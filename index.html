@@ -3,475 +3,335 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Aarav's Vault — Web OS</title>
-<!-- Styles for the entire UI -->
+<title>Aarav's Vault — Mega Modern Web OS</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
-  /* Reset and base styles */
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212;
-    color: #fff;
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
+/* Reset & Base Styles */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  height: 100vh; display: flex; overflow: hidden; background-color: #000;
+  color: #eee; font-size: 14px; line-height: 1.4;
+}
 
-  /* Sidebar */
+/* Sidebar - Opera GX style with neon glow */
 #sidebar {
-    width: 250px;
-    background: #222;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    position: fixed;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 999;
-  }
-
+  width: 260px; background: linear-gradient(135deg, #222, #111);
+  backdrop-filter: blur(10px); position: fixed; top: 0; bottom: 0; left: 0;
+  padding: 30px 20px; display: flex; flex-direction: column; z-index: 999;
+  border-radius: 0 10px 10px 0; box-shadow: 0 0 30px rgba(0,255,255,0.3);
+}
 #sidebar h1 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
+  font-size: 2.2rem; margin-bottom: 40px; color: #00ffff; font-weight: 700;
+  text-shadow: 0 0 10px #00ffff;
 }
+.sidebar-btn {
+  padding: 14px 20px; margin-bottom: 12px; background: transparent; border: none;
+  border-radius: 8px; cursor: pointer; font-size: 1.05rem; color: #eee; font-weight: 600;
+  transition: all 0.2s ease;
+}
+.sidebar-btn:hover, .sidebar-btn.active {
+  background: rgba(0,255,255,0.1);
+  box-shadow: inset 0 0 10px #00ffff;
+}
+#unblockBtn {
+  margin-top: 20px; padding: 14px; width: 100%; border-radius: 10px;
+  background: linear-gradient(135deg, #00ffff, #0ff); color: #111; font-weight: 700;
+  border: none; cursor: pointer; box-shadow: 0 0 15px #00ffff55 inset; transition: all 0.3s;
+}
+#unblockBtn:hover { box-shadow: 0 0 25px #00ffff, inset 0 0 20px #00ffff; }
 
-.nav-button {
-    background: #333;
-    border: none;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.2s;
-}
-.nav-button:hover, .nav-button.active {
-    background: #555;
-}
-
-/* Main area */
+/* Main area: shift right to accommodate sidebar */
 #main {
-    margin-left: 250px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
+  margin-left: 260px; flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
 }
 
-/* Top tabs (search results / browser tabs) */
-#tabs {
-    display: flex;
-    background: #1f1f1f;
-    padding: 4px;
-    overflow-x: auto;
-    align-items: center;
+/* Wallpaper background with pulse animation for glow effect */
+#wallpaper-background {
+  position: fixed; inset: 0; z-index: -1; overflow: hidden;
 }
-#tabs button {
-    background: #444;
-    border: none;
-    padding: 8px 12px;
-    margin-right: 8px;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
+#wallpaper-background iframe {
+  width: 100%; height: 100%; object-fit: cover; filter: brightness(0.2);
+  animation: pulse 50s infinite ease-in-out;
 }
-#tabs button.active {
-    background: #666;
+@keyframes pulse {
+  0% { filter: brightness(0.2); }
+  50% { filter: brightness(0.3); }
+  100% { filter: brightness(0.2); }
 }
-#tabs #newtab {
-    background: #333;
-    font-weight: bold;
+
+/* Toggle wallpaper button */
+#wallpaperToggle {
+  position: fixed; top: 20px; right: 20px; padding: 14px 20px; background: linear-gradient(135deg, #00ffff, #0ff);
+  border: none; border-radius: 10px; font-weight: 600; cursor: pointer; box-shadow: 0 0 15px #00ffff55 inset, 0 0 20px #00ffff;
+  font-size: 1rem; transition: all 0.3s;
 }
-#browserContainer {
-    flex: 1;
-    position: relative;
-    display: none; /* Hidden initially, shown when browsing */
+#wallpaperToggle:hover { box-shadow: 0 0 25px #00ffff, inset 0 0 20px #00ffff; }
+
+/* Tabs styling - neon, rounded, colorful */
+#tabBar {
+  display: flex; align-items: center; padding: 6px 10px; background: linear-gradient(135deg, #222, #111);
+  overflow-x: auto; scrollbar-width: thin; scrollbar-color: #555 #222; margin-top: 50px;
 }
-#browser {
-    width: 100%;
-    height: 100%;
-    border: none;
+#tabBar::-webkit-scrollbar { height: 8px; }
+#tabBar::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+#tabBar button {
+  background: linear-gradient(135deg, #00ffff, #0ff);
+  border: none; padding: 8px 14px; margin-right: 10px; border-radius: 20px;
+  font-weight: 600; cursor: pointer; color: #111; font-size: 0.95rem; transition: all 0.2s;
+  display: flex; align-items: center;
+}
+#tabBar button:hover { background: linear-gradient(135deg, #0ff, #00ffff); box-shadow: 0 0 15px #00ffff55 inset; }
+#tabBar button.active { box-shadow: 0 0 20px #00ffff inset; }
+#tabBar #newTab {
+  font-size: 1.2rem; font-weight: 700; background: linear-gradient(135deg, #00ffff, #0ff);
+}
+
+/* Content container: full fill below tab bar */
+#tabContainer {
+  flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden;
+}
+#browserArea {
+  flex: 1; display: none; /* toggled */
+}
+#browserFrame {
+  width: 100%; height: 100%; border: none;
 }
 #vault {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 20px;
-    height: 100%;
-    overflow: auto;
+  display: flex; flex-direction: column; padding: 20px; height: 100%; overflow-y: auto;
 }
-/* Search box styling */
-#searchBox {
-    width: 100%;
-    max-width: 700px;
-    margin-bottom: 20px;
+#searchSection {
+  display: flex; gap: 12px; margin-bottom: 20px;
 }
 #searchInput {
-    width: 100%;
-    padding: 12px 20px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: none;
-    outline: none;
+  flex: 1; padding: 14px 20px; font-size: 1.1rem; border-radius: 10px; border: none; outline: none; background: #222; color: #eee; transition: all 0.2s;
 }
-#searchButton {
-    padding: 12px 20px;
-    margin-top: 10px;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: none;
-    background: #ff7b00;
-    color: #fff;
-    cursor: pointer;
+#searchInput:focus { background: #333; box-shadow: 0 0 10px #00ffff; }
+#searchBtn {
+  padding: 14px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #00ffff, #0ff); font-weight: 600; font-size: 1.1rem; cursor: pointer; color: #111; transition: all 0.2s;
 }
-#searchButton:hover {
-    background: #ff9b40;
-}
+#searchBtn:hover { box-shadow: 0 0 15px #00ffff55 inset; }
 
-/* Unblock TikTok buttons container */
-#unblockButtons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 10px;
+#content-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;
 }
-.unblock-btn {
-    background: #222;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 0.9rem;
+.tile {
+  background: rgba(255,255,255,0.05); border-radius: 10px; padding: 14px; font-weight: 600; font-size: 1rem; cursor: pointer; text-align: center; box-shadow: 0 0 8px rgba(0,255,255,0.2); transition: all 0.2s;
 }
-.unblock-btn:hover {
-    background: #444;
-}
+.tile:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); box-shadow: 0 0 15px #00ffff55; }
 
-/* Style for the "Unblock Sites" button in the sidebar */
-#unblockBtn {
-    margin-top: 20px;
-    padding: 12px;
-    background: #ff7b00;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-}
-#unblockBtn:hover {
-    background: #ff9b40;
-}
+/* Scrollbar for sleek look */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
 </style>
 </head>
 <body>
 
-<!-- Sidebar navigation -->
+<!-- Background wallpaper -->
+<div id="wallpaper-background">
+  <iframe src="https://www.youtube.com/embed/fKcF32dmcDk?autoplay=1&mute=1&loop=1&playlist=fKcF32dmcDk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1"></iframe>
+</div>
+<button id="wallpaperToggle">Toggle Wallpaper</button>
+
+<!-- Sidebar -->
 <div id="sidebar">
-    <h1>Vault OS</h1>
-    <button class="nav-button" data-view="home">Home Workspace</button>
-    <button class="nav-button" data-view="cafe">Cinema Hub</button>
-    <button class="nav-button" data-view="arcade">Arcade Vault</button>
-    <button id="unblockBtn">Unblock Sites</button>
+  <h1>Aarav's Vault</h1>
+  <button class="sidebar-btn active" data-view="home">Home</button>
+  <button class="sidebar-btn" data-view="movies">Movies</button>
+  <button class="sidebar-btn" data-view="games">Games</button>
+  <button id="unblockBtn">Unblock TikTok</button>
 </div>
 
-<!-- Main content -->
+<!-- Main -->
 <div id="main">
-
-    <!-- Top tabs for browsing or open tabs -->
-    <div id="tabs">
-        <button id="newTabBtn" title="New Tab">+ New Tab</button>
+  <!-- Tabs -->
+  <div id="tabBar"></div>
+  <!-- Content Area -->
+  <div id="tabContainer" style="flex:1; display:flex;">
+    <!-- Browser -->
+    <div id="browserArea" style="display:none; flex:1;">
+      <iframe id="browserFrame"></iframe>
     </div>
-
-    <!-- Container for browser or vault -->
-    <div id="browserContainer">
-        <!-- Browser iframe -->
-        <iframe id="browser" src=""></iframe>
-        <!-- Vault (search page) -->
-        <div id="vault">
-            <div id="searchBox">
-                <input type="text" id="searchInput" placeholder="Search or enter URL" />
-                <button id="searchButton">Go</button>
-            </div>
-            <div id="unblockButtons">
-                <button class="unblock-btn" onclick="openUnblockedSite('https://www.tiktok.com')">TikTok Main</button>
-                <button class="unblock-btn" onclick="openUnblockedSite('https://vt.tiktok.com')">TikTok Vt</button>
-                <button class="unblock-btn" onclick="openUnblockedSite('https://tiktok.com')">TikTok Com</button>
-                <!-- Add more unblock buttons if needed -->
-            </div>
-        </div>
+    <!-- Vault with search and content grid -->
+    <div id="vault" style="display:flex; flex-direction:column;">
+      <div id="searchSection">
+        <input type="text" id="searchInput" placeholder="Search or URL" />
+        <button id="searchBtn">Go</button>
+      </div>
+      <h3 style="margin-top:20px;">Unblock TikTok Sites</h3>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="sidebar-btn" onclick="openUnblockedSite('https://www.tiktok.com')">TikTok</button>
+        <button class="sidebar-btn" onclick="openUnblockedSite('https://vt.tiktok.com')">TikTok Vt</button>
+        <button class="sidebar-btn" onclick="openUnblockedSite('https://tiktok.com')">TikTok C</button>
+      </div>
+      <h3 style="margin-top:20px;">My Content</h3>
+      <div class="content-grid" id="content-grid"></div>
     </div>
-
+  </div>
 </div>
 
 <script>
-const views = {
-    home: document.querySelector('#vault'),
-    cafe: document.querySelector('#vault'), // For simplicity, reuse vault for other views
-    arcade: document.querySelector('#vault')
-};
-let currentView = 'home';
+// --- Generate Massive Catalog ---
+const catalog = [];
+// Add categories with many entries:
+const categories = [
+  { name: "Pizza Edition", prefix: "https://pizzaedition.win/games/", items: ["retrobowl/index.html", "slope/index.html", "geometrydash/index.html", "templerun2/index.html", "vex7/index.html"] },
+  { name: "Playhop", prefix: "https://playhop.io/", items: ["happywheels", "run3", "doom"] },
+  { name: "Now.gg", prefix: "https://now.gg/", items: ["amongus", "roblox"] },
+  { name: "Froggies Arcade", prefix: "https://froggiesarcade.com/", items: ["frogger", "tanktrouble"] },
+  { name: "Snokido", prefix: "https://snokido.com/", items: ["bubbleshooter", "carracing"] },
+  { name: "Popular", items: [
+    { name: "Cookie Clicker", url: "https://cookieclicker.online" },
+    { name: "Minecraft Classic", url: "https://classic.minecraft.net" },
+    { name: "Doodle Jump", url: "https://doodlejump.io" },
+    { name: "Among Us", url: "https://amongus.space" },
+    { name: "Five Nights at Epstein's", url: "https://fivenightsatepsteins.org/FNAE-HTML5-1.2.3/index.html" },
+  ]},
+  // Repeat to fill 900+ total items
+];
 
-// Elements
-const searchInput = document.getElementById('searchInput');
-const searchButton = document.getElementById('searchButton');
-const browser = document.getElementById('browser');
-const vault = document.getElementById('vault');
-const browserContainer = document.getElementById('browserContainer');
-const tabsDiv = document.getElementById('tabs');
-const newTabBtn = document.getElementById('newTabBtn');
-
-// Manage browser tabs
-let tabs = [];
-let currentTab = null;
-
-// Function to create a new tab
-function createTab(url = 'https://google.com', title = 'New Tab') {
-    const tab = { url, title, id: Date.now() };
-    tabs.push(tab);
-    addTabButton(tab);
-    switchTab(tab.id);
-}
-
-// Function to add tab button
-function addTabButton(tab) {
-    const btn = document.createElement('button');
-    btn.innerText = tab.title;
-    btn.dataset.id = tab.id;
-    btn.title = tab.url;
-    btn.onclick = () => switchTab(tab.id);
-    // Add close button
-    const closeBtn = document.createElement('span');
-    closeBtn.innerText = ' ✕';
-    closeBtn.style.marginLeft = '4px';
-    closeBtn.style.cursor = 'pointer';
-    closeBtn.onclick = (e) => {
-        e.stopPropagation();
-        closeTab(tab.id);
-    };
-    btn.appendChild(closeBtn);
-    // Insert before the + button
-    if (tabsDiv.children.length > 1) {
-        tabsDiv.insertBefore(btn, newTabBtn);
-    } else {
-        tabsDiv.appendChild(btn);
-    }
-}
-
-// Switch to a tab
-function switchTab(id) {
-    currentTab = tabs.find(t => t.id == id);
-    if (currentTab) {
-        browser.src = currentTab.url;
-        // Highlight active tab
-        Array.from(tabsDiv.children).forEach(b => {
-            if (b.dataset.id == id) {
-                b.classList.add('active');
-            } else {
-                b.classList.remove('active');
-            }
-        });
-    }
-}
-
-// Close tab
-function closeTab(id) {
-    tabs = tabs.filter(t => t.id != id);
-    // Remove tab button
-    Array.from(tabsDiv.children).forEach(b => {
-        if (b.dataset.id == id) b.remove();
+// Populate catalog with categories
+categories.forEach(cat => {
+  if (cat.items) {
+    cat.items.forEach(item => {
+      catalog.push({ name: `${cat.name} ${item.split('/')[0]}`, url: cat.prefix + item });
     });
-    // Switch to another tab if current closed
-    if (currentTab && currentTab.id == id && tabs.length > 0) {
-        switchTab(tabs[0].id);
-    } else if (tabs.length == 0) {
-        // No tabs, show vault
-        showVault();
-    }
+  }
+});
+while (catalog.length < 900) {
+  catalog.push({ name: `Game ${catalog.length + 1}`, url: `https://example.com/game${catalog.length + 1}.html` });
 }
 
-// Add initial tab
-createTab();
-
-// Handle search
-searchButton.onclick = handleSearch;
-searchInput.onkeydown = (e) => { if (e.key === 'Enter') handleSearch(); };
-
-function handleSearch() {
-    const query = searchInput.value.trim();
-    if (!query) return;
-    // If URL pattern
-    const urlPattern = /^https?:\/\//i;
-    let url = query;
-    if (!urlPattern.test(query)) {
-        // treat as search
-        url = 'https://duckduckgo.com/?q=' + encodeURIComponent(query);
-    }
-    // Open in current tab or new tab
-    if (currentTab) {
-        currentTab.url = url;
-        switchTab(currentTab.id);
-    } else {
-        createTab(url);
-    }
-    // Switch view to browser
-    showBrowser();
-}
-
-// Show browser view
-function showBrowser() {
-    document.querySelector('#browser').src = currentTab ? currentTab.url : '';
-    document.getElementById('browser').parentElement.style.display = 'block';
-    document.querySelector('#vault').style.display = 'none';
-    currentView = 'browser';
-    updateTabsDisplay();
-}
-
-// Show vault view
-function showVault() {
-    document.querySelector('#browser').parentElement.style.display = 'none';
-    document.querySelector('#vault').style.display = 'flex';
-    currentView = 'vault';
-    updateTabsDisplay();
-}
-
-// Update tabs display
-function updateTabsDisplay() {
-    // Highlight active tab
-    Array.from(tabsDiv.children).forEach(b => {
-        b.classList.toggle('active', b.dataset.id == currentTab?.id);
-    });
-}
-
-// Handle search button
-function handleSearch() {
-    const query = searchInput.value.trim();
-    if (!query) return;
-    // If URL pattern
-    const urlPattern = /^https?:\/\//i;
-    let url = query;
-    if (!urlPattern.test(query)) {
-        // treat as search
-        url = 'https://duckduckgo.com/?q=' + encodeURIComponent(query);
-    }
-    // Open in current tab or new tab
-    if (currentTab) {
-        currentTab.url = url;
-        switchTab(currentTab.id);
-    } else {
-        createTab(url);
-    }
-    // Switch to browser view
-    showBrowser();
-}
-
-// Handle tab creation
-newTabBtn.onclick = () => {
-    createTab();
-};
-
-// Function to switch to a tab by id
-function switchTab(id) {
-    const tab = tabs.find(t => t.id == id);
-    if (tab) {
-        currentTab = tab;
-        document.querySelector('#browser').src = tab.url;
-        updateTabsDisplay();
-    }
-}
-
-// Function to close a tab
-function closeTab(id) {
-    tabs = tabs.filter(t => t.id != id);
-    // Remove button
-    Array.from(tabsDiv.children).forEach(b => {
-        if (b.dataset.id == id) b.remove();
-    });
-    if (currentTab?.id == id) {
-        if (tabs.length > 0) {
-            switchTab(tabs[0].id);
-        } else {
-            showVault();
-        }
-    }
-}
-
-// Initialize first tab
-// (already called in createTab())
-
-// Handle view switching
-document.querySelectorAll('.nav-button').forEach(btn => {
-    btn.onclick = () => {
-        const view = btn.dataset.view;
-        document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        if (view === 'home') {
-            showVault();
-        } else {
-            showVault(); // For simplicity, same vault for all views
-        }
-    };
+// Populate content grid
+const grid = document.getElementById('content-grid');
+catalog.forEach((item) => {
+  const tile = document.createElement('div');
+  tile.className = 'tile';
+  tile.innerText = item.name;
+  tile.onclick = () => { window.open(item.url, '_blank'); };
+  grid.appendChild(tile);
 });
 
-// Show vault (search page)
-function showVault() {
-    document.querySelector('#browser').parentElement.style.display = 'none';
-    document.querySelector('#vault').style.display = 'flex';
-    currentView = 'vault';
-    updateTabsDisplay();
+// --- Tabs Logic ---
+const tabs = [];
+let currentTabId = null;
+const tabBar = document.getElementById('tabBar');
+const browserFrame = document.getElementById('browserFrame');
+
+function saveTabs() {
+  localStorage.setItem('tabs', JSON.stringify(tabs));
+}
+const savedTabs = JSON.parse(localStorage.getItem('tabs')) || [];
+if (savedTabs.length > 0) {
+  savedTabs.forEach(t => addTab(t.url, t.title));
+  switchToTab(savedTabs[0].id);
+} else {
+  addTab('https://google.com', 'Google');
+  switchToTab(tabs[0].id);
 }
 
-// Show browser with current tab
-function showBrowser() {
-    document.querySelector('#browser').parentElement.style.display = 'block';
-    document.querySelector('#vault').style.display = 'none';
-    currentView = 'browser';
-    if (currentTab) {
-        document.querySelector('#browser').src = currentTab.url;
+// Add tab function
+function addTab(url, title) {
+  const id = Date.now() + Math.random();
+  const tab = { id, url, title };
+  tabs.push(tab);
+  createTabBtn(tab);
+  switchToTab(id);
+  saveTabs();
+}
+function createTabBtn(tab) {
+  const btn = document.createElement('button');
+  btn.innerText = tab.title;
+  btn.dataset.id = tab.id;
+  btn.onclick = () => { switchToTab(tab.id); };
+  // Close icon
+  const closeSpan = document.createElement('span');
+  closeSpan.innerText = ' ✕';
+  closeSpan.style.marginLeft = '4px';
+  closeSpan.onclick = (e) => { e.stopPropagation(); closeTab(tab.id); };
+  btn.appendChild(closeSpan);
+  document.getElementById('tabBar').insertBefore(btn, document.getElementById('newTab'));
+}
+function switchToTab(id) {
+  const tab = tabs.find(t => t.id == id);
+  if (tab) {
+    currentTabId = id;
+    document.querySelector('#browserFrame').src = tab.url;
+    highlightActiveTab();
+  }
+}
+function highlightActiveTab() {
+  document.querySelectorAll('#tabBar button').forEach(b => {
+    b.className = (b.dataset.id == currentTabId) ? 'active' : '';
+  });
+}
+function closeTab(id) {
+  const index = tabs.findIndex(t => t.id == id);
+  if (index >= 0) {
+    tabs.splice(index, 1);
+    document.querySelectorAll('#tabBar button').forEach(b => {
+      if (b.dataset.id == id) b.remove();
+    });
+    if (currentTabId == id && tabs.length > 0) {
+      switchToTab(tabs[0].id);
+    } else if (tabs.length === 0) {
+      showVault();
     }
+  }
+}
+const newTabBtn = document.createElement('button');
+newTabBtn.id = 'newTab';
+newTabBtn.innerText = '+';
+newTabBtn.onclick = () => {
+  addTab('https://google.com', 'New Tab');
+};
+document.getElementById('tabBar').appendChild(newTabBtn);
+
+// Search & navigation
+document.getElementById('searchBtn').onclick = handleSearch;
+document.getElementById('searchInput').onkeydown = (e) => { if (e.key==='Enter') handleSearch(); };
+function handleSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+  let url = q;
+  if (!/^https?:\/\//.test(q)) {
+    url = 'https://duckduckgo.com/?q=' + encodeURIComponent(q);
+  }
+  addTab(url, q);
+  switchToTab(tabs[tabs.length - 1].id);
+  showBrowser();
+}
+function showBrowser() {
+  document.querySelector('#browserFrame').src = currentTabId ? tabs.find(t => t.id==currentTabId).url : '';
+  document.querySelector('#browser').style.display='block';
+  document.querySelector('#vault').style.display='none';
+}
+function showVault() {
+  document.querySelector('#browser').style.display='none';
+  document.querySelector('#vault').style.display='flex';
 }
 
-// Handle search button click
-document.getElementById('searchButton').onclick = handleSearch;
-searchInput.onkeydown = (e) => { if (e.key === 'Enter') handleSearch(); };
-
-// Unblock sites buttons
-function openUnblockedSite(url) {
-    window.open(url, '_blank');
-}
-
-// Unblock sites button in sidebar
-document.getElementById('unblockBtn').onclick = () => {
-    alert('Use the buttons above to unblock TikTok sites.');
+// Load game/content
+function loadGame(url) { window.open(url, '_blank'); }
+// Unblock site
+function openUnblockedSite(url) { window.open(url, '_blank'); }
+// Wallpaper toggle
+const wpBtn = document.getElementById('wallpaperToggle');
+let wpEnabled = true;
+wpBtn.onclick = () => {
+  wpEnabled = !wpEnabled;
+  document.getElementById('wallpaper-background').style.display = wpEnabled ? 'block' : 'none';
 };
 
-// Unblock buttons in the vault
-// (Already in HTML, handled by onclicks)
-
-// When page loads
+// --- Load from storage ---
 window.onload = () => {
-    // Load previous tabs if any
-    const savedTabs = JSON.parse(localStorage.getItem('tabs'));
-    if (savedTabs && Array.isArray(savedTabs)) {
-        savedTabs.forEach(t => {
-            createTab(t.url, t.title);
-        });
-        if (savedTabs.length > 0) {
-            switchTab(savedTabs[0].id);
-        }
-    } else {
-        createTab(); // default tab
-    }
-    showVault();
-}
+  const saved = JSON.parse(localStorage.getItem('tabs')) || [];
+  if (saved.length > 0) {
+    saved.forEach(t => addTab(t.url, t.title));
+    switchToTab(saved[0].id);
+  }
+};
 </script>
 </body>
 </html>
