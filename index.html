@@ -1,459 +1,842 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAULT OS — Aarav's Hub</title>
-    
-    <script src="/uv/uv.config.js"></script>
-    <script src="/uv/uv.bundle.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aarav's Vault — Web OS</title>
+<script src="/uv/uv.config.js"></script>
+<script src="/uv/uv.bundle.js"></script>
+<style>
+  /* Root Settings & Theme Colors */
+  :root {
+    --sidebar-bg: rgba(20, 18, 24, 0.85);
+    --sidebar-border: rgba(255, 255, 255, 0.05);
+    --card-bg: rgba(25, 23, 30, 0.65);
+    --card-hover: rgba(255, 255, 255, 0.1);
+    --accent-color: #ff7b00; 
+    --arcade-yellow: #facc15; 
+    --text-main: #ffffff;
+    --text-muted: #9aa0a6;
+  }
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
 
-        :root {
-            --bg: #0a0a0d;
-            --accent: #d4af37;
-            --text: #e8e8e8;
-            --muted: #aaaaaa;
-            --card: rgba(28, 28, 35, 0.92);
-        }
+  body {
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    background: #000;
+  }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            color: var(--text);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background: var(--bg);
-            font-family: 'Inter', system-ui, sans-serif;
-        }
+  /* --- BACKGROUND LIVE WALLPAPER --- */
+  .wallpaper-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .wallpaper-bg-container iframe {
+    width: 100vw;
+    height: 56.25vw;
+    min-height: 100vh;
+    min-width: 177.77vh; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: brightness(0.35) contrast(1.1);
+  }
 
-        /* Full Bleed Wallpaper Fix */
-        .wallpaper-bg-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-        }
-        .wallpaper-bg-container video, .wallpaper-bg-container iframe {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            filter: brightness(0.45) contrast(1.15) saturate(1.1);
-        }
+  /* --- SIDEBAR NAVIGATION --- */
+  aside {
+    width: 260px;
+    min-width: 260px;
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-right: 1px solid var(--sidebar-border);
+    display: flex;
+    flex-direction: column;
+    padding: 25px 15px;
+    z-index: 200; 
+    position: relative;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 35px;
+    padding-left: 10px;
+  }
+  .brand-logo {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    font-weight: bold;
+  }
+  .brand-title h1 {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+  .brand-title p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .nav-section {
+    margin-bottom: 25px;
+  }
+  .section-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    font-weight: 700;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-main);
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    margin-bottom: 4px;
+    cursor: pointer;
+  }
+  .nav-item:hover, .nav-item.active {
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--accent-color);
+  }
+  .sidebar-footer {
+    margin-top: auto;
+  }
+  .btn-discord {
+    display: block;
+    text-align: center;
+    background: rgba(88, 101, 242, 0.2);
+    color: #5865F2;
+    border: 1px solid rgba(88, 101, 242, 0.4);
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
 
-        /* Centered Premium Search */
-        .search-wrapper {
-            position: fixed;
-            top: 45px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 680px;
-            z-index: 300;
-        }
-        .search-container {
-            background: rgba(20, 20, 28, 0.96);
-            border: 2px solid rgba(212, 175, 55, 0.35);
-            border-radius: 60px;
-            padding: 16px 36px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 12px 50px rgba(0,0,0,0.7);
-            transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
-        }
-        .search-container:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 20px 60px rgba(212,175,55,0.3);
-            transform: scale(1.02);
-        }
-        .search-container input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: white;
-            font-size: 1.2rem;
-            padding-left: 12px;
-        }
+  /* --- MAIN COMPONENT --- */
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
-        /* Bottom Bar */
-        .bottom-bar {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            height: 82px;
-            background: rgba(12,12,18,0.97);
-            backdrop-filter: blur(24px);
-            border-top: 1px solid rgba(212,175,55,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 52px;
-            z-index: 500;
-        }
-        .nav-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text);
-            text-decoration: none;
-            font-size: 0.82rem;
-            padding: 8px 20px;
-            border-radius: 14px;
-            transition: all 0.3s;
-        }
-        .nav-btn:hover, .nav-btn.active {
-            color: var(--accent);
-            background: rgba(212,175,55,0.12);
-        }
-        .nav-btn .icon { font-size: 1.75rem; margin-bottom: 3px; }
+  /* Tab bar */
+  #tab-bar {
+    display: flex;
+    background: #222;
+    padding: 4px;
+    overflow-x: auto;
+    white-space: nowrap;
+    z-index: 999;
+  }
+  #tab-bar button {
+    padding: 4px 8px;
+    margin-right: 4px;
+    border: none;
+    border-radius: 4px;
+    background: #444;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+  }
 
-        main {
-            flex: 1;
-            padding-top: 130px;
-            padding-bottom: 100px;
-            overflow-y: auto;
-            position: relative;
-        }
+  /* Tab content area */
+#tab-content {
+  flex: 1;
+  position: relative;
+  height: calc(100vh - 40px);
+}
 
-        .view {
-            display: none;
-            width: 100%;
-            height: 100%;
-            padding: 0 40px;
-        }
-        .view.active { display: block; }
+/* --- WORKSPACE AND PANELS --- */
+.workspace-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
+  box-sizing: border-box;
+}
 
-        /* Arcade */
-        .arcade-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 32px;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-        .game-card {
-            background: var(--card);
-            border-radius: 22px;
-            padding: 26px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            height: 310px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .game-card:hover {
-            transform: translateY(-12px) scale(1.03);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-        }
+/* Other existing styles ... (keep your styles here) */
 
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-            max-width: 1400px;
-            margin: 60px auto 0;
-        }
-        .feature-card {
-            background: var(--card);
-            padding: 28px;
-            border-radius: 20px;
-        }
+.widget-clock {
+  font-size: 3.5rem;
+  font-weight: 400;
+  letter-spacing: -1px;
+  margin-bottom: 5px;
+}
+.widget-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 35px;
+}
+.search-container {
+  width: 100%;
+  max-width: 700px;
+  background: rgba(20, 20, 25, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 30px;
+  padding: 6px 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  margin-bottom: 20px;
+}
+.search-container input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 1.05rem;
+  padding: 10px;
+}
 
-        /* Settings Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background: #1c1c24;
-            width: 90%;
-            max-width: 620px;
-            border-radius: 24px;
-            padding: 40px;
-            border: 1px solid var(--accent);
-        }
+/* App grid styles ... (keep your styles here) */
 
-        /* Cloak / Panic */
-        .panic-btn {
-            background: #9f1239;
-            color: white;
-            padding: 14px 32px;
-            border: none;
-            border-radius: 9999px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-    </style>
+.app-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Arcade styles ... (keep your styles here) */
+
+.arcade-view {
+  display: none; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #111116;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0),
+    radial-gradient(rgba(255, 255, 255, 0.02) 2px, transparent 0);
+  background-size: 40px 40px, 80px 80px;
+  padding: 40px;
+  overflow-y: auto;
+  z-index: 5;
+}
+.arcade-control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+  border-bottom: 4px solid #1a1a24;
+  padding-bottom: 20px;
+  position: relative;
+}
+.arcade-header-title h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.moving-lines {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  height: 4px;
+  width: 180px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--arcade-yellow),
+    var(--arcade-yellow) 20px,
+    #000 20px,
+    #000 40px
+  );
+  animation: moveLines 1.2s linear infinite;
+}
+@keyframes moveLines {
+  0% { background-position: 0px; }
+  100% { background-position: 40px; }
+}
+.arcade-search {
+  background: #16161f;
+  border: 2px solid #222230;
+  border-radius: 12px;
+  padding: 10px 20px;
+  width: 320px;
+  color: white;
+  outline: none;
+  font-size: 0.95rem;
+}
+.arcade-search:focus {
+  border-color: var(--arcade-yellow);
+}
+.arcade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin-bottom: 40px;
+}
+.game-card {
+  background: #16161f;
+  border: 2px solid #222230;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 250px;
+  transition: all 0.25s ease;
+}
+.game-card:hover {
+  border-color: var(--arcade-yellow);
+  box-shadow: 0 0 25px rgba(250, 204, 21, 0.1);
+}
+.game-card .title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.btn-play-action {
+  background: #facc15;
+  color: #000;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.2s, background-color 0.2s;
+}
+.game-card:hover .btn-play-action {
+  background: #fde047;
+  transform: scale(1.02);
+}
+/* --- INTERNAL FRAME FOR GAMES --- */
+.game-player-frame {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  z-index: 100; 
+}
+.game-player-frame iframe {
+  width: 100%;
+  height: calc(100% - 40px);
+  border: none;
+  background: #000;
+}
+.game-control-bar {
+  height: 40px;
+  background: #0d0d11;
+  border-top: 2px solid #1e1e2a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+}
+.embed-credit {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.close-arcade-btn {
+  background: transparent;
+  color: #ef4444;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- New Buttons for Unblocking TikTok Sites --- */
+#unblock-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px;
+  padding: 10px;
+  background: rgba(40,40,40,0.5);
+  border-radius: 8px;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+#unblock-buttons button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+#unblock-buttons button:hover {
+  background: #444;
+}
+</style>
 </head>
 <body>
 
-    <!-- Wallpaper Selection -->
-    <div class="wallpaper-bg-container" id="wallpaperContainer">
-        <!-- Default -->
-        <video autoplay loop muted playsinline>
-            <source src="https://assets.mixkit.co/videos/preview/12345/12345-large.mp4" type="video/mp4">
-        </video>
+<!-- Buttons for unblocking TikTok sites -->
+<div id="unblock-buttons">
+  <button onclick="openUnblockedTikTok('https://www.tiktok.com')">TikTok Main</button>
+  <button onclick="openUnblockedTikTok('https://vt.tiktok.com')">TikTok Vt</button>
+  <button onclick="openUnblockedTikTok('https://tiktok.com')">TikTok Com</button>
+  <!-- Add more proxy sites here if you know them -->
+</div>
+
+<!-- Wallpaper Selector Panel -->
+<div id="wallpaper-selector" style="display:none;">
+  <h3 style="color:#fff;">Wallpaper Selector</h3>
+  <div id="wallpaper-gallery"></div>
+  <button onclick="toggleWallpaperPanel()">Close</button>
+</div>
+
+<!-- Cloaking toggle button -->
+<button id="cloaking-toggle" style="margin:10px;">Toggle Cloak</button>
+
+<div class="wallpaper-bg-container">
+  <iframe src="https://www.youtube.com/embed/fKcF32dmcDk?autoplay=1&mute=1&loop=1&playlist=fKcF32dmcDk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+</div>
+
+<!-- Tab bar for browser-like tabs -->
+<div id="tab-bar">
+  <button onclick="createNewTab()">+ New Tab</button>
+</div>
+<div id="tab-content"></div>
+
+<aside>
+  <div class="brand">
+    <div class="brand-logo">V</div>
+    <div class="brand-title">
+      <h1>Vault OS</h1>
+      <p>Aarav's Hub</p>
     </div>
+  </div>
+  <div class="nav-section">
+    <div class="section-label">Navigation</div>
+    <div onclick="switchView('home')" id="nav-home" class="nav-item active"><span>🏠</span> Home Workspace</div>
+    <div onclick="switchView('cinema')" id="nav-cinema" class="nav-item"><span>🎬</span> Cinema Hub</div>
+    <div onclick="switchView('arcade')" id="nav-arcade" class="nav-item"><span>🕹️</span> Arcade Vault</div>
+  </div>
+  <div class="sidebar-footer">
+    <a href="https://discord.com" target="_blank" class="btn-discord">Join Discord</a>
+  </div>
+</aside>
 
-    <!-- Top Search -->
-    <div class="search-wrapper">
-        <form class="search-container" onsubmit="handleVaultSearch(event)">
-            <span style="color:var(--accent); font-size:1.4rem;">🔍</span>
-            <input type="text" id="vaultSearchInput" placeholder="Proxy search • TikTok, Netflix, YouTube, Games...">
-            <select id="proxySelector" style="background:transparent;border:none;color:var(--accent);margin-left:12px;">
-                <option value="uv">Ultraviolet</option>
-                <option value="rammer">Rammerhead</option>
-                <option value="snub">Snub Proxy</option>
-            </select>
-        </form>
+<main>
+  <!-- Game iframe -->
+  <div class="game-player-frame" id="gameViewport">
+    <iframe id="arcadeFrame" src="" allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-modals"></iframe>
+    <div class="game-control-bar">
+      <div class="embed-credit">Internal Engine // <span>Custom Link Mode</span></div>
+      <button class="close-arcade-btn" onclick="closeGameEngine()">✕ Exit View</button>
     </div>
+  </div>
 
-    <main>
-        <!-- Home -->
-        <div id="view-home" class="view active">
-            <div style="text-align:center;max-width:820px;margin:0 auto;">
-                <h1 style="font-family:'Playfair Display',serif;font-size:5.2rem;letter-spacing:-3px;margin-bottom:12px;color:#fff;">Vault OS</h1>
-                <p style="font-size:1.45rem;color:var(--muted);">Sophisticated. Unblocked. Yours.</p>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h3 style="color:var(--accent);">Quick Apps</h3>
-                        <div style="display:flex;gap:18px;justify-content:center;margin-top:24px;flex-wrap:wrap;">
-                            <div onclick="quickProxy('https://www.tiktok.com')" style="cursor:pointer;text-align:center;">
-                                <div style="width:64px;height:64px;background:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 8px;">🎵</div>
-                                <div>TikTok</div>
-                            </div>
-                            <div onclick="quickProxy('https://www.netflix.com')" style="cursor:pointer;text-align:center;">
-                                <div style="width:64px;height:64px;background:#e50914;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 8px;">📺</div>
-                                <div>Netflix</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <h3 style="color:var(--accent);">Wallpapers</h3>
-                        <button onclick="openWallpaperSelector()" style="width:100%;padding:14px;background:rgba(212,175,55,0.15);border:1px solid var(--accent);border-radius:12px;color:white;margin-top:16px;">Change 4K Animated Wallpaper</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Arcade -->
-        <div id="view-arcade" class="view">
-            <h2 style="text-align:center;font-size:2.8rem;margin-bottom:30px;color:var(--accent);">Arcade Vault • 50+ Games</h2>
-            <input id="arcadeSearchInput" placeholder="Search 50+ unblocked games..." 
-                   style="display:block;margin:0 auto 40px;width:520px;padding:18px 28px;background:rgba(30,30,38,0.9);border:1px solid #555;border-radius:50px;color:white;font-size:1.1rem;"
-                   oninput="filterArcadeLibrary()">
-            <div class="arcade-grid" id="dynamicArcadeGrid"></div>
-        </div>
-
-        <!-- Cinema -->
-        <div id="view-cinema" class="view">
-            <div style="text-align:center;max-width:900px;margin:80px auto;">
-                <div onclick="loadCinema()" style="cursor:pointer;background:var(--card);border-radius:28px;padding:80px 40px;">
-                    <div style="font-size:7rem;margin-bottom:30px;">🎥</div>
-                    <h2 style="font-size:2.6rem;">DULO TV • Cinema Hub</h2>
-                    <p style="margin:20px 0;color:var(--muted);">Launch full streaming inside Vault</p>
-                    <button class="btn-play-action" style="margin-top:20px;padding:18px 60px;font-size:1.2rem;">LAUNCH STREAM</button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-bar">
-        <a onclick="switchView('home')" id="nav-home" class="nav-btn active"><span class="icon">🏠</span>Home</a>
-        <a onclick="switchView('arcade')" id="nav-arcade" class="nav-btn"><span class="icon">🕹️</span>Arcade</a>
-        <a onclick="switchView('cinema')" id="nav-cinema" class="nav-btn"><span class="icon">🎬</span>Cinema</a>
-        <a onclick="openSettings()" class="nav-btn"><span class="icon">⚙️</span>Settings</a>
+  <!-- Home View -->
+  <div class="workspace-view" id="view-home-panel">
+    <div class="hub-center">
+      <div class="widget-clock" id="liveClock">Welcome</div>
+      <div class="widget-subtitle">Your cinematic web dashboard portal</div>
+      <form class="search-container" id="vaultSearchForm" onsubmit="handleVaultSearch(event)">
+        <input type="text" id="vaultSearchInput" placeholder="TikTok, Netflix, YouTube or search anything... (proxied via UV)">
+      </form>
     </div>
-
-    <!-- Player -->
-    <div id="gameViewport" class="game-player-frame" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:900;">
-        <iframe id="arcadeFrame" src="" allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-modals" style="width:100%;height:calc(100% - 68px);"></iframe>
-        <div style="height:68px;background:#111;display:flex;align-items:center;justify-content:space-between;padding:0 40px;color:#ccc;">
-            <div>VAULT OS • Proxy Active</div>
-            <div>
-                <button onclick="closeGameEngine()" style="background:#991b1b;padding:10px 32px;border:none;border-radius:999px;color:white;">Exit</button>
-            </div>
-        </div>
+    <div class="app-grid">
+      <a href="https://www.youtube.com" target="_blank" class="app-tile">
+        <div class="app-icon">📺</div><div class="app-name">YouTube</div>
+      </a>
+      <a onclick="launchProxiedTikTok()" class="app-tile" style="cursor:pointer;">
+        <div class="app-icon">🎵</div><div class="app-name">TikTok (Unblocked)</div>
+      </a>
+      <a href="https://www.discord.com" target="_blank" class="app-tile">
+        <div class="app-icon">💬</div><div class="app-name">Discord</div>
+      </a>
+      <a href="https://www.google.com" target="_blank" class="app-tile">
+        <div class="app-icon">🔍</div><div class="app-name">Google</div>
+      </a>
+      <a href="https://www.twitch.tv" target="_blank" class="app-tile">
+        <div class="app-icon">🔮</div><div class="app-name">Twitch</div>
+      </a>
     </div>
-
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom:30px;color:var(--accent);">Vault Settings</h2>
-            
-            <div style="margin-bottom:30px;">
-                <label>Panic Button URL</label>
-                <input id="panicUrl" value="https://google.com" style="width:100%;padding:12px;margin-top:8px;background:#222;border:1px solid #555;border-radius:12px;color:white;">
-                <button onclick="setPanicButton()" class="panic-btn" style="margin-top:12px;width:100%;">Save Panic Redirect</button>
-            </div>
-
-            <div style="margin-bottom:30px;">
-                <h3>Cloak Mode</h3>
-                <button onclick="cloakTab()" style="width:100%;padding:16px;background:#334155;border:none;border-radius:12px;color:white;margin:8px 0;">Cloak as Google Docs</button>
-            </div>
-
-            <div>
-                <button onclick="closeModal()" style="width:100%;padding:14px;background:#444;border:none;border-radius:12px;color:white;">Close</button>
-            </div>
-        </div>
+    <div style="display:flex; gap:12px; margin-top:25px; justify-content:center; flex-wrap:wrap;">
+      <button onclick="launchProxiedTikTok()" style="padding:10px 20px; background:#000; border:2px solid #ff7b00; color:white; border-radius:999px; font-weight:600; cursor:pointer;">🎵 TikTok Unblocked</button>
+      <button onclick="proxySite('https://www.tiktokv.com')" style="padding:10px 20px; background:#000; border:2px solid #ff7b00; color:white; border-radius:999px; font-weight:600; cursor:pointer;">🎵 TikTok Mirror</button>
+      <button onclick="proxySite('https://urlebird.com')" style="padding:10px 20px; background:#000; border:2px solid #ff7b00; color:white; border-radius:999px; font-weight:600; cursor:pointer;">📹 Urlebird Videos</button>
+      <button onclick="proxySite('https://www.netflix.com')" style="padding:10px 20px; background:#000; border:2px solid #ff7b00; color:white; border-radius:999px; font-weight:600; cursor:pointer;">🎬 Netflix</button>
+      <button onclick="proxySite('https://www.youtube.com')" style="padding:10px 20px; background:#000; border:2px solid #ff7b00; color:white; border-radius:999px; font-weight:600; cursor:pointer;">📺 YouTube</button>
     </div>
+  </div>
+</main>
 
-    <!-- Wallpaper Selector -->
-    <div id="wallpaperModal" class="modal">
-        <div class="modal-content" style="max-width:780px;">
-            <h2>Choose Animated 4K Wallpaper</h2>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px;">
-                <div onclick="changeWallpaper(0)" style="cursor:pointer;border:2px solid #555;border-radius:16px;overflow:hidden;">
-                    <video width="100%" height="140" autoplay loop muted><source src="https://assets.mixkit.co/videos/preview/12345/12345-large.mp4" type="video/mp4"></video>
-                    <div style="padding:12px;text-align:center;">Dark Fantasy</div>
-                </div>
-                <!-- More options can be added -->
-            </div>
-            <button onclick="closeWallpaperModal()" style="margin-top:30px;width:100%;padding:14px;">Close</button>
-        </div>
-    </div>
+<script>
+  // System Clock Track
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  document.getElementById('liveClock').innerText = days[new Date().getDay()];
 
-    <script>
-        // === FULL ARCADE LIBRARY (50+ games) ===
-        const arcadeLibraryDatabase = [
-            {name:"Retro Bowl",folder:"retrobowl"},{name:"Slope",folder:"slope"},{name:"BitLife",folder:"bitlife"},
-            {name:"Geometry Dash",folder:"geometry-dash"},{name:"1v1.LOL",folder:"1v1-lol"},{name:"Tunnel Rush",folder:"tunnel-rush"},
-            {name:"Drive Mad",folder:"drive-mad"},{name:"Drift Boss",folder:"drift-boss"},{name:"Run 3",folder:"run-3"},
-            {name:"Happy Wheels",folder:"happy-wheels"},{name:"Subway Surfers",folder:"subway-surfers"},{name:"Cookie Clicker",folder:"cookie-clicker"},
-            {name:"Minecraft Classic",folder:"minecraft"},{name:"Eggy Car",folder:"eggy-car"},{name:"Smash Karts",folder:"smash-karts"},
-            // ... (abbreviated for brevity - add all previous entries here in real file)
-            {name:"Five Nights at Epstein's",isCustom:true,customUrl:"https://fivenightsatepsteins.org/FNAE-HTML5-1.2.3/index.html?autostart=1"}
-        ];
+  // Wallpapers array
+  const wallpapers = [
+    { name: "Animated Sunset", url: "https://example.com/wallpapers/sunset.mp4" },
+    { name: "City Night", url: "https://example.com/wallpapers/citynight.webm" }
+    // Add more wallpapers as needed
+  ];
 
-        function compileArcadeLibrary() {
-            const grid = document.getElementById('dynamicArcadeGrid');
-            grid.innerHTML = '';
-            arcadeLibraryDatabase.forEach(game => {
-                let onclick = game.isCustom ? 
-                    `loadInternalGame('${game.customUrl}')` : 
-                    `window.open('https://pizzaedition.win/games/${game.folder}/','_blank')`;
-                grid.innerHTML += `
-                    <div class="game-card" data-name="${game.name.toLowerCase()}">
-                        <div style="font-size:5rem;margin:20px 0 12px;">🕹️</div>
-                        <div style="font-size:1.35rem;font-weight:600;">${game.name}</div>
-                        <button class="btn-play-action" onclick="${onclick}" style="margin-top:20px;width:100%;padding:14px;">PLAY UNBLOCKED</button>
-                    </div>`;
-            });
-        }
+  // Load wallpaper from localStorage
+  if (localStorage.getItem('wallpaper')) {
+    document.querySelector('.wallpaper-bg-container iframe').src = localStorage.getItem('wallpaper');
+  }
 
-        function filterArcadeLibrary() {
-            const term = document.getElementById('arcadeSearchInput').value.toLowerCase();
-            document.querySelectorAll('.game-card').forEach(c => {
-                c.style.display = c.getAttribute('data-name').includes(term) ? 'flex' : 'none';
-            });
-        }
+  function populateWallpapers() {
+    const gallery = document.getElementById('wallpaper-gallery');
+    gallery.innerHTML = '';
+    wallpapers.forEach(wp => {
+      const btn = document.createElement('button');
+      btn.style.width = '80px';
+      btn.style.height = '80px';
+      btn.style.border = 'none';
+      btn.style.borderRadius = '4px';
+      btn.style.overflow = 'hidden';
+      btn.style.cursor = 'pointer';
+      btn.title = wp.name;
+      btn.onclick = () => {
+        setWallpaper(wp.url);
+      };
+      const media = document.createElement('video');
+      media.src = wp.url;
+      media.loop = true;
+      media.muted = true;
+      media.autoplay = true;
+      media.style.width = '100%';
+      media.style.height = '100%';
+      media.style.objectFit = 'cover';
+      btn.appendChild(media);
+      gallery.appendChild(btn);
+    });
+  }
 
-        // View Switching
-        function switchView(v) {
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-            document.getElementById(`view-${v}`).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`nav-${v}`).classList.add('active');
-        }
+  function setWallpaper(url) {
+    document.querySelector('.wallpaper-bg-container iframe').src = url;
+    localStorage.setItem('wallpaper', url);
+  }
 
-        function loadInternalGame(url) {
-            document.getElementById('arcadeFrame').src = url;
-            document.getElementById('gameViewport').style.display = 'block';
-        }
+  function toggleWallpaperPanel() {
+    const panel = document.getElementById('wallpaper-selector');
+    if (panel.style.display === 'none' || !panel.style.display) {
+      panel.style.display = 'flex';
+    } else {
+      panel.style.display = 'none';
+    }
+  }
 
-        function loadCinema() {
-            loadInternalGame('https://dulo.tv');
-        }
+  // Initialize wallpapers
+  populateWallpapers();
 
-        function closeGameEngine() {
-            document.getElementById('arcadeFrame').src = '';
-            document.getElementById('gameViewport').style.display = 'none';
-        }
+  // Cloaking toggle
+  let isCloaked = localStorage.getItem('cloaked') === 'true';
 
-        // Proxy Handler with multiple backends
-        function handleVaultSearch(e) {
-            e.preventDefault();
-            let q = document.getElementById('vaultSearchInput').value.trim();
-            if (!q) return;
-            const proxyType = document.getElementById('proxySelector').value;
-            
-            let target = q.startsWith('http') ? q : (q.includes('.') ? 'https://' + q : 'https://duckduckgo.com/?q=' + encodeURIComponent(q));
+  function updateCloak() {
+    const title = isCloaked ? "Google Docs" : "Aarav's Vault — Web OS";
+    document.title = title;
+    // Change favicon
+    let favicon = document.querySelector("link[rel='icon']");
+    if (!favicon) {
+      favicon = document.createElement('link');
+      favicon.rel = 'icon';
+      document.head.appendChild(favicon);
+    }
+    favicon.href = isCloaked ? 'https://ssl.gstatic.com/docs/doclist/images/drive_2022q4_32.png' : 'favicon.ico'; // placeholder icon
+    localStorage.setItem('cloaked', isCloaked);
+  }
 
-            let proxied;
-            if (proxyType === 'uv' && typeof __uv$config !== 'undefined') {
-                proxied = __uv$config.prefix + __uv$config.encodeUrl(target);
-            } else if (proxyType === 'rammer') {
-                proxied = `https://rammerhead.example.com/${target}`; // replace with real instance if available
-            } else {
-                proxied = target; // fallback
-            }
-            loadInternalGame(proxied);
-        }
+  if (isCloaked) {
+    updateCloak();
+  }
 
-        function quickProxy(url) {
-            loadInternalGame(url);
-        }
+  document.getElementById('cloaking-toggle').onclick = () => {
+    isCloaked = !isCloaked;
+    updateCloak();
+  };
 
-        // Settings & Panic
-        let panicUrl = "https://google.com";
-        function openSettings() {
-            document.getElementById('settingsModal').style.display = 'flex';
-        }
-        function closeModal() {
-            document.getElementById('settingsModal').style.display = 'none';
-        }
-        function setPanicButton() {
-            panicUrl = document.getElementById('panicUrl').value || "https://google.com";
-            alert("Panic button saved!");
-        }
-        function cloakTab() {
-            document.title = "Google Docs";
-            history.pushState({}, '', '/docs');
-            alert("Tab cloaked as Google Docs");
-        }
+  // Tab system
+  let tabs = JSON.parse(localStorage.getItem('tabs')) || [
+    { id: Date.now(), title: 'Tab 1', url: 'https://google.com' }
+  ];
+  let currentTabId = localStorage.getItem('currentTabId') || tabs[0].id;
 
-        // Wallpaper System
-        function openWallpaperSelector() {
-            document.getElementById('wallpaperModal').style.display = 'flex';
-        }
-        function closeWallpaperModal() {
-            document.getElementById('wallpaperModal').style.display = 'none';
-        }
-        function changeWallpaper(n) {
-            const container = document.getElementById('wallpaperContainer');
-            container.innerHTML = `<video autoplay loop muted playsinline><source src="https://assets.mixkit.co/videos/preview/12345/12345-large.mp4" type="video/mp4"></video>`;
-            closeWallpaperModal();
-        }
+  const tabBar = document.getElementById('tab-bar');
 
-        // Keyboard shortcuts & extra entertainment
-        document.addEventListener('keydown', e => {
-            if (e.key === "Escape") closeGameEngine();
-            if (e.key.toLowerCase() === "p" && e.ctrlKey) {
-                window.location.href = panicUrl;
-            }
-        });
+  function saveTabs() {
+    localStorage.setItem('tabs', JSON.stringify(tabs));
+    localStorage.setItem('currentTabId', currentTabId);
+  }
 
-        // Init
-        window.onload = () => {
-            compileArcadeLibrary();
-            // More initialization can go here for 700+ lines of features
-        };
+  function renderTabs() {
+    Array.from(tabBar.children).forEach(child => {
+      if (child.dataset && child.dataset.id) {
+        tabBar.removeChild(child);
+      }
+    });
+    tabs.forEach(tab => {
+      const btn = document.createElement('button');
+      btn.innerText = tab.title;
+      btn.dataset.id = tab.id;
+      if (tab.id == currentTabId) {
+        btn.style.background = '#666';
+      } else {
+        btn.style.background = '#444';
+      }
+      btn.onclick = () => switchTab(tab.id);
+      // Close button
+      const closeSpan = document.createElement('span');
+      closeSpan.innerText = ' ✕';
+      closeSpan.style.marginLeft = '4px';
+      closeSpan.style.cursor = 'pointer';
+      closeSpan.onclick = (e) => {
+        e.stopPropagation();
+        closeTab(tab.id);
+      };
+      btn.appendChild(closeSpan);
+      tabBar.insertBefore(btn, document.querySelector('#tab-bar button'));
+    });
+  }
 
-        // Additional aesthetic JS (particles, clock, etc.)
-        // ... (expand with more JS to reach high line count)
-    </script>
+  function switchTab(id) {
+    currentTabId = id;
+    saveTabs();
+    updateTabContent();
+    renderTabs();
+  }
+
+  function createNewTab() {
+    const newTab = {
+      id: Date.now(),
+      title: 'New Tab',
+      url: 'https://google.com'
+    };
+    tabs.push(newTab);
+    currentTabId = newTab.id;
+    saveTabs();
+    renderTabs();
+    updateTabContent();
+  }
+
+  function closeTab(id) {
+    tabs = tabs.filter(t => t.id !== id);
+    if (currentTabId === id && tabs.length) {
+      currentTabId = tabs[0].id;
+    }
+    saveTabs();
+    renderTabs();
+    updateTabContent();
+  }
+
+  function updateTabContent() {
+    const tab = tabs.find(t => t.id == currentTabId);
+    let iframe = document.getElementById('tab-iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = 'tab-iframe';
+      iframe.style.position = 'absolute';
+      iframe.style.top = '50px'; // below tab bar
+      iframe.style.left = '0';
+      iframe.style.width = '100%';
+      iframe.style.height = 'calc(100% - 50px)';
+      iframe.style.border = 'none';
+      document.getElementById('tab-content').innerHTML = '';
+      document.getElementById('tab-content').appendChild(iframe);
+    }
+    if (tab) {
+      iframe.src = tab.url;
+    }
+  }
+
+  // Initialize tabs
+  renderTabs();
+  updateTabContent();
+
+  // View switcher
+  function switchView(target) {
+    closeGameEngine();
+    document.getElementById('view-home-panel').style.display = 'none';
+    document.getElementById('view-cinema-panel').style.display = 'none';
+    document.getElementById('view-arcade-panel').style.display = 'none';
+
+    document.getElementById('nav-home').classList.remove('active');
+    document.getElementById('nav-cinema').classList.remove('active');
+    document.getElementById('nav-arcade').classList.remove('active');
+
+    if(target === 'home') {
+      document.getElementById('view-home-panel').style.display = 'flex';
+      document.getElementById('nav-home').classList.add('active');
+    } else if (target === 'cinema') {
+      document.getElementById('view-cinema-panel').style.display = 'block';
+      document.getElementById('nav-cinema').classList.add('active');
+    } else if (target === 'arcade') {
+      document.getElementById('view-arcade-panel').style.display = 'block';
+      document.getElementById('nav-arcade').classList.add('active');
+    }
+  }
+
+  // Load internal game
+  function loadInternalGame(sourceUrl) {
+    document.getElementById('arcadeFrame').src = sourceUrl;
+    document.getElementById('gameViewport').style.display = 'block';
+  }
+
+  function closeGameEngine() {
+    document.getElementById('arcadeFrame').src = "";
+    document.getElementById('gameViewport').style.display = 'none';
+  }
+
+  // Proxy site
+  function proxySite(url) {
+    if (typeof __uv$config !== 'undefined' && navigator.serviceWorker) {
+      navigator.serviceWorker.register('/uv.sw.js', {
+        scope: __uv$config.prefix
+      }).then(() => {
+        const proxied = __uv$config.prefix + __uv$config.encodeUrl(url);
+        loadInternalGame(proxied);
+      }).catch(() => {
+        window.open(url, '_blank');
+      });
+    } else {
+      window.open(url, '_blank');
+    }
+  }
+
+  // Launch TikTok with fallback
+  function launchProxiedTikTok() {
+    const tiktokUrls = [
+      "https://www.tiktok.com",
+      "https://tiktok.com",
+      "https://www.tiktokv.com",
+      "https://urlebird.com",
+      "https://vt.tiktok.com"
+    ];
+    let index = 0;
+    const tryNext = () => {
+      if (index >= tiktokUrls.length) {
+        alert("❌ All TikTok links blocked on this network.\nTry typing a different mirror in the search bar or ask for more options.");
+        return;
+      }
+      proxySite(tiktokUrls[index++]);
+    };
+    tryNext();
+  }
+
+  // Open TikTok via proxy site
+  function openUnblockedTikTok(proxyUrl) {
+    window.open(proxyUrl, '_blank');
+  }
+
+  // Vault search handler
+  function handleVaultSearch(event) {
+    event.preventDefault();
+    const input = document.getElementById('vaultSearchInput').value.trim();
+    if (!input) return;
+    const isUrl = input.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/) || input.startsWith('http');
+    let targetUrl = input;
+    if (isUrl) {
+      if (!/^https?:\/\//i.test(input)) targetUrl = 'https://' + input;
+    } else {
+      targetUrl = 'https://duckduckgo.com/?q=' + encodeURIComponent(input);
+    }
+    if (typeof __uv$config !== 'undefined' && navigator.serviceWorker) {
+      navigator.serviceWorker.register('/uv.sw.js', {
+        scope: __uv$config.prefix
+      }).then(() => {
+        const proxiedUrl = __uv$config.prefix + __uv$config.encodeUrl(targetUrl);
+        loadInternalGame(proxiedUrl); 
+      }).catch(err => {
+        console.error("Ultraviolet registration failed, falling back:", err);
+        window.open(targetUrl, '_blank');
+      });
+    } else {
+      console.warn("Ultraviolet scripts not active or server is running statically. Directing outward.");
+      window.open(targetUrl, '_blank');
+    }
+  }
+
+  // Wallpaper select toggle
+  function toggleWallpaperPanel() {
+    const panel = document.getElementById('wallpaper-selector');
+    if (panel.style.display === 'none' || !panel.style.display) {
+      panel.style.display = 'flex';
+    } else {
+      panel.style.display = 'none';
+    }
+  }
+
+  // Initialize
+  window.onload = () => {
+    // Setup cloaking
+    if (localStorage.getItem('cloaked') === 'true') {
+      isCloaked = true;
+      updateCloak();
+    }
+
+    // Setup tabs
+    renderTabs();
+    updateTabContent();
+
+    // Setup wallpaper
+    populateWallpapers();
+
+    // Setup initial view
+    switchView('home');
+  };
+</script>
 </body>
 </html>
