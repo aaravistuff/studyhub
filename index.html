@@ -23,7 +23,7 @@
             display: flex;
         }
 
-        /* Loading */
+        /* Loading Screen */
         #loading {
             position: fixed;
             inset: 0;
@@ -44,13 +44,11 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Wallpaper */
+        /* 4K Animated Wallpaper */
         #wallpaper {
             position: fixed;
             inset: 0;
             z-index: -2;
-            background-size: cover;
-            background-position: center;
         }
         #wallpaper iframe {
             width: 100%;
@@ -102,7 +100,7 @@
             text-transform: uppercase;
         }
 
-        /* Main */
+        /* Main Area */
         #main {
             flex: 1;
             position: relative;
@@ -183,7 +181,7 @@
         }
         .app-icon img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Browser - Velara Style Layout */
+        /* OSBrowser Layout */
         #browser-container {
             display: none;
             flex-direction: column;
@@ -241,7 +239,7 @@
         <p style="margin-top:24px;font-size:18px;letter-spacing:2px;">Initializing Vault OS...</p>
     </div>
 
-    <!-- Wallpaper -->
+    <!-- 4K Animated Wallpaper -->
     <div id="wallpaper">
         <iframe src="https://www.youtube.com/embed/gU4vSEZwiyE?autoplay=1&mute=1&loop=1&playlist=gU4vSEZwiyE&controls=0&showinfo=0&rel=0" allow="autoplay" style="width:100%;height:100%;border:none;"></iframe>
     </div>
@@ -260,7 +258,7 @@
         <div class="nav-item" onclick="openInBrowser('https://retrobowl.me', 'Games')">Games</div>
 
         <div class="nav-header">TOOLS</div>
-        <div class="nav-item" onclick="newTab()">Browser</div>
+        <div class="nav-item" onclick="newTab()">OSBrowser</div>
         <div class="nav-item" onclick="openSettings()">Settings</div>
 
         <div style="margin-top:auto;padding:0 28px 40px;">
@@ -287,17 +285,17 @@
         <div id="apps-grid"></div>
     </div>
 
-    <!-- Browser -->
+    <!-- OSBrowser -->
     <div id="browser-container">
         <div class="tab-bar" id="tab-bar"></div>
         <iframe id="main-browser" allowfullscreen></iframe>
     </div>
 
-    <!-- Settings Modal -->
+    <!-- Settings -->
     <div id="settings-modal">
         <div class="modal-content">
             <h2>Settings</h2>
-            <h3 style="margin:20px 0 10px;">Animated 4K Wallpaper</h3>
+            <h3 style="margin:20px 0 10px;">4K Animated Wallpaper</h3>
             <select id="wp-select" onchange="changeWallpaper(this.value)" style="width:100%;padding:12px;background:#334155;border:none;border-radius:8px;color:white;">
                 <option value="gargantua">Gargantua Black Hole</option>
                 <option value="nebula">Deep Nebula</option>
@@ -312,7 +310,8 @@
         let currentTabs = [];
         let activeTabId = null;
 
-        const proxyBase = "https://velara.buzz/"; // Proxy for bypassing blockers
+        // OSBrowser Proxy (bypasses blockers)
+        const proxyBase = "https://velara.buzz/";   // Keep working proxy, just renamed in UI
 
         function proxyUrl(url) {
             return proxyBase + "?url=" + encodeURIComponent(url);
@@ -328,10 +327,8 @@
             wp.innerHTML = '';
             if (type === 'gargantua') {
                 wp.innerHTML = `<iframe src="https://www.youtube.com/embed/gU4vSEZwiyE?autoplay=1&mute=1&loop=1&playlist=gU4vSEZwiyE&controls=0" allow="autoplay" style="width:100%;height:100%;border:none;"></iframe>`;
-            } else if (type === 'nebula') {
-                wp.style.backgroundImage = "url('https://picsum.photos/id/1016/2560/1440')";
             } else {
-                wp.style.backgroundImage = "url('https://picsum.photos/id/133/2560/1440')";
+                wp.style.backgroundImage = `url('https://picsum.photos/id/${type === 'nebula' ? 1016 : 133}/2560/1440')`;
             }
         }
 
@@ -357,8 +354,8 @@
             });
         }
 
-        function openInBrowser(url, title = "Vault") {
-            const proxied = proxyUrl(url); // Bypass via Velara-style proxy
+        function openInBrowser(url, title = "OSBrowser") {
+            const proxied = proxyUrl(url);
             const id = 'tab-' + Date.now();
             currentTabs.push({id, url: proxied, title});
             renderTabs();
@@ -380,6 +377,7 @@
         function activateTab(id) {
             activeTabId = id;
             const tab = currentTabs.find(t => t.id === id);
+            if (!tab) return;
             document.getElementById('browser-container').style.display = 'flex';
             document.getElementById('main-browser').src = tab.url;
             renderTabs();
@@ -400,7 +398,7 @@
             let q = document.getElementById('global-search').value.trim();
             if (!q) return;
             let url = q.startsWith('http') ? q : `https://duckduckgo.com/?q=${encodeURIComponent(q)}`;
-            openInBrowser(url, q.substring(0,20));
+            openInBrowser(url, q.substring(0,20) || "Search");
         }
 
         function showHome() {
@@ -408,7 +406,6 @@
         }
 
         function toggleUnblockModal() {
-            alert("Quick unblock links open via proxy.");
             openInBrowser("https://tiktok.com", "TikTok");
         }
 
@@ -428,6 +425,7 @@
 
         window.onload = init;
 
+        // Global functions
         window.openInBrowser = openInBrowser;
         window.newTab = newTab;
         window.performSearch = performSearch;
