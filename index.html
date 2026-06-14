@@ -2,58 +2,72 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Aarav's Vault — Mega Modern Web OS</title>
-<!-- Fonts -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vault OS</title>
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
-/* Reset & Base Styles */
+/* Reset and base styles */
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
   font-family: 'Inter', sans-serif;
-  height: 100vh; display: flex; overflow: hidden; background-color: #000;
-  color: #eee; font-size: 14px; line-height: 1.4;
+  background-color: #000;
+  color: #eee;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
-/* Sidebar - Opera GX style with neon glow */
+/* Sidebar styles */
 #sidebar {
-  width: 260px; background: linear-gradient(135deg, #222, #111);
-  backdrop-filter: blur(10px); position: fixed; top: 0; bottom: 0; left: 0;
-  padding: 30px 20px; display: flex; flex-direction: column; z-index: 999;
-  border-radius: 0 10px 10px 0; box-shadow: 0 0 30px rgba(0,255,255,0.3);
+  width: 280px;
+  background: linear-gradient(135deg, #222, #111);
+  backdrop-filter: blur(12px);
+  position: fixed; top: 0; bottom: 0; left: 0;
+  display: flex; flex-direction: column;
+  padding: 30px 20px;
+  z-index: 999;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 0 40px rgba(0,255,255,0.4);
+  transition: all 0.3s ease;
 }
 #sidebar h1 {
-  font-size: 2.2rem; margin-bottom: 40px; color: #00ffff; font-weight: 700;
-  text-shadow: 0 0 10px #00ffff;
+  font-size: 2.4rem; margin-bottom: 40px; color: #00ffff; font-weight: 700; text-shadow: 0 0 12px #00ffff;
 }
 .sidebar-btn {
   padding: 14px 20px; margin-bottom: 12px; background: transparent; border: none;
-  border-radius: 8px; cursor: pointer; font-size: 1.05rem; color: #eee; font-weight: 600;
+  border-radius: 8px; cursor: pointer; font-size: 1.05rem; font-weight: 600; color: #eee;
   transition: all 0.2s ease;
 }
 .sidebar-btn:hover, .sidebar-btn.active {
   background: rgba(0,255,255,0.1);
-  box-shadow: inset 0 0 10px #00ffff;
+  box-shadow: inset 0 0 15px #00ffff;
 }
 #unblockBtn {
   margin-top: 20px; padding: 14px; width: 100%; border-radius: 10px;
   background: linear-gradient(135deg, #00ffff, #0ff); color: #111; font-weight: 700;
-  border: none; cursor: pointer; box-shadow: 0 0 15px #00ffff55 inset; transition: all 0.3s;
+  border: none; cursor: pointer; box-shadow: 0 0 20px #00ffff55 inset; transition: all 0.3s;
 }
-#unblockBtn:hover { box-shadow: 0 0 25px #00ffff, inset 0 0 20px #00ffff; }
+#unblockBtn:hover { box-shadow: 0 0 30px #00ffff, inset 0 0 25px #00ffff; }
 
-/* Main area: shift right to accommodate sidebar */
+/* Main container styling */
 #main {
-  margin-left: 260px; flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+  margin-left: 280px;
+  flex: 1; display: flex; flex-direction: column;
+  height: 100vh; overflow: hidden; position: relative;
 }
 
-/* Wallpaper background with pulse animation for glow effect */
-#wallpaper-background {
-  position: fixed; inset: 0; z-index: -1; overflow: hidden;
+/* Animated wallpaper background with glow effect */
+#wallpaper {
+  position: fixed; inset: 0; z-index: -1;
 }
-#wallpaper-background iframe {
-  width: 100%; height: 100%; object-fit: cover; filter: brightness(0.2);
-  animation: pulse 50s infinite ease-in-out;
+#wallpaper iframe {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.2);
+  animation: pulse 60s infinite ease-in-out;
 }
 @keyframes pulse {
   0% { filter: brightness(0.2); }
@@ -61,17 +75,23 @@ body {
   100% { filter: brightness(0.2); }
 }
 
-/* Toggle wallpaper button */
-#wallpaperToggle {
-  position: fixed; top: 20px; right: 20px; padding: 14px 20px; background: linear-gradient(135deg, #00ffff, #0ff);
-  border: none; border-radius: 10px; font-weight: 600; cursor: pointer; box-shadow: 0 0 15px #00ffff55 inset, 0 0 20px #00ffff;
-  font-size: 1rem; transition: all 0.3s;
+/* Toggle wallpaper button style */
+#toggleWallpaper {
+  position: fixed; top: 20px; right: 20px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #00ffff, #0ff);
+  border: none; border-radius: 10px;
+  font-weight: 600; font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 0 20px #00ffff55 inset, 0 0 25px #00ffff;
+  transition: all 0.3s;
 }
-#wallpaperToggle:hover { box-shadow: 0 0 25px #00ffff, inset 0 0 20px #00ffff; }
+#toggleWallpaper:hover { box-shadow: 0 0 35px #00ffff, inset 0 0 30px #00ffff; }
 
 /* Tabs styling - neon, rounded, colorful */
 #tabBar {
-  display: flex; align-items: center; padding: 6px 10px; background: linear-gradient(135deg, #222, #111);
+  display: flex; align-items: center; padding: 8px 10px;
+  background: linear-gradient(135deg, #222, #111);
   overflow-x: auto; scrollbar-width: thin; scrollbar-color: #555 #222; margin-top: 50px;
 }
 #tabBar::-webkit-scrollbar { height: 8px; }
@@ -79,8 +99,8 @@ body {
 #tabBar button {
   background: linear-gradient(135deg, #00ffff, #0ff);
   border: none; padding: 8px 14px; margin-right: 10px; border-radius: 20px;
-  font-weight: 600; cursor: pointer; color: #111; font-size: 0.95rem; transition: all 0.2s;
-  display: flex; align-items: center;
+  font-weight: 600; cursor: pointer; font-size: 0.95rem; color: #111;
+  transition: all 0.2s;
 }
 #tabBar button:hover { background: linear-gradient(135deg, #0ff, #00ffff); box-shadow: 0 0 15px #00ffff55 inset; }
 #tabBar button.active { box-shadow: 0 0 20px #00ffff inset; }
@@ -88,16 +108,20 @@ body {
   font-size: 1.2rem; font-weight: 700; background: linear-gradient(135deg, #00ffff, #0ff);
 }
 
-/* Content container: full fill below tab bar */
-#tabContainer {
-  flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden;
+/* Content container below tabs */
+#contentContainer {
+  flex: 1; display: flex; overflow: hidden; position: relative;
 }
+
+/* Browser and vault area styles */
 #browserArea {
-  flex: 1; display: none; /* toggled */
+  flex: 1; display: none; /* toggled on click */
 }
 #browserFrame {
   width: 100%; height: 100%; border: none;
 }
+
+/* Vault styles with search and grid */
 #vault {
   display: flex; flex-direction: column; padding: 20px; height: 100%; overflow-y: auto;
 }
@@ -105,34 +129,38 @@ body {
   display: flex; gap: 12px; margin-bottom: 20px;
 }
 #searchInput {
-  flex: 1; padding: 14px 20px; font-size: 1.1rem; border-radius: 10px; border: none; outline: none; background: #222; color: #eee; transition: all 0.2s;
+  flex: 1; padding: 14px 20px; font-size: 1.1rem; border-radius: 10px; border: none; outline: none; background: #222; color: #eee;
 }
 #searchInput:focus { background: #333; box-shadow: 0 0 10px #00ffff; }
 #searchBtn {
-  padding: 14px 20px; border: none; border-radius: 10px; background: linear-gradient(135deg, #00ffff, #0ff); font-weight: 600; font-size: 1.1rem; cursor: pointer; color: #111; transition: all 0.2s;
+  padding: 14px 20px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #00ffff, #0ff);
+  font-weight: 600; font-size: 1.1rem; cursor: pointer; color: #111; transition: all 0.2s;
 }
 #searchBtn:hover { box-shadow: 0 0 15px #00ffff55 inset; }
 
-#content-grid {
+#gameGrid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;
 }
-.tile {
-  background: rgba(255,255,255,0.05); border-radius: 10px; padding: 14px; font-weight: 600; font-size: 1rem; cursor: pointer; text-align: center; box-shadow: 0 0 8px rgba(0,255,255,0.2); transition: all 0.2s;
+.game-tile {
+  background: rgba(255,255,255,0.05); border-radius: 10px; padding: 14px; cursor: pointer;
+  text-align: center; font-weight: 600; font-size: 1rem; color: #eee; box-shadow: 0 0 8px rgba(0,255,255,0.2);
+  transition: all 0.2s;
 }
-.tile:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); box-shadow: 0 0 15px #00ffff55; }
+.game-tile:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); box-shadow: 0 0 15px #00ffff55; }
 
-/* Scrollbar for sleek look */
+/* Scrollbar styling */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
 </style>
 </head>
 <body>
 
-<!-- Background wallpaper -->
-<div id="wallpaper-background">
+<!-- Wallpaper background -->
+<div id="wallpaper">
   <iframe src="https://www.youtube.com/embed/fKcF32dmcDk?autoplay=1&mute=1&loop=1&playlist=fKcF32dmcDk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1"></iframe>
 </div>
-<button id="wallpaperToggle">Toggle Wallpaper</button>
+<button id="toggleWallpaper">Toggle Wallpaper</button>
 
 <!-- Sidebar -->
 <div id="sidebar">
@@ -143,18 +171,18 @@ body {
   <button id="unblockBtn">Unblock TikTok</button>
 </div>
 
-<!-- Main -->
+<!-- Main Content -->
 <div id="main">
   <!-- Tabs -->
   <div id="tabBar"></div>
-  <!-- Content Area -->
-  <div id="tabContainer" style="flex:1; display:flex;">
-    <!-- Browser -->
-    <div id="browserArea" style="display:none; flex:1;">
+  <!-- Content container -->
+  <div id="contentContainer">
+    <!-- Browser view -->
+    <div id="browserArea">
       <iframe id="browserFrame"></iframe>
     </div>
-    <!-- Vault with search and content grid -->
-    <div id="vault" style="display:flex; flex-direction:column;">
+    <!-- Vault: search + grid -->
+    <div id="vault">
       <div id="searchSection">
         <input type="text" id="searchInput" placeholder="Search or URL" />
         <button id="searchBtn">Go</button>
@@ -166,15 +194,14 @@ body {
         <button class="sidebar-btn" onclick="openUnblockedSite('https://tiktok.com')">TikTok C</button>
       </div>
       <h3 style="margin-top:20px;">My Content</h3>
-      <div class="content-grid" id="content-grid"></div>
+      <div id="gameGrid"></div>
     </div>
   </div>
 </div>
 
 <script>
-// --- Generate Massive Catalog ---
-const catalog = [];
-// Add categories with many entries:
+// --- Generate 900+ content entries ---
+// Define categories with many items
 const categories = [
   { name: "Pizza Edition", prefix: "https://pizzaedition.win/games/", items: ["retrobowl/index.html", "slope/index.html", "geometrydash/index.html", "templerun2/index.html", "vex7/index.html"] },
   { name: "Playhop", prefix: "https://playhop.io/", items: ["happywheels", "run3", "doom"] },
@@ -183,15 +210,15 @@ const categories = [
   { name: "Snokido", prefix: "https://snokido.com/", items: ["bubbleshooter", "carracing"] },
   { name: "Popular", items: [
     { name: "Cookie Clicker", url: "https://cookieclicker.online" },
-    { name: "Minecraft Classic", url: "https://classic.minecraft.net" },
+    { name: "Minecraft", url: "https://classic.minecraft.net" },
     { name: "Doodle Jump", url: "https://doodlejump.io" },
     { name: "Among Us", url: "https://amongus.space" },
     { name: "Five Nights at Epstein's", url: "https://fivenightsatepsteins.org/FNAE-HTML5-1.2.3/index.html" },
   ]},
-  // Repeat to fill 900+ total items
 ];
-
-// Populate catalog with categories
+// Initialize catalog array
+const catalog = [];
+// Fill catalog with category items
 categories.forEach(cat => {
   if (cat.items) {
     cat.items.forEach(item => {
@@ -199,21 +226,22 @@ categories.forEach(cat => {
     });
   }
 });
+// Fill remaining with dummy data until 900+ total
 while (catalog.length < 900) {
   catalog.push({ name: `Game ${catalog.length + 1}`, url: `https://example.com/game${catalog.length + 1}.html` });
 }
 
-// Populate content grid
-const grid = document.getElementById('content-grid');
+// Populate the game grid
+const grid = document.getElementById('gameGrid');
 catalog.forEach((item) => {
   const tile = document.createElement('div');
-  tile.className = 'tile';
+  tile.className = 'game-tile';
   tile.innerText = item.name;
   tile.onclick = () => { window.open(item.url, '_blank'); };
   grid.appendChild(tile);
 });
 
-// --- Tabs Logic ---
+// --- Tabs management ---
 const tabs = [];
 let currentTabId = null;
 const tabBar = document.getElementById('tabBar');
@@ -231,7 +259,6 @@ if (savedTabs.length > 0) {
   switchToTab(tabs[0].id);
 }
 
-// Add tab function
 function addTab(url, title) {
   const id = Date.now() + Math.random();
   const tab = { id, url, title };
@@ -269,13 +296,13 @@ function highlightActiveTab() {
 function closeTab(id) {
   const index = tabs.findIndex(t => t.id == id);
   if (index >= 0) {
-    tabs.splice(index, 1);
+    tabs.splice(index,1);
     document.querySelectorAll('#tabBar button').forEach(b => {
       if (b.dataset.id == id) b.remove();
     });
     if (currentTabId == id && tabs.length > 0) {
       switchToTab(tabs[0].id);
-    } else if (tabs.length === 0) {
+    } else if (tabs.length===0) {
       showVault();
     }
   }
@@ -288,7 +315,7 @@ newTabBtn.onclick = () => {
 };
 document.getElementById('tabBar').appendChild(newTabBtn);
 
-// Search & navigation
+// --- Search & Navigation ---
 document.getElementById('searchBtn').onclick = handleSearch;
 document.getElementById('searchInput').onkeydown = (e) => { if (e.key==='Enter') handleSearch(); };
 function handleSearch() {
@@ -299,7 +326,7 @@ function handleSearch() {
     url = 'https://duckduckgo.com/?q=' + encodeURIComponent(q);
   }
   addTab(url, q);
-  switchToTab(tabs[tabs.length - 1].id);
+  switchToTab(tabs[tabs.length-1].id);
   showBrowser();
 }
 function showBrowser() {
@@ -314,17 +341,17 @@ function showVault() {
 
 // Load game/content
 function loadGame(url) { window.open(url, '_blank'); }
-// Unblock site
+// Open TikTok unblocked sites
 function openUnblockedSite(url) { window.open(url, '_blank'); }
-// Wallpaper toggle
-const wpBtn = document.getElementById('wallpaperToggle');
+// Toggle wallpaper
+const wpBtn = document.getElementById('toggleWallpaper');
 let wpEnabled = true;
 wpBtn.onclick = () => {
   wpEnabled = !wpEnabled;
-  document.getElementById('wallpaper-background').style.display = wpEnabled ? 'block' : 'none';
+  document.getElementById('wallpaper').style.display = wpEnabled ? 'block' : 'none';
 };
 
-// --- Load from storage ---
+// --- Load saved tabs on startup ---
 window.onload = () => {
   const saved = JSON.parse(localStorage.getItem('tabs')) || [];
   if (saved.length > 0) {
