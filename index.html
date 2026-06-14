@@ -3,40 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vault OS • Modern</title>
+    <title>Vault OS • Polaris Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-tertiary: #1a1a1a;
-            --bg-card: #161616;
+            --accent: #f59e0b;
             --text-primary: #f4f4f5;
-            --text-secondary: #a1a1aa;
-            --accent: #4a9eff;
-            --accent-hover: #3b7ed9;
-            --border: #27272a;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --text-secondary: #d1d5db;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-primary);
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #000;
             color: var(--text-primary);
             height: 100vh;
             overflow: hidden;
             display: flex;
-            position: relative;
-            font-size: 15px;
-            line-height: 1.6;
         }
 
         /* Gargantua Black Hole Wallpaper */
@@ -45,360 +29,292 @@
             inset: 0;
             z-index: -3;
             overflow: hidden;
-            opacity: 0.92;
         }
-
         #wallpaper iframe {
             width: 100%;
             height: 100%;
             border: none;
-            filter: brightness(0.85) contrast(1.05);
-        }
-
-        #particles {
-            position: fixed;
-            inset: 0;
-            z-index: -2;
-            pointer-events: none;
-            mix-blend-mode: screen;
-            opacity: 0.6;
+            filter: brightness(0.75) contrast(1.1);
         }
 
         #sidebar {
-            width: 268px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
+            width: 260px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid #334155;
+            padding: 24px 16px;
             display: flex;
             flex-direction: column;
-            padding: 28px 20px;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 200;
-            transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            z-index: 100;
+            height: 100vh;
         }
 
-        #sidebar-header {
+        .logo {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 52px;
-        }
-
-        #sidebar-header h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 27px;
-            font-weight: 600;
-            letter-spacing: -0.8px;
-            color: white;
-        }
-
-        .nav-section {
-            margin-bottom: 42px;
-        }
-
-        .nav-section-title {
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #52525b;
-            margin-bottom: 12px;
-            padding-left: 18px;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            padding: 0 12px;
         }
 
         .nav-item {
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 13px 18px;
-            margin-bottom: 4px;
-            border-radius: var(--radius-md);
             color: var(--text-secondary);
-            text-decoration: none;
-            transition: all 0.25s ease;
-            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(245, 158, 11, 0.15);
+            color: white;
         }
 
-        .nav-item:hover,
-        .nav-item.active {
-            background: rgba(74, 158, 255, 0.12);
-            color: var(--text-primary);
-        }
-
-        #main-content {
-            margin-left: 268px;
+        #main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            position: relative;
         }
 
         #top-bar {
             height: 68px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 0 28px;
-            justify-content: space-between;
-            z-index: 150;
+            padding: 0 32px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            z-index: 50;
         }
 
-        .search-bar {
-            display: flex;
+        #search-container {
+            flex: 1;
             max-width: 720px;
-            margin-bottom: 48px;
+            margin: 0 auto;
         }
 
         #global-search {
-            flex: 1;
-            padding: 18px 26px;
-            font-size: 17px;
-            background: var(--bg-tertiary);
-            border: 1.5px solid var(--border);
+            width: 100%;
+            padding: 18px 28px;
+            font-size: 18px;
+            background: rgba(30, 41, 59, 0.85);
+            border: 2px solid #475569;
             border-radius: 9999px;
             color: white;
+            backdrop-filter: blur(8px);
         }
-
         #global-search:focus {
-            border-color: var(--accent);
             outline: none;
-            box-shadow: 0 0 0 5px rgba(74, 158, 255, 0.18);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3);
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(192px, 1fr));
-            gap: 26px;
+        #content-area {
+            flex: 1;
+            padding: 40px 40px 0;
+            overflow-y: auto;
         }
 
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+        .category-pills {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .pill {
+            padding: 8px 22px;
+            background: rgba(51, 65, 85, 0.7);
+            border-radius: 9999px;
             cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .pill:hover, .pill.active {
+            background: var(--accent);
+            color: black;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 24px;
         }
-
-        .card-visual {
-            height: 148px;
-            background: #27272a;
+        .app-card {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .app-card:hover { transform: scale(1.08); }
+        .app-icon {
+            width: 78px;
+            height: 78px;
+            background: #1e2937;
+            border-radius: 18px;
+            margin: 0 auto 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
+            font-size: 38px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
         }
-
-        .card-visual img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .card:hover .card-visual img {
-            transform: scale(1.08);
-        }
-
-        .card-body {
-            padding: 18px;
-        }
-
-        .card-title {
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .tab-item {
-            display: flex;
-            align-items: center;
-            padding: 0 22px;
-            height: 54px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
-            cursor: pointer;
-            white-space: nowrap;
-            font-size: 14.2px;
-            position: relative;
-        }
-
-        .tab-item.active {
-            background: var(--bg-primary);
-            color: var(--accent);
-            border-bottom: 3px solid var(--accent);
-        }
-
-        #content {
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-        }
-
-        #vault-home {
-            padding: 40px 36px;
-            height: 100%;
-            overflow-y: auto;
+        .app-name {
+            font-size: 13.5px;
+            font-weight: 500;
         }
 
         #browser-container {
             display: none;
-            height: 100%;
             flex-direction: column;
+            height: 100%;
+            background: #000;
         }
-
         #main-browser {
             flex: 1;
             border: none;
         }
 
-        button, .nav-item {
-            user-select: none;
+        .tab-bar {
+            background: #1e2937;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 52px;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 0 20px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            background: #334155;
+            margin-right: 6px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .tab.active {
+            background: #0f172a;
         }
     </style>
 </head>
 <body>
-    <!-- Gargantua Black Hole Wallpaper -->
+    <!-- Black Hole Wallpaper -->
     <div id="wallpaper">
-        <iframe src="https://www.youtube.com/embed/gU4vSEZwiyE?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=gU4vSEZwiyE&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3&amp;modestbranding=1" allow="autoplay" title="Gargantua Black Hole"></iframe>
+        <iframe src="https://www.youtube.com/embed/gU4vSEZwiyE?autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=gU4vSEZwiyE&amp;controls=0&amp;showinfo=0&amp;rel=0&amp;iv_load_policy=3" allow="autoplay" title="Gargantua"></iframe>
     </div>
-    <canvas id="particles"></canvas>
 
     <!-- Sidebar -->
     <div id="sidebar">
-        <div id="sidebar-header">
-            <span style="font-size:32px;">🔒</span>
-            <h1>Vault</h1>
+        <div class="logo">
+            <span style="font-size:34px;">🔒</span>
+            <span>Vault</span>
         </div>
 
-        <div class="nav-section">
-            <div class="nav-section-title">Core</div>
-            <div onclick="showVault()" class="nav-item active"><span>🏠</span><span>Home</span></div>
-            <div onclick="newTab()" class="nav-item"><span>🌐</span><span>Browser</span></div>
-            <div onclick="switchSection('games')" class="nav-item"><span>🎮</span><span>Games</span></div>
-        </div>
-
-        <div class="nav-section">
-            <div class="nav-section-title">Media</div>
-            <div onclick="switchSection('movies')" class="nav-item"><span>🎥</span><span>Movies</span></div>
-            <div onclick="switchSection('music')" class="nav-item"><span>🎵</span><span>Music</span></div>
-        </div>
-
-        <div style="margin-top: auto;">
+        <div class="nav-item active" onclick="navigateTo('home')"><span style="font-size:22px;">🏠</span> Home</div>
+        <div class="nav-item" onclick="navigateTo('games')"><span style="font-size:22px;">🎮</span> Games</div>
+        <div class="nav-item" onclick="navigateTo('movies')"><span style="font-size:22px;">🎥</span> Cinema</div>
+        <div class="nav-item" onclick="navigateTo('music')"><span style="font-size:22px;">🎵</span> Music</div>
+        
+        <div style="margin-top: auto; padding: 0 12px;">
             <button onclick="toggleUnblockModal()" 
-                    style="width:100%; padding:16px; background:var(--accent); color:white; border:none; border-radius:12px; font-weight:600;">
+                    style="width:100%; padding:16px; background:#f59e0b; color:black; border:none; border-radius:12px; font-weight:600;">
                 Unblock Sites
             </button>
         </div>
     </div>
 
-    <div id="main-content">
+    <div id="main">
+        <!-- Top Bar with Search -->
         <div id="top-bar">
-            <div style="display:flex; align-items:center; gap:22px;">
-                <div onclick="toggleSidebar()" style="font-size:24px; cursor:pointer;">≡</div>
-                <div id="clock" style="font-family:monospace; font-size:15px;"></div>
-            </div>
-            <div style="display:flex; align-items:center; gap:18px;">
-                <input type="text" id="quick-command" placeholder="Quick search or command..." 
-                       style="padding:8px 18px; background:#27272a; border:none; border-radius:9999px; width:260px;" 
-                       onkeypress="if(event.key==='Enter') performQuickCommand(this.value)">
-                <div onclick="toggleProfile()" style="width:36px;height:36px;background:#3b82f6;border-radius:50%;cursor:pointer;"></div>
+            <div id="search-container">
+                <input id="global-search" type="text" placeholder="Search the web or enter a URL" 
+                       onkeypress="if(event.key==='Enter') handleSearch()">
             </div>
         </div>
 
-        <div id="tab-container" style="background: var(--bg-tertiary); height: 54px; display: flex; align-items: center; border-bottom: 1px solid var(--border); padding-left: 8px; overflow-x: auto;"></div>
+        <!-- Tab Bar -->
+        <div class="tab-bar" id="tab-bar"></div>
 
-        <div id="content">
-            <!-- Vault Home -->
-            <div id="vault-home">
-                <div style="margin-bottom: 32px;">
-                    <h2>Welcome back, Aarav</h2>
-                    <p style="color: var(--text-secondary);">Your secure entertainment &amp; productivity hub</p>
+        <!-- Content -->
+        <div id="content-area">
+            <!-- Home View -->
+            <div id="home-view">
+                <div class="category-pills">
+                    <div class="pill active">Popular</div>
+                    <div class="pill" onclick="navigateTo('games')">Games</div>
+                    <div class="pill" onclick="navigateTo('movies')">Cinema</div>
                 </div>
 
-                <div class="search-bar">
-                    <input id="global-search" type="text" placeholder="Search games, movies, or paste URL..." 
-                           onkeyup="if(event.key==='Enter') handleGlobalSearch()">
-                    <button onclick="handleGlobalSearch()" 
-                            style="margin-left:12px; padding:0 36px; background:var(--accent); border:none; border-radius:9999px; color:white;">Go</button>
-                </div>
+                <div class="apps-grid" id="home-apps"></div>
 
-                <!-- Games Section -->
-                <h3 style="margin: 32px 0 18px;">Games Hub</h3>
-                <div id="games-grid" class="grid-container"></div>
-
-                <!-- Movies Section -->
-                <h3 style="margin: 48px 0 18px;">Movies &amp; Streaming</h3>
-                <div id="movies-grid" class="grid-container"></div>
-
-                <!-- Music Section -->
-                <h3 style="margin: 48px 0 18px;">Music</h3>
-                <div id="music-grid" class="grid-container"></div>
+                <h3 style="margin: 50px 0 20px; color:#cbd5e1;">Quick Unblock</h3>
+                <div style="display:flex; gap:16px; flex-wrap:wrap;" id="quick-links"></div>
             </div>
 
-            <!-- Browser View -->
-            <div id="browser-container">
-                <iframe id="main-browser" allowfullscreen></iframe>
+            <!-- Games Arcade -->
+            <div id="games-view" style="display:none;">
+                <h2 style="margin-bottom:30px;">Arcade</h2>
+                <div class="apps-grid" id="arcade-grid"></div>
             </div>
+
+            <!-- Movies -->
+            <div id="movies-view" style="display:none;">
+                <h2>Cinema</h2>
+                <p style="color:#94a3b8;">Streaming from trusted unblocked sources</p>
+                <button onclick="openInBrowser('https://dulo.tv')" 
+                        style="margin-top:20px; padding:16px 32px; background:#f59e0b; color:black; border:none; border-radius:9999px; font-size:17px;">
+                    Open Dulo.tv Cinema
+                </button>
+            </div>
+
+            <!-- Music -->
+            <div id="music-view" style="display:none;">
+                <h2>Music</h2>
+                <button onclick="openInBrowser('https://open.spotify.com')" style="padding:16px 32px; background:#1db954; color:white; border:none; border-radius:9999px;">Open Spotify</button>
+            </div>
+        </div>
+
+        <!-- Browser View -->
+        <div id="browser-container">
+            <iframe id="main-browser" allowfullscreen></iframe>
         </div>
     </div>
 
     <!-- Unblock Modal -->
-    <div id="unblock-modal" style="position:fixed; inset:0; background:rgba(0,0,0,0.9); display:none; align-items:center; justify-content:center; z-index:9999;">
-        <div style="background:#18181b; padding:40px; border-radius:20px; width:480px; max-height:80vh; overflow:auto;">
-            <h3>Unblock / Quick Access</h3>
-            <div style="margin:24px 0; display:grid; gap:10px;">
-                <button onclick="openInBrowser('https://www.tiktok.com')" style="padding:16px; background:#27272a; border:none; border-radius:12px; text-align:left; width:100%;">TikTok</button>
-                <button onclick="openInBrowser('https://www.snokido.com')" style="padding:16px; background:#27272a; border:none; border-radius:12px; text-align:left; width:100%;">Snokido Games</button>
-                <button onclick="openInBrowser('https://pizzaedition.win')" style="padding:16px; background:#27272a; border:none; border-radius:12px; text-align:left; width:100%;">Pizza Edition</button>
-                <button onclick="openInBrowser('https://playhop.io')" style="padding:16px; background:#27272a; border:none; border-radius:12px; text-align:left; width:100%;">Playhop</button>
-            </div>
-            <button onclick="closeModal('unblock-modal')" style="width:100%; padding:14px; background:#27272a;">Close</button>
+    <div id="unblock-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;z-index:9999;">
+        <div style="background:#1e2937;padding:40px;border-radius:20px;width:460px;">
+            <h3 style="margin-bottom:24px;">Unblock Links</h3>
+            <div id="modal-links" style="display:flex;flex-direction:column;gap:12px;"></div>
+            <button onclick="closeModal()" style="margin-top:30px;width:100%;padding:14px;background:#334155;border:none;border-radius:12px;">Close</button>
         </div>
     </div>
 
     <script>
-        // Tab Management
         let currentTabs = [];
         let activeTabId = null;
 
-        function generateTabId() {
-            return 'tab_' + Date.now() + Math.random().toString(36).substr(2, 5);
-        }
+        function generateId() { return 'tab-' + Date.now(); }
 
         function renderTabs() {
-            const container = document.getElementById('tab-container');
-            container.innerHTML = '';
+            const bar = document.getElementById('tab-bar');
+            bar.innerHTML = '';
             currentTabs.forEach(tab => {
-                const el = document.createElement('div');
-                el.className = `tab-item ${tab.id === activeTabId ? 'active' : ''}`;
-                el.innerHTML = `
-                    ${tab.title}
-                    <span onclick="closeTab('${tab.id}'); event.stopImmediatePropagation()" style="margin-left:12px; color:#f87171; font-size:18px;">×</span>
-                `;
-                el.onclick = () => activateTab(tab.id);
-                container.appendChild(el);
+                const t = document.createElement('div');
+                t.className = `tab ${tab.id === activeTabId ? 'active' : ''}`;
+                t.innerHTML = `${tab.title} <span onclick="closeTab('${tab.id}');event.stopImmediatePropagation()" style="margin-left:12px;color:#f87171;">×</span>`;
+                t.onclick = () => activateTab(tab.id);
+                bar.appendChild(t);
             });
-
-            // New tab button
-            const newBtn = document.createElement('div');
-            newBtn.style.cssText = 'padding:0 24px; height:100%; display:flex; align-items:center; font-size:28px; color:#71717a; cursor:pointer;';
-            newBtn.textContent = '+';
-            newBtn.onclick = () => addNewTab();
-            container.appendChild(newBtn);
         }
 
-        function addNewTab(url = "https://google.com", title = "New Tab") {
-            const id = generateTabId();
-            currentTabs.push({id, url, title});
+        function addTab(url, title) {
+            const id = generateId();
+            currentTabs.push({id, url, title: title.length > 20 ? title.substring(0,18)+'...' : title});
             renderTabs();
             activateTab(id);
         }
@@ -407,10 +323,8 @@
             activeTabId = id;
             const tab = currentTabs.find(t => t.id === id);
             if (!tab) return;
-
-            document.getElementById('vault-home').style.display = 'none';
-            const browserContainer = document.getElementById('browser-container');
-            browserContainer.style.display = 'flex';
+            document.getElementById('content-area').style.display = 'none';
+            document.getElementById('browser-container').style.display = 'flex';
             document.getElementById('main-browser').src = tab.url;
             renderTabs();
         }
@@ -419,227 +333,127 @@
             const idx = currentTabs.findIndex(t => t.id === id);
             if (idx === -1) return;
             currentTabs.splice(idx, 1);
-            if (activeTabId === id) {
-                if (currentTabs.length > 0) {
-                    activateTab(currentTabs[0].id);
-                } else {
-                    showVault();
-                }
-            }
+            if (activeTabId === id && currentTabs.length > 0) activateTab(currentTabs[0].id);
+            else if (currentTabs.length === 0) showHome();
             renderTabs();
         }
 
-        function showVault() {
+        function showHome() {
             document.getElementById('browser-container').style.display = 'none';
-            document.getElementById('vault-home').style.display = 'block';
+            document.getElementById('content-area').style.display = 'block';
+            document.querySelectorAll('#content-area > div').forEach(d => d.style.display = 'none');
+            document.getElementById('home-view').style.display = 'block';
         }
 
-        // Global Search
-        function handleGlobalSearch() {
-            const input = document.getElementById('global-search').value.trim();
-            if (!input) return;
-            let url = input;
-            if (!input.startsWith('http')) {
-                url = 'https://duckduckgo.com/?q=' + encodeURIComponent(input);
-            }
-            addNewTab(url, input.length > 30 ? input.substring(0,27)+'...' : input);
+        function navigateTo(section) {
+            showHome();
+            document.querySelectorAll('#content-area > div').forEach(d => d.style.display = 'none');
+            if (section === 'games') document.getElementById('games-view').style.display = 'block';
+            else if (section === 'movies') document.getElementById('movies-view').style.display = 'block';
+            else if (section === 'music') document.getElementById('music-view').style.display = 'block';
         }
 
-        // Open in main browser tab
-        function openInBrowser(url) {
-            addNewTab(url, new URL(url).hostname);
-            closeModal('unblock-modal');
+        function handleSearch() {
+            const q = document.getElementById('global-search').value.trim();
+            if (!q) return;
+            let url = q.startsWith('http') ? q : 'https://duckduckgo.com/?q=' + encodeURIComponent(q);
+            addTab(url, q);
         }
 
-        function performQuickCommand(cmd) {
-            if (cmd) openInBrowser('https://duckduckgo.com/?q=' + encodeURIComponent(cmd));
-        }
-
-        function toggleProfile() { alert("Profile settings coming in future update."); }
-        function toggleSidebar() { alert("Sidebar toggle ready."); }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
+        function openInBrowser(url, title = "Vault Browser") {
+            addTab(url, title);
         }
 
         function toggleUnblockModal() {
-            document.getElementById('unblock-modal').style.display = 'flex';
+            const modal = document.getElementById('unblock-modal');
+            const container = document.getElementById('modal-links');
+            container.innerHTML = `
+                <button onclick="openInBrowser('https://www.tiktok.com','TikTok')" style="padding:16px;background:#334155;border:none;border-radius:12px;width:100%;text-align:left;">TikTok</button>
+                <button onclick="openInBrowser('https://vt.tiktok.com','TikTok')" style="padding:16px;background:#334155;border:none;border-radius:12px;width:100%;text-align:left;">TikTok VT</button>
+                <button onclick="openInBrowser('https://dulo.tv','Cinema')" style="padding:16px;background:#334155;border:none;border-radius:12px;width:100%;text-align:left;">Dulo.tv</button>
+            `;
+            modal.style.display = 'flex';
         }
 
-        function switchSection(section) {
-            showVault();
-            document.getElementById('vault-home').scrollIntoView({behavior: "smooth"});
+        function closeModal() {
+            document.getElementById('unblock-modal').style.display = 'none';
         }
 
-        // Game Data with real images and links
-        const games = [
-            {name: "Slope", url: "https://slope-game.io", img: "https://picsum.photos/id/1015/300/200"},
-            {name: "Retro Bowl", url: "https://retrobowl.me", img: "https://picsum.photos/id/201/300/200"},
-            {name: "Geometry Dash", url: "https://geometrydash.io", img: "https://picsum.photos/id/237/300/200"},
-            {name: "Cookie Clicker", url: "https://cookieclicker.io", img: "https://picsum.photos/id/180/300/200"},
-            {name: "Vex 7", url: "https://vex7.io", img: "https://picsum.photos/id/251/300/200"},
-            {name: "Happy Wheels", url: "https://playhop.io/happywheels", img: "https://picsum.photos/id/133/300/200"},
-            {name: "Run 3", url: "https://playhop.io/run3", img: "https://picsum.photos/id/201/300/200"},
-            {name: "Tank Trouble", url: "https://froggiesarcade.com/tanktrouble", img: "https://picsum.photos/id/180/300/200"},
-            {name: "Bubble Shooter", url: "https://snokido.com/game/bubbleshooter", img: "https://picsum.photos/id/251/300/200"},
+        // Games Arcade
+        const arcadeGames = [
+            {name: "Slope", url: "https://slope-game.io", emoji: "🏂"},
+            {name: "Retro Bowl", url: "https://retrobowl.me", emoji: "🏈"},
+            {name: "Cookie Clicker", url: "https://cookieclicker.io", emoji: "🍪"},
+            {name: "Geometry Dash", url: "https://geometrydash.io", emoji: "📐"},
+            {name: "Vex 7", url: "https://vex7.io", emoji: "⚔️"},
+            {name: "Five Nights at Epstein's", url: "https://fivenightsatepsteins.org/FNAE-HTML5-1.2.3/index.html", emoji: "🕹️"},
+            {name: "Happy Wheels", url: "https://playhop.io/happywheels", emoji: "🚲"},
+            {name: "Run 3", url: "https://playhop.io/run3", emoji: "🏃"},
+            {name: "Tank Trouble", url: "https://froggiesarcade.com/tanktrouble", emoji: "🛡️"},
         ];
 
-        function populateGames() {
-            const container = document.getElementById('games-grid');
-            container.innerHTML = '';
-            games.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-visual">
-                        <img src="${game.img}" alt="${game.name}">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-title">${game.name}</div>
-                        <div style="color:var(--accent); font-size:13px;">Play Now →</div>
-                    </div>
+        function populateHomeApps() {
+            const container = document.getElementById('home-apps');
+            const popular = arcadeGames.slice(0, 8);
+            popular.forEach(game => {
+                const div = document.createElement('div');
+                div.className = 'app-card';
+                div.innerHTML = `
+                    <div class="app-icon">${game.emoji}</div>
+                    <div class="app-name">${game.name}</div>
                 `;
-                card.onclick = () => openInBrowser(game.url);
-                container.appendChild(card);
+                div.onclick = () => openInBrowser(game.url, game.name);
+                container.appendChild(div);
             });
         }
 
-        // Movies - dulo.tv embed style
-        const movies = [
-            {name: "Dulo.tv Movies", url: "https://dulo.tv", img: "https://picsum.photos/id/1016/300/200"},
-            {name: "Action Blockbusters", url: "https://dulo.tv", img: "https://picsum.photos/id/133/300/200"},
-        ];
-
-        function populateMovies() {
-            const container = document.getElementById('movies-grid');
-            container.innerHTML = '';
-            movies.forEach(movie => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-visual">
-                        <img src="${movie.img}" alt="${movie.name}">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-title">${movie.name}</div>
-                        <div style="color:var(--accent); font-size:13px;">Watch →</div>
-                    </div>
+        function populateArcade() {
+            const container = document.getElementById('arcade-grid');
+            arcadeGames.forEach(game => {
+                const div = document.createElement('div');
+                div.className = 'app-card';
+                div.innerHTML = `
+                    <div class="app-icon">${game.emoji}</div>
+                    <div class="app-name">${game.name}</div>
                 `;
-                card.onclick = () => openInBrowser(movie.url);
-                container.appendChild(card);
+                div.onclick = () => openInBrowser(game.url, game.name);
+                container.appendChild(div);
             });
         }
 
-        // Music
-        const musicItems = [
-            {name: "Spotify Web", url: "https://open.spotify.com", img: "https://picsum.photos/id/201/300/200"},
-            {name: "YouTube Music", url: "https://music.youtube.com", img: "https://picsum.photos/id/180/300/200"},
-        ];
-
-        function populateMusic() {
-            const container = document.getElementById('music-grid');
-            container.innerHTML = '';
-            musicItems.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-visual">
-                        <img src="${item.img}" alt="${item.name}">
-                    </div>
-                    <div class="card-body">
-                        <div class="card-title">${item.name}</div>
-                        <div style="color:var(--accent); font-size:13px;">Listen →</div>
-                    </div>
-                `;
-                card.onclick = () => openInBrowser(item.url);
-                container.appendChild(card);
+        function populateQuickLinks() {
+            const container = document.getElementById('quick-links');
+            const links = [
+                {name: "TikTok", url: "https://www.tiktok.com"},
+                {name: "TikTok VT", url: "https://vt.tiktok.com"},
+                {name: "Dulo.tv", url: "https://dulo.tv"},
+            ];
+            links.forEach(l => {
+                const btn = document.createElement('button');
+                btn.style.cssText = "padding:14px 28px; background:rgba(51,65,85,0.8); border:none; border-radius:9999px; color:white;";
+                btn.textContent = l.name;
+                btn.onclick = () => openInBrowser(l.url);
+                container.appendChild(btn);
             });
         }
 
-        // Particles
-        function initParticles() {
-            const canvas = document.getElementById('particles');
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            let w, h;
-
-            function resize() {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
-            }
-
-            class Particle {
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.x = Math.random() * w;
-                    this.y = Math.random() * h;
-                    this.vx = (Math.random() - 0.5) * 0.8;
-                    this.vy = (Math.random() - 0.5) * 0.8;
-                    this.size = Math.random() * 2 + 0.8;
-                }
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    if (this.x < 0 || this.x > w) this.vx *= -1;
-                    if (this.y < 0 || this.y > h) this.vy *= -1;
-                }
-                draw() {
-                    ctx.fillStyle = 'rgba(100, 180, 255, 0.7)';
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
-
-            resize();
-            for (let i = 0; i < 180; i++) particles.push(new Particle());
-
-            function animate() {
-                ctx.clearRect(0, 0, w, h);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                requestAnimationFrame(animate);
-            }
-            animate();
-
-            window.addEventListener('resize', resize);
+        function initialize() {
+            populateHomeApps();
+            populateArcade();
+            populateQuickLinks();
+            addTab("https://google.com", "Google");
+            console.log("%cVault OS Polaris Edition - Black Hole ready", "color:#fbbf24;font-size:14px");
         }
 
-        function updateClock() {
-            setInterval(() => {
-                const now = new Date();
-                document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-            }, 10000);
-        }
+        window.onload = initialize;
 
-        // Boot
-        function initializeVault() {
-            initParticles();
-            populateGames();
-            populateMovies();
-            populateMusic();
-            updateClock();
-            addNewTab("https://google.com", "Google");
-            console.log("%cVault OS Modern - Gargantua Edition loaded successfully", "color:#60a5fa; font-size:13px;");
-        }
-
-        window.onload = initializeVault;
-
-        // Expose globals
-        window.showVault = showVault;
-        window.newTab = () => addNewTab();
+        // Expose functions
+        window.navigateTo = navigateTo;
         window.openInBrowser = openInBrowser;
+        window.handleSearch = handleSearch;
         window.toggleUnblockModal = toggleUnblockModal;
         window.closeModal = closeModal;
-        window.handleGlobalSearch = handleGlobalSearch;
-        window.switchSection = switchSection;
-        window.performQuickCommand = performQuickCommand;
-        window.toggleProfile = toggleProfile;
-        window.toggleSidebar = toggleSidebar;
+        window.showHome = showHome;
     </script>
 </body>
 </html>
