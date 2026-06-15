@@ -23,228 +23,91 @@
             display: flex;
         }
 
-        /* Loading Screen */
         #loading {
-            position: fixed;
-            inset: 0;
-            background: #0a0f1c;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: fixed; inset: 0; background: #0a0f1c; z-index: 99999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .spinner {
-            width: 64px;
-            height: 64px;
-            border: 6px solid #334155;
-            border-top: 6px solid var(--accent);
-            border-radius: 50%;
+            width: 64px; height: 64px; border: 6px solid #334155;
+            border-top: 6px solid var(--accent); border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* 4K Animated Wallpaper */
         #wallpaper {
-            position: fixed;
-            inset: 0;
-            z-index: -2;
+            position: fixed; inset: 0; z-index: -2;
         }
         #wallpaper iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+            width: 100%; height: 100%; border: none;
         }
 
-        /* Sidebar */
         #sidebar {
-            width: 272px;
-            background: var(--sidebar);
-            border-right: 1px solid #334155;
-            padding: 28px 0;
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
+            width: 272px; background: var(--sidebar); border-right: 1px solid #334155;
+            padding: 28px 0; display: flex; flex-direction: column; z-index: 100;
         }
         .logo-area {
-            padding: 0 28px 48px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            padding: 0 28px 48px; display: flex; align-items: center; gap: 12px;
         }
         .vault-logo {
-            font-size: 27px;
-            font-weight: 700;
-            letter-spacing: -1px;
+            font-size: 27px; font-weight: 700; letter-spacing: -1.2px;
             background: linear-gradient(90deg, #f59e0b, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .nav-item {
-            padding: 14px 28px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            color: #cbd5e1;
-            cursor: pointer;
-            font-weight: 500;
+            padding: 14px 28px; display: flex; align-items: center; gap: 16px;
+            color: #cbd5e1; cursor: pointer; font-weight: 500;
         }
-        .nav-item:hover, .nav-item.active {
-            background: rgba(245,158,11,0.18);
-        }
-        .nav-header {
-            padding: 18px 28px 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #94a3b8;
-            text-transform: uppercase;
-        }
+        .nav-item:hover, .nav-item.active { background: rgba(245,158,11,0.18); }
 
-        /* Main Area */
-        #main {
-            flex: 1;
-            position: relative;
-        }
-        #top-right {
-            position: absolute;
-            top: 32px;
-            right: 48px;
-            text-align: right;
-        }
-        .day { font-size: 48px; font-weight: 600; }
-        .hub { font-size: 15px; color: #94a3b8; }
-
+        #main { flex: 1; position: relative; }
         #search-container {
-            position: absolute;
-            top: 130px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 660px;
+            position: absolute; top: 130px; left: 50%; transform: translateX(-50%); width: 660px;
         }
         #global-search {
-            width: 100%;
-            padding: 20px 28px;
-            font-size: 17px;
-            background: rgba(30,41,59,0.95);
-            border: 2px solid #475569;
-            border-radius: 9999px;
-        }
-        #global-search:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 5px rgba(245,158,11,0.25);
-            outline: none;
+            width: 100%; padding: 20px 28px; font-size: 17px;
+            background: rgba(30,41,59,0.95); border: 2px solid #475569; border-radius: 9999px;
         }
 
-        .pills {
-            position: absolute;
-            top: 210px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            background: rgba(15,23,42,0.9);
-            padding: 6px;
-            border-radius: 9999px;
+        .quick-links {
+            position: absolute; top: 210px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 28px; z-index: 50;
         }
-        .pill {
-            padding: 9px 26px;
-            border-radius: 9999px;
-            cursor: pointer;
+        .quick-link {
+            text-align: center; cursor: pointer; transition: transform 0.3s;
         }
-        .pill.active {
-            background: var(--accent);
-            color: black;
+        .quick-link:hover { transform: scale(1.12); }
+        .quick-link img {
+            width: 64px; height: 64px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
 
-        #apps-grid {
-            position: absolute;
-            top: 290px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: grid;
-            grid-template-columns: repeat(7, 114px);
-            gap: 32px 26px;
-        }
-        .app-card {
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        .app-card:hover { transform: scale(1.08); }
-        .app-icon {
-            width: 88px;
-            height: 88px;
-            border-radius: 18px;
-            margin: 0 auto 10px;
-            overflow: hidden;
-            box-shadow: 0 12px 25px rgba(0,0,0,0.6);
-        }
-        .app-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* OSBrowser Layout */
         #browser-container {
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            inset: 0;
-            z-index: 200;
-            background: #000;
+            display: none; flex-direction: column; position: absolute; inset: 0; z-index: 200; background: #000;
         }
         .tab-bar {
-            height: 58px;
-            background: #1e2937;
-            display: flex;
-            align-items: center;
-            padding: 0 12px;
-            overflow-x: auto;
+            height: 58px; background: #1e2937; display: flex; align-items: center;
+            padding: 0 12px; overflow-x: auto;
         }
         .tab {
-            padding: 0 24px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            background: #334155;
-            margin-right: 6px;
-            border-radius: 8px 8px 0 0;
-            cursor: pointer;
-            white-space: nowrap;
+            padding: 0 24px; height: 100%; display: flex; align-items: center;
+            background: #334155; margin-right: 6px; border-radius: 8px 8px 0 0;
+            cursor: pointer; white-space: nowrap;
         }
         .tab.active { background: #0f172a; border-bottom: 4px solid var(--accent); }
         .tab .close { margin-left: 12px; color: #f87171; font-size: 20px; cursor: pointer; }
         #main-browser { flex: 1; border: none; }
-
-        /* Settings */
-        #settings-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 300;
-        }
-        .modal-content {
-            background: #1e2937;
-            width: 520px;
-            border-radius: 16px;
-            padding: 32px;
-        }
     </style>
 </head>
 <body>
 
-    <!-- Loading -->
     <div id="loading">
         <div class="spinner"></div>
         <p style="margin-top:24px;font-size:18px;letter-spacing:2px;">Initializing Vault OS...</p>
     </div>
 
-    <!-- 4K Animated Wallpaper -->
     <div id="wallpaper">
         <iframe src="https://www.youtube.com/embed/gU4vSEZwiyE?autoplay=1&mute=1&loop=1&playlist=gU4vSEZwiyE&controls=0&showinfo=0&rel=0" allow="autoplay" style="width:100%;height:100%;border:none;"></iframe>
     </div>
 
-    <!-- Sidebar -->
     <div id="sidebar">
         <div class="logo-area">
             <div class="vault-logo">VAULT</div>
@@ -255,34 +118,27 @@
         <div class="nav-header">ENTERTAINMENT</div>
         <div class="nav-item" onclick="openInBrowser('https://dulo.tv', 'Cinema')">Cinema</div>
         <div class="nav-item" onclick="openInBrowser('https://open.spotify.com', 'Music')">Music</div>
-        <div class="nav-item" onclick="openInBrowser('https://retrobowl.me', 'Games')">Games</div>
+        <div class="nav-item" onclick="openVaultArcade()">Vault Arcade</div>
 
         <div class="nav-header">TOOLS</div>
         <div class="nav-item" onclick="newTab()">OSBrowser</div>
-        <div class="nav-item" onclick="openSettings()">Settings</div>
-
-        <div style="margin-top:auto;padding:0 28px 40px;">
-            <button onclick="toggleUnblockModal()" style="width:100%;padding:16px;background:#334155;border:none;border-radius:9999px;color:white;">Unblock Sites</button>
-        </div>
     </div>
 
     <div id="main">
-        <div id="top-right">
-            <div class="day">Sunday</div>
-            <div class="hub">Your cinematic web hub</div>
-        </div>
-
         <div id="search-container">
             <input id="global-search" type="text" placeholder="Search the web or enter a URL" onkeypress="if(event.key==='Enter') performSearch()">
         </div>
 
-        <div class="pills">
-            <div class="pill active">Popular</div>
-            <div class="pill">Games</div>
-            <div class="pill">Media</div>
+        <div class="quick-links">
+            <div class="quick-link" onclick="openInBrowser('https://tiktok.com', 'TikTok')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/TikTok_logo.svg/512px-TikTok_logo.svg.png" alt="TikTok">
+                <span>TikTok</span>
+            </div>
+            <div class="quick-link" onclick="openInBrowser('https://youtube.com', 'YouTube')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/512px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube">
+                <span>YouTube</span>
+            </div>
         </div>
-
-        <div id="apps-grid"></div>
     </div>
 
     <!-- OSBrowser -->
@@ -291,27 +147,10 @@
         <iframe id="main-browser" allowfullscreen></iframe>
     </div>
 
-    <!-- Settings -->
-    <div id="settings-modal">
-        <div class="modal-content">
-            <h2>Settings</h2>
-            <h3 style="margin:20px 0 10px;">4K Animated Wallpaper</h3>
-            <select id="wp-select" onchange="changeWallpaper(this.value)" style="width:100%;padding:12px;background:#334155;border:none;border-radius:8px;color:white;">
-                <option value="gargantua">Gargantua Black Hole</option>
-                <option value="nebula">Deep Nebula</option>
-                <option value="cyber">Cyber City</option>
-            </select>
-
-            <button onclick="closeSettings()" style="margin-top:32px;width:100%;padding:14px;background:var(--accent);color:black;border:none;border-radius:9999px;font-weight:600;">Close</button>
-        </div>
-    </div>
-
     <script>
         let currentTabs = [];
         let activeTabId = null;
-
-        // OSBrowser Proxy (bypasses blockers)
-        const proxyBase = "https://velara.buzz/";   // Keep working proxy, just renamed in UI
+        const proxyBase = "https://velara.buzz/";
 
         function proxyUrl(url) {
             return proxyBase + "?url=" + encodeURIComponent(url);
@@ -320,38 +159,6 @@
         function hideLoading() {
             document.getElementById('loading').style.opacity = '0';
             setTimeout(() => document.getElementById('loading').style.display = 'none', 600);
-        }
-
-        function changeWallpaper(type) {
-            const wp = document.getElementById('wallpaper');
-            wp.innerHTML = '';
-            if (type === 'gargantua') {
-                wp.innerHTML = `<iframe src="https://www.youtube.com/embed/gU4vSEZwiyE?autoplay=1&mute=1&loop=1&playlist=gU4vSEZwiyE&controls=0" allow="autoplay" style="width:100%;height:100%;border:none;"></iframe>`;
-            } else {
-                wp.style.backgroundImage = `url('https://picsum.photos/id/${type === 'nebula' ? 1016 : 133}/2560/1440')`;
-            }
-        }
-
-        const appsData = [
-            {name: "YouTube", url: "https://youtube.com", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/512px-YouTube_full-color_icon_%282017%29.svg.png"},
-            {name: "TikTok", url: "https://tiktok.com", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/TikTok_logo.svg/512px-TikTok_logo.svg.png"},
-            {name: "Slope", url: "https://slope-game.io", img: "https://picsum.photos/id/1015/400/400"},
-            {name: "Retro Bowl", url: "https://retrobowl.me", img: "https://picsum.photos/id/201/400/400"},
-            {name: "Cookie Clicker", url: "https://cookieclicker.io", img: "https://picsum.photos/id/180/400/400"},
-            {name: "Five Nights at Epstein's", url: "https://fivenightsatepsteins.org/FNAE-HTML5-1.2.3/index.html", img: "https://picsum.photos/id/237/400/400"},
-            {name: "Dulo.tv", url: "https://dulo.tv", img: "https://picsum.photos/id/1016/400/400"}
-        ];
-
-        function populateApps() {
-            const grid = document.getElementById('apps-grid');
-            grid.innerHTML = '';
-            appsData.forEach(app => {
-                const card = document.createElement('div');
-                card.className = 'app-card';
-                card.innerHTML = `<div class="app-icon"><img src="${app.img}" alt="${app.name}"></div><div class="app-name">${app.name}</div>`;
-                card.onclick = () => openInBrowser(app.url, app.name);
-                grid.appendChild(card);
-            });
         }
 
         function openInBrowser(url, title = "OSBrowser") {
@@ -405,35 +212,73 @@
             document.getElementById('browser-container').style.display = 'none';
         }
 
-        function toggleUnblockModal() {
-            openInBrowser("https://tiktok.com", "TikTok");
-        }
+        // Vault Arcade with ALL games including Five Nights at Epstein's
+        const vaultArcadeGames = [
+            {name: "Five Nights at Epstein's", url: "https://fivenightsatepsteins.org/FNAE-HTML5-1.2.3/index.html"},
+            {name: "Alien Hominid", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/393.html"},
+            {name: "Customer Support", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/383.html"},
+            {name: "The Deadseat", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/395.html"},
+            {name: "Fireboy & Watergirl", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/385.html"},
+            {name: "Deltatraveler", url: "https://script.google.com/macros/s/AKfycbx137PRDh0Of0SDaXqu2fKaJ8Ht8Os5Nabi3xeIWYs_dCA0jP4SKRjQ9P9nC1xeruWK/exec?game=388"},
+            {name: "Needy Streamer Overload", url: "https://script.google.com/macros/s/AKfycbx137PRDh0Of0SDaXqu2fKaJ8Ht8Os5Nabi3xeIWYs_dCA0jP4SKRjQ9P9nC1xeruWK/exec?game=389"},
+            {name: "Pizza Tower", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/394.html"},
+            {name: "TileTopia", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/391.html"},
+            {name: "Earn to Die", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/378.html"},
+            {name: "Earn to Die 2", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/379.html"},
+            {name: "Bart Blast", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/380.html"},
+            {name: "Bendy and the Ink Machine", url: "https://script.google.com/macros/s/AKfycby_6uwHt90FuvgGfTLTHhveJVw0nEJ_bMxq8GTaA1KjFfpmu0g08RlArFt61GAw7WOw/exec?game=374"},
+            {name: "Gacha Life", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/375.html"},
+            {name: "Gacha Verse", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/376.html"},
+            {name: "Tung Sahur Horror", url: "https://script.google.com/macros/s/AKfycby_6uwHt90FuvgGfTLTHhveJVw0nEJ_bMxq8GTaA1KjFfpmu0g08RlArFt61GAw7WOw/exec?game=377"},
+            {name: "Horror Tale", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/373.html"},
+            {name: "Dumb Ways to Die", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/372.html"},
+            {name: "Bloons Tower Defense 1", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/367.html"},
+            {name: "Bloons Tower Defense 2", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/368.html"},
+            {name: "Bloons Tower Defense 3", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/369.html"},
+            {name: "Bloons Tower Defense 4", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/370.html"},
+            {name: "Bloons Tower Defense 5", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/371.html"},
+            {name: "Brotato", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/366.html"},
+            {name: "Endoparasitic 2", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/365.html"},
+            {name: "Endoparasitic", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/364.html"},
+            {name: "Baby Sniper In Vietnam", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/363.html"}
+        ];
 
-        function openSettings() {
-            document.getElementById('settings-modal').style.display = 'flex';
-        }
+        function openVaultArcade() {
+            let html = `
+                <h2 style="color:white;text-align:center;margin:40px 0 30px;font-size:32px;">Vault Arcade</h2>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;padding:0 40px;">
+            `;
 
-        function closeSettings() {
-            document.getElementById('settings-modal').style.display = 'none';
+            vaultArcadeGames.forEach(g => {
+                html += `
+                    <div onclick="openInBrowser('${g.url}', '${g.name}')" 
+                         style="background:#1e2937;padding:24px;border-radius:16px;cursor:pointer;text-align:center;transition:0.3s;">
+                        <div style="font-size:52px;margin-bottom:16px;">🎮</div>
+                        <div style="font-weight:600;font-size:15.5px;">${g.name}</div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+
+            const id = 'tab-' + Date.now();
+            currentTabs.push({id, url: 'data:text/html,' + encodeURIComponent(html), title: "Vault Arcade"});
+            renderTabs();
+            activateTab(id);
         }
 
         function init() {
-            populateApps();
             hideLoading();
             newTab();
         }
 
         window.onload = init;
 
-        // Global functions
         window.openInBrowser = openInBrowser;
         window.newTab = newTab;
         window.performSearch = performSearch;
         window.showHome = showHome;
-        window.toggleUnblockModal = toggleUnblockModal;
-        window.openSettings = openSettings;
-        window.closeSettings = closeSettings;
-        window.changeWallpaper = changeWallpaper;
+        window.openVaultArcade = openVaultArcade;
     </script>
 </body>
 </html>
