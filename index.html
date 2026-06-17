@@ -3,282 +3,691 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vault OS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Aarav's Vault — Web OS</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
+        /* Root Settings & Theme Colors */
         :root {
-            --accent: #f59e0b;
-            --sidebar: #1e2937;
+            --sidebar-bg: rgba(20, 18, 24, 0.85);
+            --sidebar-border: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(25, 23, 30, 0.65);
+            --card-hover: rgba(255, 255, 255, 0.1);
+            --accent-color: #ff7b00; 
+            --arcade-yellow: #facc15; 
+            --text-main: #ffffff;
+            --text-muted: #9aa0a6;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: 'Inter', system-ui, sans-serif;
+            color: var(--text-main);
             height: 100vh;
-            overflow: hidden;
-            color: #e2e8f0;
-            background: #000;
             display: flex;
+            overflow: hidden;
+            background: #000;
         }
 
-        #loading {
-            position: fixed; inset: 0; background: #0a0f1c; z-index: 99999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .spinner {
-            width: 64px; height: 64px; border: 6px solid #334155;
-            border-top: 6px solid var(--accent); border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        #wallpaper {
-            position: fixed; inset: 0; z-index: -2;
-        }
-        #wallpaper iframe {
-            width: 100%; height: 100%; border: none;
+        /* --- BACKGROUND LIVE WALLPAPER --- */
+        .wallpaper-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
         }
 
-        #sidebar {
-            width: 272px; background: var(--sidebar); border-right: 1px solid #334155;
-            padding: 28px 0; display: flex; flex-direction: column; z-index: 100;
+        .wallpaper-bg-container iframe {
+            width: 100vw;
+            height: 56.25vw;
+            min-height: 100vh;
+            min-width: 177.77vh; 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: brightness(0.35) contrast(1.1);
         }
-        .logo-area {
-            padding: 0 28px 48px; display: flex; align-items: center; gap: 12px;
+
+        /* --- SIDEBAR NAVIGATION --- */
+        aside {
+            width: 260px;
+            min-width: 260px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
+            padding: 25px 15px;
+            z-index: 200; 
+            position: relative;
         }
-        .vault-logo {
-            font-size: 27px; font-weight: 700; letter-spacing: -1.2px;
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 35px;
+            padding-left: 10px;
         }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .brand-title h1 {
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-title p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .nav-section {
+            margin-bottom: 25px;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            font-weight: 700;
+        }
+
         .nav-item {
-            padding: 14px 28px; display: flex; align-items: center; gap: 16px;
-            color: #cbd5e1; cursor: pointer; font-weight: 500;
-        }
-        .nav-item:hover, .nav-item.active { background: rgba(245,158,11,0.18); }
-
-        #main { flex: 1; position: relative; }
-        #search-container {
-            position: absolute; top: 130px; left: 50%; transform: translateX(-50%); width: 660px;
-        }
-        #global-search {
-            width: 100%; padding: 20px 28px; font-size: 17px;
-            background: rgba(30,41,59,0.95); border: 2px solid #475569; border-radius: 9999px;
-        }
-
-        .quick-links {
-            position: absolute; top: 210px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 28px; z-index: 50;
-        }
-        .quick-link {
-            text-align: center; cursor: pointer; transition: transform 0.3s;
-        }
-        .quick-link:hover { transform: scale(1.12); }
-        .quick-link img {
-            width: 64px; height: 64px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+            cursor: pointer;
         }
 
-        #browser-container {
-            display: none; flex-direction: column; position: absolute; inset: 0; z-index: 200; background: #000;
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid var(--accent-color);
         }
-        .tab-bar {
-            height: 58px; background: #1e2937; display: flex; align-items: center;
-            padding: 0 12px; overflow-x: auto;
+
+        .sidebar-footer {
+            margin-top: auto;
         }
-        .tab {
-            padding: 0 24px; height: 100%; display: flex; align-items: center;
-            background: #334155; margin-right: 6px; border-radius: 8px 8px 0 0;
-            cursor: pointer; white-space: nowrap;
+
+        .btn-discord {
+            display: block;
+            text-align: center;
+            background: rgba(88, 101, 242, 0.2);
+            color: #5865F2;
+            border: 1px solid rgba(88, 101, 242, 0.4);
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
         }
-        .tab.active { background: #0f172a; border-bottom: 4px solid var(--accent); }
-        .tab .close { margin-left: 12px; color: #f87171; font-size: 20px; cursor: pointer; }
-        #main-browser { flex: 1; border: none; }
+
+        /* --- MAIN VIEWPORT COMPONENT --- */
+        main {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .workspace-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+        }
+
+        .hub-center {
+            text-align: center;
+            width: 100%;
+            max-width: 650px;
+            margin-bottom: 45px;
+        }
+
+        .widget-clock {
+            font-size: 3.5rem;
+            font-weight: 400;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+        }
+
+        .widget-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 35px;
+        }
+
+        .search-container {
+            width: 100%;
+            background: rgba(20, 20, 25, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 6px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .search-container input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 1.05rem;
+            padding: 10px;
+        }
+
+        .app-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .app-tile {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 110px;
+            height: 110px;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 8px;
+        }
+
+        .app-tile:hover {
+            transform: translateY(-5px);
+            background: var(--card-hover);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .app-icon { font-size: 2.2rem; }
+        .app-name { font-size: 0.8rem; color: var(--text-muted); text-align: center; }
+
+        /* --- ARCADE VAULT DISPLAY --- */
+        .arcade-view {
+            display: none; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #111116;
+            background-image: 
+                radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0),
+                radial-gradient(rgba(255, 255, 255, 0.02) 2px, transparent 0);
+            background-size: 40px 40px, 80px 80px;
+            padding: 40px;
+            overflow-y: auto;
+            z-index: 5;
+        }
+
+        .arcade-control-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 4px solid #1a1a24;
+            padding-bottom: 20px;
+            position: relative;
+        }
+
+        .arcade-header-title h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .arcade-header-title h2 span {
+            color: var(--arcade-yellow);
+        }
+
+        .moving-lines {
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            height: 4px;
+            width: 180px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--arcade-yellow),
+                var(--arcade-yellow) 20px,
+                #000 20px,
+                #000 40px
+            );
+            animation: moveLines 1.2s linear infinite;
+        }
+
+        @keyframes moveLines {
+            0% { background-position: 0px; }
+            100% { background-position: 40px; }
+        }
+
+        .arcade-search {
+            background: #16161f;
+            border: 2px solid #222230;
+            border-radius: 12px;
+            padding: 10px 20px;
+            width: 320px;
+            color: white;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .arcade-search:focus {
+            border-color: var(--arcade-yellow);
+        }
+
+        .arcade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: #16161f;
+            border: 2px solid #222230;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            height: 250px;
+            transition: all 0.25s ease;
+        }
+
+        .game-card:hover {
+            border-color: var(--arcade-yellow);
+            box-shadow: 0 0 25px rgba(250, 204, 21, 0.1);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 110px;
+            border-radius: 10px;
+            background: #0d0d11;
+            object-fit: cover;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .game-card .title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .btn-play-action {
+            background: #facc15;
+            color: #000;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .game-card:hover .btn-play-action {
+            background: #fde047;
+            transform: scale(1.02);
+        }
+
+        /* --- INTERNAL FRAME FOR FNAE --- */
+        .game-player-frame {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 100; 
+        }
+
+        .game-player-frame iframe {
+            width: 100%;
+            height: calc(100% - 40px);
+            border: none;
+            background: #000;
+        }
+
+        .game-control-bar {
+            height: 40px;
+            background: #0d0d11;
+            border-top: 2px solid #1e1e2a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+        }
+
+        .embed-credit {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .embed-credit span { color: var(--arcade-yellow); }
+
+        .close-arcade-btn {
+            background: transparent;
+            color: #ef4444;
+            border: none;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="loading">
-        <div class="spinner"></div>
-        <p style="margin-top:24px;font-size:18px;letter-spacing:2px;">Initializing Vault OS...</p>
+    <div class="wallpaper-bg-container">
+        <iframe src="https://www.youtube.com/embed/fKcF32dmcDk?autoplay=1&mute=1&loop=1&playlist=fKcF32dmcDk&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1" allow="autoplay; encrypted-media" frameborder="0"></iframe>
     </div>
 
-    <div id="wallpaper">
-        <iframe src="https://www.youtube.com/embed/gU4vSEZwiyE?autoplay=1&mute=1&loop=1&playlist=gU4vSEZwiyE&controls=0&showinfo=0&rel=0" allow="autoplay" style="width:100%;height:100%;border:none;"></iframe>
-    </div>
-
-    <div id="sidebar">
-        <div class="logo-area">
-            <div class="vault-logo">VAULT</div>
-            <span style="font-size:26px;font-weight:700;">OS</span>
-        </div>
-
-        <div class="nav-item active" onclick="showHome()">Home</div>
-        <div class="nav-header">ENTERTAINMENT</div>
-        <div class="nav-item" onclick="openInBrowser('https://dulo.tv', 'Cinema')">Cinema</div>
-        <div class="nav-item" onclick="openInBrowser('https://open.spotify.com', 'Music')">Music</div>
-        <div class="nav-item" onclick="openVaultArcade()">Vault Arcade</div>
-
-        <div class="nav-header">TOOLS</div>
-        <div class="nav-item" onclick="newTab()">OSBrowser</div>
-    </div>
-
-    <div id="main">
-        <div id="search-container">
-            <input id="global-search" type="text" placeholder="Search the web or enter a URL" onkeypress="if(event.key==='Enter') performSearch()">
-        </div>
-
-        <div class="quick-links">
-            <div class="quick-link" onclick="openInBrowser('https://tiktok.com', 'TikTok')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/TikTok_logo.svg/512px-TikTok_logo.svg.png" alt="TikTok">
-                <span>TikTok</span>
-            </div>
-            <div class="quick-link" onclick="openInBrowser('https://youtube.com', 'YouTube')">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/512px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube">
-                <span>YouTube</span>
+    <aside>
+        <div class="brand">
+            <div class="brand-logo">V</div>
+            <div class="brand-title">
+                <h1>Vault OS</h1>
+                <p>Aarav's Hub</p>
             </div>
         </div>
-    </div>
 
-    <!-- OSBrowser -->
-    <div id="browser-container">
-        <div class="tab-bar" id="tab-bar"></div>
-        <iframe id="main-browser" allowfullscreen></iframe>
-    </div>
+        <div class="nav-section">
+            <div class="section-label">Navigation</div>
+            <div onclick="switchView('home')" id="nav-home" class="nav-item active"><span>🏠</span> Home Workspace</div>
+            <div onclick="switchView('cinema')" id="nav-cinema" class="nav-item"><span>🎬</span> Cinema Hub</div>
+            <div onclick="switchView('arcade')" id="nav-arcade" class="nav-item"><span>🕹️</span> Arcade Vault</div>
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="https://discord.com" target="_blank" class="btn-discord">Join Discord</a>
+        </div>
+    </aside>
+
+    <main>
+        
+        <div class="game-player-frame" id="gameViewport">
+            <iframe id="arcadeFrame" src="" allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation allow-modals"></iframe>
+            <div class="game-control-bar">
+                <div class="embed-credit">Internal Engine // <span>Custom Link Mode</span></div>
+                <button class="close-arcade-btn" onclick="closeGameEngine()">✕ Exit Game</button>
+            </div>
+        </div>
+
+        <div class="workspace-view" id="view-home-panel">
+            <div class="hub-center">
+                <div class="widget-clock" id="liveClock">Welcome</div>
+                <div class="widget-subtitle">Your cinematic web dashboard portal</div>
+                <form class="search-container" id="vaultSearchForm" onsubmit="handleVaultSearch(event)">
+                    <input type="text" id="vaultSearchInput" placeholder="Search the web or enter a URL...">
+                </form>
+            </div>
+
+            <div class="app-grid">
+                <a href="https://www.youtube.com" target="_blank" class="app-tile">
+                    <div class="app-icon">📺</div><div class="app-name">YouTube</div>
+                </a>
+                <a href="https://www.tiktok.com" target="_blank" class="app-tile">
+                    <div class="app-icon">🎵</div><div class="app-name">TikTok</div>
+                </a>
+                <a href="https://www.discord.com" target="_blank" class="app-tile">
+                    <div class="app-icon">💬</div><div class="app-name">Discord</div>
+                </a>
+                <a href="https://www.google.com" target="_blank" class="app-tile">
+                    <div class="app-icon">🔍</div><div class="app-name">Google</div>
+                </a>
+                <a href="https://www.twitch.tv" target="_blank" class="app-tile">
+                    <div class="app-icon">🔮</div><div class="app-name">Twitch</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="arcade-view" id="view-cinema-panel">
+            <div class="arcade-control-header">
+                <div class="arcade-header-title">
+                    <h2>Cinema Hub Streaming</h2>
+                    <div class="moving-lines"></div>
+                </div>
+            </div>
+            <div class="arcade-grid">
+                <a href="https://dulo.tv" target="_blank" style="text-decoration: none;">
+                    <div class="game-card" style="height: 180px;">
+                        <div class="title" style="font-size: 1.5rem;">🎬 DULO TV</div>
+                        <button class="btn-play-action">Launch TV Stream</button>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="arcade-view" id="view-arcade-panel">
+            <div class="arcade-control-header">
+                <div class="arcade-header-title">
+                    <h2>THE <span>PIZZA EDITION</span> ARCADE VAULT</h2>
+                    <div class="moving-lines"></div>
+                </div>
+                <input type="text" class="arcade-search" id="arcadeSearchInput" placeholder="Search verified catalog..." oninput="filterArcadeLibrary()">
+            </div>
+            
+            <div class="arcade-grid" id="dynamicArcadeGrid"></div>
+        </div>
+
+    </main>
 
     <script>
-        let currentTabs = [];
-        let activeTabId = null;
-        const proxyBase = "https://velara.buzz/";
+        // System Clock Track
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        document.getElementById('liveClock').innerText = days[new Date().getDay()];
 
-        function proxyUrl(url) {
-            return proxyBase + "?url=" + encodeURIComponent(url);
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').style.opacity = '0';
-            setTimeout(() => document.getElementById('loading').style.display = 'none', 600);
-        }
-
-        function openInBrowser(url, title = "OSBrowser") {
-            const proxied = proxyUrl(url);
-            const id = 'tab-' + Date.now();
-            currentTabs.push({id, url: proxied, title});
-            renderTabs();
-            activateTab(id);
-        }
-
-        function renderTabs() {
-            const bar = document.getElementById('tab-bar');
-            bar.innerHTML = '<div onclick="newTab()" style="padding:0 20px;cursor:pointer;font-size:28px;color:#94a3b8;">+</div>';
-            currentTabs.forEach(tab => {
-                const t = document.createElement('div');
-                t.className = `tab ${tab.id === activeTabId ? 'active' : ''}`;
-                t.innerHTML = `${tab.title} <span class="close" onclick="closeTab('${tab.id}');event.stopImmediatePropagation()">×</span>`;
-                t.onclick = (e) => { if (!e.target.classList.contains('close')) activateTab(tab.id); };
-                bar.appendChild(t);
-            });
-        }
-
-        function activateTab(id) {
-            activeTabId = id;
-            const tab = currentTabs.find(t => t.id === id);
-            if (!tab) return;
-            document.getElementById('browser-container').style.display = 'flex';
-            document.getElementById('main-browser').src = tab.url;
-            renderTabs();
-        }
-
-        function closeTab(id) {
-            currentTabs = currentTabs.filter(t => t.id !== id);
-            if (currentTabs.length > 0) activateTab(currentTabs[0].id);
-            else document.getElementById('browser-container').style.display = 'none';
-            renderTabs();
-        }
-
-        function newTab() {
-            openInBrowser("https://google.com", "New Tab");
-        }
-
-        function performSearch() {
-            let q = document.getElementById('global-search').value.trim();
-            if (!q) return;
-            let url = q.startsWith('http') ? q : `https://duckduckgo.com/?q=${encodeURIComponent(q)}`;
-            openInBrowser(url, q.substring(0,20) || "Search");
-        }
-
-        function showHome() {
-            document.getElementById('browser-container').style.display = 'none';
-        }
-
-        // Vault Arcade with ALL games including Five Nights at Epstein's
-        const vaultArcadeGames = [
-            {name: "Five Nights at Epstein's", url: "https://fivenightsatepsteins.org/FNAE-HTML5-1.2.3/index.html"},
-            {name: "Alien Hominid", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/393.html"},
-            {name: "Customer Support", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/383.html"},
-            {name: "The Deadseat", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/395.html"},
-            {name: "Fireboy & Watergirl", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/385.html"},
-            {name: "Deltatraveler", url: "https://script.google.com/macros/s/AKfycbx137PRDh0Of0SDaXqu2fKaJ8Ht8Os5Nabi3xeIWYs_dCA0jP4SKRjQ9P9nC1xeruWK/exec?game=388"},
-            {name: "Needy Streamer Overload", url: "https://script.google.com/macros/s/AKfycbx137PRDh0Of0SDaXqu2fKaJ8Ht8Os5Nabi3xeIWYs_dCA0jP4SKRjQ9P9nC1xeruWK/exec?game=389"},
-            {name: "Pizza Tower", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/394.html"},
-            {name: "TileTopia", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/391.html"},
-            {name: "Earn to Die", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/378.html"},
-            {name: "Earn to Die 2", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/379.html"},
-            {name: "Bart Blast", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/380.html"},
-            {name: "Bendy and the Ink Machine", url: "https://script.google.com/macros/s/AKfycby_6uwHt90FuvgGfTLTHhveJVw0nEJ_bMxq8GTaA1KjFfpmu0g08RlArFt61GAw7WOw/exec?game=374"},
-            {name: "Gacha Life", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/375.html"},
-            {name: "Gacha Verse", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/376.html"},
-            {name: "Tung Sahur Horror", url: "https://script.google.com/macros/s/AKfycby_6uwHt90FuvgGfTLTHhveJVw0nEJ_bMxq8GTaA1KjFfpmu0g08RlArFt61GAw7WOw/exec?game=377"},
-            {name: "Horror Tale", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/373.html"},
-            {name: "Dumb Ways to Die", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/372.html"},
-            {name: "Bloons Tower Defense 1", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/367.html"},
-            {name: "Bloons Tower Defense 2", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/368.html"},
-            {name: "Bloons Tower Defense 3", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/369.html"},
-            {name: "Bloons Tower Defense 4", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/370.html"},
-            {name: "Bloons Tower Defense 5", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/371.html"},
-            {name: "Brotato", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/366.html"},
-            {name: "Endoparasitic 2", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/365.html"},
-            {name: "Endoparasitic", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/364.html"},
-            {name: "Baby Sniper In Vietnam", url: "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/Noahs-Calculus-Tutor@master/games/363.html"}
+        // Verified Pizza Edition catalog paths
+        const arcadeLibraryDatabase = [
+            { id: "retrobowl", name: "Retro Bowl", folder: "retrobowl" },
+            { id: "slope", name: "Slope", folder: "slope" },
+            { id: "bitlife", name: "BitLife", folder: "bitlife" },
+            { id: "geometrydash", name: "Geometry Dash", folder: "geometry-dash" },
+            { id: "1v1lol", name: "1v1.LOL", folder: "1v1-lol" },
+            { id: "tunnelrush", name: "Tunnel Rush", folder: "tunnel-rush" },
+            { id: "drivemad", name: "Drive Mad", folder: "drive-mad" },
+            { id: "driftboss", name: "Drift Boss", folder: "drift-boss" },
+            { id: "run3", name: "Run 3", folder: "run-3" },
+            { id: "happywheels", name: "Happy Wheels", folder: "happy-wheels" },
+            { id: "subwaysurfers", name: "Subway Surfers", folder: "subway-surfers" },
+            { id: "cookieclicker", name: "Cookie Clicker", folder: "cookie-clicker" },
+            { id: "minecraft", name: "Minecraft Classic", folder: "minecraft" },
+            { id: "eggycar", name: "Eggy Car", folder: "eggy-car" },
+            { id: "smashkarts", name: "Smash Karts", folder: "smash-karts" },
+            { id: "templerun2", name: "Temple Run 2", folder: "temple-run-2" },
+            { id: "basketballstars", name: "Basketball Stars", folder: "basketball-stars" },
+            { id: "stickmanhook", name: "Stickman Hook", folder: "stickman-hook" },
+            { id: "clustertruck", name: "Clustertruck", folder: "clustertruck" },
+            { id: "snowrider3d", name: "Snow Rider 3D", folder: "snow-rider-3d" },
+            { id: "pizzatower", name: "Pizza Tower", folder: "pizza-tower" },
+            { id: "vex7", name: "Vex 7", folder: "vex-7" },
+            { id: "worldshardestgame", name: "World's Hardest Game", folder: "worlds-hardest-game" },
+            { id: "crossyroad", name: "Crossy Road", folder: "crossy-road" },
+            { id: "amongus", name: "Among Us", folder: "among-us" },
+            { id: "badicecream", name: "Bad Ice Cream", folder: "bad-ice-cream" },
+            { id: "badicecream2", name: "Bad Ice Cream 2", folder: "bad-ice-cream-2" },
+            { id: "badicecream3", name: "Bad Ice Cream 3", folder: "bad-ice-cream-3" },
+            { id: "bindingofisaac", name: "Binding of Isaac", folder: "binding-of-isaac" },
+            { id: "bloonstd4", name: "Bloons TD 4", folder: "bloons-td-4" },
+            { id: "bloonstd5", name: "Bloons TD 5", folder: "bloons-td-5" },
+            { id: "bobtherobber", name: "Bob the Robber", folder: "bob-the-robber" },
+            { id: "boxingrandom", name: "Boxing Random", folder: "boxing-random" },
+            { id: "breakout", name: "Breakout", folder: "breakout" },
+            { id: "burritobison", name: "Burrito Bison", folder: "burrito-bison" },
+            { id: "catninja", name: "Cat Ninja", folder: "cat-ninja" },
+            { id: "chess", name: "Chess", folder: "chess" },
+            { id: "cubefield", name: "Cubefield", folder: "cubefield" },
+            { id: "cuttherope", name: "Cut The Rope", folder: "cut-the-rope" },
+            { id: "dealornodeal", name: "Deal or No Deal", folder: "deal-or-no-deal" },
+            { id: "deathrun", name: "Death Run", folder: "death-run" },
+            { id: "diepio", name: "Diep.io", folder: "diepio" },
+            { id: "digdug", name: "Dig Dug", folder: "dig-dug" },
+            { id: "dogeminer", name: "Doge Miner", folder: "doge-miner" },
+            { id: "dogeminer2", name: "Doge Miner 2", folder: "doge-miner-2" },
+            { id: "donkeykong", name: "Donkey Kong", folder: "donkey-kong" },
+            { id: "doodlejump", name: "Doodle Jump", folder: "doodle-jump" },
+            { id: "doom", name: "Doom", folder: "doom" },
+            { id: "ducklife4", name: "Duck Life 4", folder: "duck-life-4" },
+            { id: "elasticman", name: "Elastic Man", folder: "elastic-man" },
+            { id: "escapetheprison", name: "Escaping the Prison", folder: "escaping-the-prison" },
+            { id: "fnae", name: "Five Nights at Epstein's", folder: "CUSTOM_LINK", isCustom: true, customUrl: "https://fivenightsatepsteins.org/FNAE-HTML5-1.2.3/index.html?autostart=1" }
         ];
 
-        function openVaultArcade() {
-            let html = `
-                <h2 style="color:white;text-align:center;margin:40px 0 30px;font-size:32px;">Vault Arcade</h2>
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;padding:0 40px;">
-            `;
+        function compileArcadeLibrary() {
+            const grid = document.getElementById('dynamicArcadeGrid');
+            grid.innerHTML = "";
 
-            vaultArcadeGames.forEach(g => {
-                html += `
-                    <div onclick="openInBrowser('${g.url}', '${g.name}')" 
-                         style="background:#1e2937;padding:24px;border-radius:16px;cursor:pointer;text-align:center;transition:0.3s;">
-                        <div style="font-size:52px;margin-bottom:16px;">🎮</div>
-                        <div style="font-weight:600;font-size:15.5px;">${g.name}</div>
+            arcadeLibraryDatabase.forEach(game => {
+                let actionClick = "";
+                
+                if (game.isCustom) {
+                    // Custom working game loads inside the secure layout viewport frame
+                    actionClick = `loadInternalGame('${game.customUrl}')`;
+                } else {
+                    // Catalog games launch perfectly directly to pizzaedition.win matching addresses
+                    const targetLink = `https://pizzaedition.win/games/${game.folder}/`;
+                    actionClick = `window.open('${targetLink}', '_blank')`;
+                }
+
+                const cardHTML = `
+                    <div class="game-card" data-name="${game.name.toLowerCase()}">
+                        <div class="title" style="font-size: 1.25rem; margin-top: 30px;">🕹️</div>
+                        <div class="title">${game.name}</div>
+                        <button class="btn-play-action" onclick="${actionClick}">Launch Game</button>
                     </div>
                 `;
+                grid.innerHTML += cardHTML;
             });
-
-            html += `</div>`;
-
-            const id = 'tab-' + Date.now();
-            currentTabs.push({id, url: 'data:text/html,' + encodeURIComponent(html), title: "Vault Arcade"});
-            renderTabs();
-            activateTab(id);
         }
 
-        function init() {
-            hideLoading();
-            newTab();
+        function filterArcadeLibrary() {
+            const query = document.getElementById('arcadeSearchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.game-card');
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if(name && name.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
-        window.onload = init;
+        /* VIEWPORT ROUTER ENGINE */
+        function switchView(target) {
+            closeGameEngine();
 
-        window.openInBrowser = openInBrowser;
-        window.newTab = newTab;
-        window.performSearch = performSearch;
-        window.showHome = showHome;
-        window.openVaultArcade = openVaultArcade;
+            document.getElementById('view-home-panel').style.display = 'none';
+            document.getElementById('view-cinema-panel').style.display = 'none';
+            document.getElementById('view-arcade-panel').style.display = 'none';
+            
+            document.getElementById('nav-home').classList.remove('active');
+            document.getElementById('nav-cinema').classList.remove('active');
+            document.getElementById('nav-arcade').classList.remove('active');
+
+            if(target === 'home') {
+                document.getElementById('view-home-panel').style.display = 'flex';
+                document.getElementById('nav-home').classList.add('active');
+            } else if (target === 'cinema') {
+                document.getElementById('view-cinema-panel').style.display = 'block';
+                document.getElementById('nav-cinema').classList.add('active');
+            } else if (target === 'arcade') {
+                document.getElementById('view-arcade-panel').style.display = 'block';
+                document.getElementById('nav-arcade').classList.add('active');
+            }
+        }
+
+        function loadInternalGame(sourceUrl) {
+            document.getElementById('arcadeFrame').src = sourceUrl;
+            document.getElementById('gameViewport').style.display = 'block';
+        }
+
+        function closeGameEngine() {
+            document.getElementById('arcadeFrame').src = "";
+            document.getElementById('gameViewport').style.display = 'none';
+        }
+
+        function handleVaultSearch(event) {
+            event.preventDefault();
+            const input = document.getElementById('vaultSearchInput').value.trim();
+            if (!input) return;
+
+            const isUrl = input.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/) || input.startsWith('http');
+            if (isUrl) {
+                let finalUrl = input;
+                if (!/^https?:\/\//i.test(input)) finalUrl = 'https://' + input;
+                window.open(finalUrl, '_blank'); 
+            } else {
+                window.open('https://duckduckgo.com/?q=' + encodeURIComponent(input), '_blank');
+            }
+        }
+
+        window.onload = compileArcadeLibrary;
     </script>
 </body>
 </html>
