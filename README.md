@@ -1,2 +1,2 @@
-# Stash-OS
+# studyhub
 cool site
