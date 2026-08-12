@@ -279,7 +279,7 @@
         <div class="mb-8 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <p class="text-sm font-bold text-indigo-200">Games from Pizza Edition</p>
-            <p class="text-xs text-gray-400 mt-0.5">Click a game → Play opens the Pizza Edition page. Use “Open in new tab” if embed is blocked.</p>
+            <p class="text-xs text-gray-400 mt-0.5">Play loads the game-only embed. New tab opens the full page if needed.</p>
           </div>
           <a href="https://pizzaedition.com/" target="_blank" class="shrink-0 px-4 py-2 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 text-xs font-bold text-indigo-200 border border-indigo-400/30">Open Pizza Edition ↗</a>
         </div>
@@ -327,17 +327,24 @@
     <!-- STREAM (dulo.gd) -->
     <div id="stream-page" class="view-section hidden">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
           <div>
             <h1 class="text-2xl sm:text-3xl font-extrabold">Stream</h1>
-            <p class="text-sm text-gray-400 mt-1">Movies & TV via dulo.gd — embedded for convenience.</p>
+            <p class="text-sm text-gray-400 mt-1">Movies & TV via dulo.gd</p>
           </div>
-          <button onclick="showPage('home')" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleStreamFullscreen()" class="px-4 py-2 rounded-full bg-white text-black hover:bg-gray-200 text-xs font-extrabold flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+              Fullscreen
+            </button>
+            <a href="https://dulo.gd/" target="_blank" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">Open in new tab ↗</a>
+            <button onclick="showPage('home')" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
+          </div>
         </div>
-        <div class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height: min(75vh, 720px);">
-          <iframe id="stream-iframe" src="https://dulo.gd/" class="w-full h-full border-0" allow="fullscreen; autoplay; encrypted-media" allowfullscreen></iframe>
+        <div id="stream-player-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height: min(80vh, 800px);">
+          <iframe id="stream-iframe" src="https://dulo.gd/" class="w-full h-full border-0" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
         </div>
-        <p class="text-xs text-gray-500 mt-3">If the embed is blocked by your network, <a href="https://dulo.gd/" target="_blank" class="text-indigo-400 hover:underline">open dulo.gd in a new tab</a>.</p>
+        <p class="text-xs text-gray-500 mt-3">Use <b>Fullscreen</b> for a clean cinema view. If the embed is blocked, open dulo.gd in a new tab.</p>
       </div>
     </div>
 
@@ -397,20 +404,20 @@
   // If an embed fails, the "Open in new tab" button still works.
   // Pizza Edition direct game links
   const GAMES = [
-    { id: 'polytrack', name: 'Polytrack', category: 'Racing', popular: 100, desc: 'Low-poly racing with custom tracks and precision driving.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/2.png', url: 'https://pizzaedition.com/g/polytrack' },
-    { id: 'basketballstars', name: 'Basketball Stars', category: 'Sports', popular: 99, desc: 'Intense 1v1 basketball matches.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/6.png', url: 'https://pizzaedition.com/g/basketballstars' },
-    { id: '1v1lol', name: '1v1.LOL', category: 'Action', popular: 98, desc: 'Build, edit, and fight in build battles.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/3.png', url: 'https://pizzaedition.com/g/1v1lol' },
-    { id: '2drocketleague', name: '2D Rocket League', category: 'Sports', popular: 97, desc: '2D car soccer — boost, flip, and score.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/47.png', url: 'https://pizzaedition.com/g/2drocketleague' },
-    { id: 'basketrandom', name: 'Basket Random', category: 'Sports', popular: 96, desc: 'Wobbly physics basketball — hilarious and competitive.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/7.png', url: 'https://pizzaedition.com/g/basketrandom' },
-    { id: 'bikeobby', name: 'Bike Obby', category: 'Racing', popular: 95, desc: 'Obstacle course bike challenges.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/46.png', url: 'https://pizzaedition.com/g/bikeobby' },
-    { id: 'bitlife', name: 'BitLife', category: 'Idle', popular: 94, desc: 'Live a virtual life full of choices.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/13.png', url: 'https://pizzaedition.com/g/bitlife' },
-    { id: 'spacewaves', name: 'Space Waves', category: 'Action', popular: 93, desc: 'Navigate through space wave challenges.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/31.png', url: 'https://pizzaedition.com/g/spacewaves' },
-    { id: 'clusterrush', name: 'Cluster Rush', category: 'Action', popular: 92, desc: 'Jump between trucks racing at high speed.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/30.png', url: 'https://pizzaedition.com/g/clusterrush' },
-    { id: 'escaperoad3', name: 'Escape Road 3', category: 'Racing', popular: 91, desc: 'Outrun the police in high-speed chase sequences.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/28.png', url: 'https://pizzaedition.com/g/escaperoad3' },
-    { id: 'geometrydash', name: 'Geometry Dash', category: 'Action', popular: 90, desc: 'Rhythm-based platformer — jump and fly to the beat.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/14.png', url: 'https://pizzaedition.com/g/geometrydash' },
-    { id: 'subwaysurfers', name: 'Subway Surfers', category: 'Action', popular: 89, desc: 'Endless runner — dodge trains, collect coins.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/10.png', url: 'https://pizzaedition.com/g/subwaysurfers' },
-    { id: 'soccerreal', name: 'Soccer Real', category: 'Sports', popular: 88, desc: 'Skill-based soccer gameplay.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/47.png', url: 'https://pizzaedition.com/g/soccerreal' },
-    { id: 'snowrider3d', name: 'Snow Rider 3D', category: 'Racing', popular: 87, desc: 'Snowboard down snowy slopes and collect coins.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/25.png', url: 'https://pizzaedition.com/g/snowrider3d' }
+    { id: 'polytrack', name: 'Polytrack', category: 'Racing', popular: 100, desc: 'Low-poly racing with custom tracks and precision driving.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/2.png', url: 'https://pizzaedition.com/embed/polytrack' },
+    { id: 'basketballstars', name: 'Basketball Stars', category: 'Sports', popular: 99, desc: 'Intense 1v1 basketball matches.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/6.png', url: 'https://pizzaedition.com/embed/basketballstars' },
+    { id: '1v1lol', name: '1v1.LOL', category: 'Action', popular: 98, desc: 'Build, edit, and fight in build battles.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/3.png', url: 'https://pizzaedition.com/embed/1v1lol' },
+    { id: '2drocketleague', name: '2D Rocket League', category: 'Sports', popular: 97, desc: '2D car soccer — boost, flip, and score.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/47.png', url: 'https://pizzaedition.com/embed/2drocketleague' },
+    { id: 'basketrandom', name: 'Basket Random', category: 'Sports', popular: 96, desc: 'Wobbly physics basketball — hilarious and competitive.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/7.png', url: 'https://pizzaedition.com/embed/basketrandom' },
+    { id: 'bikeobby', name: 'Bike Obby', category: 'Racing', popular: 95, desc: 'Obstacle course bike challenges.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/46.png', url: 'https://pizzaedition.com/embed/bikeobby' },
+    { id: 'bitlife', name: 'BitLife', category: 'Idle', popular: 94, desc: 'Live a virtual life full of choices.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/13.png', url: 'https://pizzaedition.com/embed/bitlife' },
+    { id: 'spacewaves', name: 'Space Waves', category: 'Action', popular: 93, desc: 'Navigate through space wave challenges.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/31.png', url: 'https://pizzaedition.com/embed/spacewaves' },
+    { id: 'clusterrush', name: 'Cluster Rush', category: 'Action', popular: 92, desc: 'Jump between trucks racing at high speed.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/30.png', url: 'https://pizzaedition.com/embed/clusterrush' },
+    { id: 'escaperoad3', name: 'Escape Road 3', category: 'Racing', popular: 91, desc: 'Outrun the police in high-speed chase sequences.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/28.png', url: 'https://pizzaedition.com/embed/escaperoad3' },
+    { id: 'geometrydash', name: 'Geometry Dash', category: 'Action', popular: 90, desc: 'Rhythm-based platformer — jump and fly to the beat.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/14.png', url: 'https://pizzaedition.com/embed/geometrydash' },
+    { id: 'subwaysurfers', name: 'Subway Surfers', category: 'Action', popular: 89, desc: 'Endless runner — dodge trains, collect coins.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/10.png', url: 'https://pizzaedition.com/embed/subwaysurfers' },
+    { id: 'soccerreal', name: 'Soccer Real', category: 'Sports', popular: 88, desc: 'Skill-based soccer gameplay.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/47.png', url: 'https://pizzaedition.com/embed/soccerreal' },
+    { id: 'snowrider3d', name: 'Snow Rider 3D', category: 'Racing', popular: 87, desc: 'Snowboard down snowy slopes and collect coins.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/25.png', url: 'https://pizzaedition.com/embed/snowrider3d' }
   ];
 
   // Fallback images (simple colored placeholders if remote fails)
@@ -580,7 +587,20 @@
     else showPage('home');
   }
 
-  function openExternal() {
+  
+  function toggleStreamFullscreen() {
+    const wrap = document.getElementById('stream-player-wrap');
+    if (!wrap) return;
+    if (!document.fullscreenElement) {
+      const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.msRequestFullscreen;
+      if (req) req.call(wrap);
+    } else {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+      if (exit) exit.call(document);
+    }
+  }
+
+function openExternal() {
     if (activeGame) window.open(activeGame.url, '_blank');
   }
 
