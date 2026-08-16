@@ -218,12 +218,14 @@
       <div class="py-2 flex justify-center">
         <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar" id="category-nav">
           <button onclick="filterCat('All', this)" class="tab-btn active flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold">All</button>
+          <button onclick="filterCat('Retro', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">🕹️ Retro</button>
           <button onclick="filterCat('Action', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Action</button>
           <button onclick="filterCat('Racing', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Racing</button>
           <button onclick="filterCat('Sports', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Sports</button>
           <button onclick="filterCat('Puzzle', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Puzzle</button>
           <button onclick="filterCat('Idle', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Idle</button>
           <button onclick="showPage('stream')" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Stream</button>
+          <button onclick="showPage('browser')" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Browser</button>
         </nav>
       </div>
     </div>
@@ -249,6 +251,7 @@
       <button onclick="filterCat('Racing', this)" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Racing</button>
       <button onclick="filterCat('Sports', this)" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Sports</button>
       <button onclick="showPage('stream')" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Stream</button>
+      <button onclick="showPage('browser')" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Browser</button>
     </div>
     <button onclick="toggleWallpaperMenu()" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shrink-0">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -337,14 +340,64 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
               Fullscreen
             </button>
-            <a href="https://dulo.gd/" target="_blank" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">Open in new tab ↗</a>
+            <a href="https://browse.startmyeducation.net/tab.html#site=https%3A%2F%2Fdulo.gd%2F" target="_blank" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">Open in new tab ↗</a>
             <button onclick="showPage('home')" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
           </div>
         </div>
         <div id="stream-player-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height: min(80vh, 800px);">
-          <iframe id="stream-iframe" src="https://dulo.gd/" class="w-full h-full border-0" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+          <iframe id="stream-iframe" src="about:blank" class="w-full h-full border-0" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
         </div>
-        <p class="text-xs text-gray-500 mt-3">Use <b>Fullscreen</b> for a clean cinema view. If the embed is blocked, open dulo.gd in a new tab.</p>
+        <p class="text-xs text-gray-500 mt-3">Loads dulo.gd through the proxy so sessions work better. Use Fullscreen for cinema mode; New tab if still blocked.</p>
+      </div>
+    </div>
+
+
+    <!-- BROWSER -->
+    <div id="browser-page" class="view-section hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold">Browser</h1>
+            <p class="text-sm text-gray-400 mt-0.5">Search the web or open any URL</p>
+          </div>
+          <button onclick="showPage('home')" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
+        </div>
+
+        <!-- Address bar -->
+        <div class="flex items-center gap-2 mb-3">
+          <button onclick="browserGo('https://duckduckgo.com/')" title="Home" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+          </button>
+          <button onclick="browserReload()" title="Reload" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          </button>
+          <form onsubmit="browserSubmit(event)" class="flex-1 flex gap-2">
+            <input id="browser-url" type="text" placeholder="Search or type a URL…" autocomplete="off"
+              class="flex-1 h-10 px-4 rounded-xl bg-white/10 border border-white/15 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-400/50 focus:ring-1 focus:ring-indigo-400/30" />
+            <button type="submit" class="h-10 px-5 rounded-xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 shrink-0">Go</button>
+          </form>
+          <button onclick="browserOpenExternal()" title="Open in new tab" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </button>
+          <button onclick="browserFullscreen()" title="Fullscreen" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+          </button>
+        </div>
+
+        <!-- Quick links -->
+        <div class="flex flex-wrap gap-2 mb-3">
+          <button onclick="browserGo('https://duckduckgo.com/')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">DuckDuckGo</button>
+          <button onclick="browserGo('https://www.google.com/webhp?igu=1')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">Google</button>
+          <button onclick="browserGo('https://wikipedia.org')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">Wikipedia</button>
+          <button onclick="browserGo('https://pizzaedition.com/')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">Pizza Edition</button>
+          <button onclick="browserGo('https://dulo.gd/')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">dulo.gd</button>
+          <button onclick="browserGo('https://gn-math.com/')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">GN Math</button>
+        </div>
+
+        <div id="browser-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height: min(75vh, 780px);">
+          <iframe id="browser-iframe" src="about:blank" class="w-full h-full border-0 bg-white" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen></iframe>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Uses a web proxy (logo hidden). First load can take a few seconds while the proxy starts. If blank, try open-in-new-tab.</p>
       </div>
     </div>
 
@@ -404,7 +457,7 @@
   // If an embed fails, the "Open in new tab" button still works.
   // Pizza Edition direct game links
   const GAMES = [
-    { id: 'pacman', name: 'Pac-Man', category: 'Puzzle', popular: 101, desc: 'Classic arcade maze — eat dots, avoid ghosts, chomp power pellets.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/15.png', url: 'https://pacmanonline.org/game.html' },
+    { id: 'pacman', name: 'Pac-Man', category: 'Retro', popular: 101, desc: 'Classic arcade maze — eat dots, avoid ghosts, chomp power pellets.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/15.png', url: 'https://pacmanonline.org/game.html' },
     { id: 'polytrack', name: 'Polytrack', category: 'Racing', popular: 100, desc: 'Low-poly racing with custom tracks and precision driving.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/2.png', url: 'https://pizzaedition.com/embed/polytrack' },
     { id: 'basketballstars', name: 'Basketball Stars', category: 'Sports', popular: 99, desc: 'Intense 1v1 basketball matches.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/6.png', url: 'https://pizzaedition.com/embed/basketballstars' },
     { id: '1v1lol', name: '1v1.LOL', category: 'Action', popular: 98, desc: 'Build, edit, and fight in build battles.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/3.png', url: 'https://pizzaedition.com/embed/1v1lol' },
@@ -601,6 +654,97 @@
     }
   }
 
+
+
+
+  // Proxy via browse.startmyeducation.net (UV) using #site= mode
+  // site-only mode hides their logo + toolbar — only the proxied page shows
+  const PROXY_ORIGIN = 'https://browse.startmyeducation.net';
+  const PROXY_TAB = PROXY_ORIGIN + '/tab.html';
+  let browserCurrent = PROXY_TAB;
+  let browserDisplayUrl = '';
+
+  function browserNormalize(input) {
+    input = (input || '').trim();
+    if (!input) return null;
+    if (/^https?:\/\//i.test(input)) return input;
+    if (/^[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(input)) return 'https://' + input;
+    return 'https://duckduckgo.com/?q=' + encodeURIComponent(input);
+  }
+
+  function browserProxySrc(targetUrl) {
+    return PROXY_TAB + '#site=' + encodeURIComponent(targetUrl);
+  }
+
+  function browserGo(url) {
+    const frame = document.getElementById('browser-iframe');
+    const input = document.getElementById('browser-url');
+    if (!frame) return;
+    const target = browserNormalize(url) || url;
+    browserDisplayUrl = target;
+    const src = browserProxySrc(target);
+    browserCurrent = src;
+    // reload hash navigations reliably
+    frame.src = 'about:blank';
+    setTimeout(() => { frame.src = src; }, 30);
+    if (input) {
+      try {
+        input.value = target.replace(/^https?:\/\//i, '');
+      } catch (e) {
+        input.value = target;
+      }
+    }
+  }
+
+  function browserSubmit(e) {
+    e.preventDefault();
+    const raw = document.getElementById('browser-url').value;
+    const target = browserNormalize(raw);
+    if (target) browserGo(target);
+  }
+
+  function browserReload() {
+    const frame = document.getElementById('browser-iframe');
+    if (!frame) return;
+    if (browserDisplayUrl) {
+      browserGo(browserDisplayUrl);
+    } else {
+      frame.src = frame.src;
+    }
+  }
+
+  function browserOpenExternal() {
+    const target = browserDisplayUrl || 'https://duckduckgo.com/';
+    window.open(browserProxySrc(target), '_blank');
+  }
+
+  
+  function loadStreamDulo() {
+    const frame = document.getElementById('stream-iframe');
+    if (!frame) return;
+    const proxy = (typeof PROXY_TAB !== 'undefined' ? PROXY_TAB : 'https://browse.startmyeducation.net/tab.html')
+      + '#site=' + encodeURIComponent('https://dulo.gd/');
+    // only set if not already on dulo proxy
+    if (!frame.src || frame.src === 'about:blank' || frame.src.endsWith('about:blank') || !frame.src.includes('dulo')) {
+      frame.src = 'about:blank';
+      setTimeout(() => { frame.src = proxy; }, 30);
+    }
+  }
+
+function browserFullscreen() {
+    const wrap = document.getElementById('browser-wrap');
+    if (!wrap) return;
+    if (!document.fullscreenElement) {
+      const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.msRequestFullscreen;
+      if (req) req.call(wrap);
+    } else {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+      if (exit) exit.call(document);
+    }
+  }
+
+
+
 function openExternal() {
     if (activeGame) window.open(activeGame.url, '_blank');
   }
@@ -663,12 +807,32 @@ function openExternal() {
 
   // ============== PAGES ==============
   function showPage(name) {
-    ['home-page','search-page','stream-page','details-page','app-player-view'].forEach(id => {
+    const map = {
+      home: 'home-page',
+      search: 'search-page',
+      stream: 'stream-page',
+      details: 'details-page',
+      player: 'app-player-view',
+      browser: 'browser-page'
+    };
+    const target = map[name] || (name + '-page');
+    ['home-page','search-page','stream-page','details-page','app-player-view','browser-page'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.classList.toggle('hidden', id !== (name === 'home' ? 'home-page' : name === 'search' ? 'search-page' : name === 'stream' ? 'stream-page' : name === 'details' ? 'details-page' : name === 'player' ? 'app-player-view' : id));
+      if (el) el.classList.toggle('hidden', id !== target);
     });
     const top = document.getElementById('navbar');
     const bot = document.querySelector('.sm\\:hidden.fixed.bottom-4');
+    if (name === 'browser') {
+      try {
+        const frame = document.getElementById('browser-iframe');
+        if (frame && (!frame.src || frame.src === 'about:blank' || frame.src.endsWith('about:blank'))) {
+          browserGo('https://duckduckgo.com/');
+        }
+      } catch (e) {}
+    }
+    if (name === 'stream') {
+      try { loadStreamDulo(); } catch (e) {}
+    }
     if (name === 'player') {
       if (top) top.classList.add('hidden');
       if (bot) bot.classList.add('hidden');
