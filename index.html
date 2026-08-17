@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StudyHub — Unblocked Games & Streams</title>
-  <meta name="description" content="StudyHub — fast unblocked games, arcade, and streaming. Clean, modern, and distraction-free." />
+  <title>Essential Mathematics for the Australian Curriculum Year 8, 4th Edition</title>
+
+  <link rel="icon" href="https://www.google.com/s2/favicons?domain=cambridge.org&sz=64" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231e3a5f' width='100' height='100' rx='12'/%3E%3Ctext x='50' y='62' text-anchor='middle' font-size='48' fill='white' font-family='Georgia,serif'%3EM%3C/text%3E%3C/svg%3E" />
+  <meta name="description" content="Essential Mathematics for the Australian Curriculum Year 8, 4th Edition — Cambridge University Press. Online student resources, exercises and worked examples." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -187,7 +192,7 @@
       <div class="circle"></div><div class="circle"></div>
       <div class="circle"></div><div class="circle"></div>
     </div>
-    <p class="mt-6 text-sm text-gray-400 font-medium tracking-wide">Loading StudyHub…</p>
+    <p class="mt-6 text-sm text-gray-400 font-medium tracking-wide">Loading Essential Mathematics Y8…</p>
   </div>
 
   <!-- Desktop Navbar -->
@@ -195,13 +200,13 @@
     <div class="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div class="flex items-center justify-between h-14 md:h-16">
         <a href="#home" onclick="showPage('home'); return false;" class="flex items-center gap-3 shrink-0 cursor-pointer">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-extrabold text-white text-lg shadow-lg">S</div>
-          <span class="font-extrabold text-xl md:text-2xl tracking-tight text-white">StudyHub</span>
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-800 to-blue-600 flex items-center justify-center font-extrabold text-white text-sm shadow-lg">EM</div>
+          <span class="font-extrabold text-sm md:text-base tracking-tight text-white leading-tight max-w-[200px] md:max-w-none">Essential Maths <span class="text-gray-400 font-semibold">Y8</span></span>
         </a>
 
         <div class="relative z-[110] flex-1 max-w-md mx-6">
           <form onsubmit="doSearch(event)" class="relative">
-            <input id="search-input" type="text" placeholder="Search games…" autocomplete="off"
+            <input id="search-input" type="text" placeholder="Search topics, exercises…" autocomplete="off"
               oninput="onSearchType(this.value)"
               class="w-full bg-white/[0.07] hover:bg-white/[0.12] focus:bg-white/[0.14] border border-white/10 text-white placeholder-gray-400 pl-10 pr-10 py-2.5 rounded-full text-sm font-medium outline-none transition-all" />
             <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -281,14 +286,14 @@
         <!-- Hot now -->
         <div class="mb-8 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <p class="text-sm font-bold text-indigo-200">Games from Pizza Edition</p>
+            <p class="text-sm font-bold text-indigo-200">Interactive practice modules</p>
             <p class="text-xs text-gray-400 mt-0.5">Play loads the game-only embed. New tab opens the full page if needed.</p>
           </div>
           <a href="https://pizzaedition.com/" target="_blank" class="shrink-0 px-4 py-2 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 text-xs font-bold text-indigo-200 border border-indigo-400/30">Open Pizza Edition ↗</a>
         </div>
 
         <section class="mb-10">
-          <h2 class="text-xl sm:text-2xl font-extrabold mb-4">Serving hot now</h2>
+          <h2 class="text-xl sm:text-2xl font-extrabold mb-4">Featured practice</h2>
           <div id="hot-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 sm:gap-4"></div>
         </section>
 
@@ -457,6 +462,7 @@
   // If an embed fails, the "Open in new tab" button still works.
   // Pizza Edition direct game links
   const GAMES = [
+    { id: 'wordle', name: 'Wordle', category: 'Puzzle', popular: 102, desc: 'Guess the 5-letter word in six tries. Pizza Edition unblocked.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/36.png', url: 'https://pizzaedition.com/embed/wordle' },
     { id: 'pacman', name: 'Pac-Man', category: 'Retro', popular: 101, desc: 'Classic arcade maze — eat dots, avoid ghosts, chomp power pellets.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/15.png', url: 'https://pacmanonline.org/game.html' },
     { id: 'polytrack', name: 'Polytrack', category: 'Racing', popular: 100, desc: 'Low-poly racing with custom tracks and precision driving.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/2.png', url: 'https://pizzaedition.com/embed/polytrack' },
     { id: 'basketballstars', name: 'Basketball Stars', category: 'Sports', popular: 99, desc: 'Intense 1v1 basketball matches.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/6.png', url: 'https://pizzaedition.com/embed/basketballstars' },
@@ -806,7 +812,18 @@ function openExternal() {
   }
 
   // ============== PAGES ==============
-  function showPage(name) {
+  
+  // Tab cloak: looks like textbook when tab is not focused
+  const CLOAK_TITLE = 'Essential Mathematics for the Australian Curriculum Year 8, 4th Edition';
+  const REAL_TITLE = CLOAK_TITLE;
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) document.title = CLOAK_TITLE;
+    else document.title = REAL_TITLE;
+  });
+  // Also set title on load
+  document.title = CLOAK_TITLE;
+
+function showPage(name) {
     const map = {
       home: 'home-page',
       search: 'search-page',
