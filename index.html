@@ -360,49 +360,769 @@
     <!-- BROWSER -->
     <div id="browser-page" class="view-section hidden">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between mb-3 gap-2 flex-wrap">
-          <div>
-            <h1 class="text-2xl sm:text-3xl font-extrabold">Browser</h1>
-            <p class="text-sm text-gray-400 mt-0.5">Search the web or open any URL</p>
-          </div>
-          <button onclick="showPage('home')" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
-        </div>
-
-        <!-- Address bar -->
-        <div class="flex items-center gap-2 mb-3">
-          <button onclick="browserGo('https://duckduckgo.com/')" title="Home" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
-          </button>
-          <button onclick="browserReload()" title="Reload" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-          </button>
-          <form onsubmit="browserSubmit(event)" class="flex-1 flex gap-2">
-            <input id="browser-url" type="text" placeholder="Search or type a URL…" autocomplete="off"
-              class="flex-1 h-10 px-4 rounded-xl bg-white/10 border border-white/15 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-400/50 focus:ring-1 focus:ring-indigo-400/30" />
-            <button type="submit" class="h-10 px-5 rounded-xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 shrink-0">Go</button>
+        <!-- Search-only home -->
+        <div id="browser-home" class="flex flex-col items-center justify-center min-h-[70vh] px-2">
+          <p class="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-3">Web Search</p>
+          <h1 class="text-2xl sm:text-3xl font-extrabold mb-8 text-center">Search the web</h1>
+          <form onsubmit="browserSubmit(event)" class="w-full max-w-xl flex gap-2">
+            <input id="browser-url" type="text" placeholder="Search or type a URL…" autocomplete="off" autofocus
+              class="flex-1 h-12 px-5 rounded-2xl bg-white/10 border border-white/15 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-400/50 focus:ring-1 focus:ring-indigo-400/30" />
+            <button type="submit" class="h-12 px-6 rounded-2xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 shrink-0">Search</button>
           </form>
-          <button onclick="browserOpenExternal()" title="Open in new tab" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-          </button>
-          <button onclick="browserFullscreen()" title="Fullscreen" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
-          </button>
+          <p class="text-xs text-gray-500 mt-4 text-center max-w-md">Results open in-page through a secure proxy. Type a site (e.g. wikipedia.org) or any search.</p>
+          <button onclick="showPage('home')" class="mt-8 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
         </div>
 
-        <!-- Quick links -->
-        <div class="flex flex-wrap gap-2 mb-3">
-          <button onclick="browserGo('https://duckduckgo.com/')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">DuckDuckGo</button>
-          <button onclick="browserGo('https://www.google.com/webhp?igu=1')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">Google</button>
-          <button onclick="browserGo('https://wikipedia.org')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">Wikipedia</button>
-          <button onclick="browserGo('https://pizzaedition.com/')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">Pizza Edition</button>
-          <button onclick="browserGo('https://dulo.gd/')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">dulo.gd</button>
-          <button onclick="browserGo('https://gn-math.com/')" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold">GN Math</button>
+        <!-- Results (hidden until search) -->
+        <div id="browser-results" class="hidden">
+          <div class="flex items-center gap-2 mb-3">
+            <button onclick="browserShowHome()" title="New search" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </button>
+            <form onsubmit="browserSubmit(event)" class="flex-1 flex gap-2">
+              <input id="browser-url-bar" type="text" placeholder="Search or URL…" autocomplete="off"
+                class="flex-1 h-10 px-4 rounded-xl bg-white/10 border border-white/15 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-400/50" />
+              <button type="submit" class="h-10 px-4 rounded-xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 shrink-0">Go</button>
+            </form>
+            <button onclick="browserOpenExternal()" title="Open in new tab" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </button>
+            <button onclick="browserFullscreen()" title="Fullscreen" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+            </button>
+          </div>
+          <div id="browser-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height: min(75vh, 780px);">
+            <iframe id="browser-iframe" src="about:blank" class="w-full h-full border-0 bg-white" allow="fullscreen" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAME DETAILS (optional quick view) -->
+    <div id="details-page" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
+        <img id="detail-img" src="" class="w-28 h-28 sm:w-36 sm:h-36 rounded-3xl object-cover border border-white/10 shadow-2xl" alt="">
+        <div class="text-center sm:text-left flex-1">
+          <h1 id="detail-title" class="text-3xl sm:text-4xl font-extrabold"></h1>
+          <p id="detail-cat" class="text-sm text-gray-400 mt-1"></p>
+          <p id="detail-desc" class="text-sm text-gray-300 mt-3 max-w-xl"></p>
+          <div class="mt-6 flex flex-wrap gap-3 justify-center sm:justify-start">
+            <button onclick="launchPlayer()" class="px-8 h-12 rounded-2xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 transition-all flex items-center gap-2">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </button>
+            <button onclick="openExternal()" class="px-5 h-12 rounded-2xl bg-white/10 border border-white/15 font-bold text-sm hover:bg-white/20">New tab</button>
+            <button onclick="showPage('home')" class="px-5 h-12 rounded-2xl bg-white/10 border border-white/15 font-bold text-sm">Back</button>
+          </div>
+          <p class="mt-3 text-xs text-gray-500 text-center sm:text-left">Tip: “Play” opens the game site in a new tab (most reliable). Embed often gets blocked.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAYER -->
+    <div id="app-player-view" class="fixed inset-0 z-[200] bg-black flex flex-col hidden">
+      <header id="player-topnav" class="h-14 sm:h-16 bg-neutral-900/90 backdrop-blur-xl border-b border-white/10 px-4 sm:px-6 flex items-center justify-between shrink-0 z-50 transition-all">
+        <div class="flex items-center gap-3 min-w-0">
+          <button onclick="exitPlayer()" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+          <h2 id="player-title" class="text-sm sm:text-base font-bold truncate">Game</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openExternal()" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center" title="Open in new tab">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </button>
+          <button onclick="toggleFullscreen()" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center" title="Fullscreen">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+          </button>
+        </div>
+      </header>
+      <div class="flex-1 relative bg-black">
+        <div id="player-loader" class="absolute inset-0 bg-neutral-950 flex flex-col items-center justify-center z-40">
+          <div class="player-spinner mb-4"></div>
+          <p class="text-sm text-gray-400">Loading game…</p>
+        </div>
+        <iframe id="player-iframe" src="" class="w-full h-full border-0" allow="fullscreen; autoplay; clipboard-write; encrypted-media; gamepad" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ============== GAME DATABASE ==============
+  // Curated list of popular unblocked / browser games.
+  // Many use public GitHub mirrors or known hosts that work in iframes.
+  // If an embed fails, the "Open in new tab" button still works.
+  // Pizza Edition direct game links
+  const GAMES = [
+    { id: 'wordle', name: 'Wordle', category: 'Puzzle', popular: 102, desc: 'Guess the 5-letter word in six tries. Pizza Edition unblocked.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/36.png', url: 'https://pizzaedition.com/embed/wordle' },
+    { id: 'pacman', name: 'Pac-Man', category: 'Retro', popular: 101, desc: 'Classic arcade maze — eat dots, avoid ghosts, chomp power pellets.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/15.png', url: 'https://pacmanonline.org/game.html' },
+    { id: 'polytrack', name: 'Polytrack', category: 'Racing', popular: 100, desc: 'Low-poly racing with custom tracks and precision driving.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/2.png', url: 'https://pizzaedition.com/embed/polytrack' },
+    { id: 'basketballstars', name: 'Basketball Stars', category: 'Sports', popular: 99, desc: 'Intense 1v1 basketball matches.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/6.png', url: 'https://pizzaedition.com/embed/basketballstars' },
+    { id: '1v1lol', name: '1v1.LOL', category: 'Action', popular: 98, desc: 'Build, edit, and fight in build battles.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/3.png', url: 'https://pizzaedition.com/embed/1v1lol' },
+    { id: '2drocketleague', name: '2D Rocket League', category: 'Sports', popular: 97, desc: '2D car soccer — boost, flip, and score.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/47.png', url: 'https://pizzaedition.com/embed/2drocketleague' },
+    { id: 'basketrandom', name: 'Basket Random', category: 'Sports', popular: 96, desc: 'Wobbly physics basketball — hilarious and competitive.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/7.png', url: 'https://pizzaedition.com/embed/basketrandom' },
+    { id: 'bikeobby', name: 'Bike Obby', category: 'Racing', popular: 95, desc: 'Obstacle course bike challenges.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/46.png', url: 'https://pizzaedition.com/embed/bikeobby' },
+    { id: 'bitlife', name: 'BitLife', category: 'Idle', popular: 94, desc: 'Live a virtual life full of choices.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/13.png', url: 'https://pizzaedition.com/embed/bitlife' },
+    { id: 'spacewaves', name: 'Space Waves', category: 'Action', popular: 93, desc: 'Navigate through space wave challenges.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/31.png', url: 'https://pizzaedition.com/embed/spacewaves' },
+    { id: 'clusterrush', name: 'Cluster Rush', category: 'Action', popular: 92, desc: 'Jump between trucks racing at high speed.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/30.png', url: 'https://pizzaedition.com/embed/clusterrush' },
+    { id: 'escaperoad3', name: 'Escape Road 3', category: 'Racing', popular: 91, desc: 'Outrun the police in high-speed chase sequences.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/28.png', url: 'https://pizzaedition.com/embed/escaperoad3' },
+    { id: 'geometrydash', name: 'Geometry Dash', category: 'Action', popular: 90, desc: 'Rhythm-based platformer — jump and fly to the beat.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/14.png', url: 'https://pizzaedition.com/embed/geometrydash' },
+    { id: 'subwaysurfers', name: 'Subway Surfers', category: 'Action', popular: 89, desc: 'Endless runner — dodge trains, collect coins.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/10.png', url: 'https://pizzaedition.com/embed/subwaysurfers' },
+    { id: 'soccerreal', name: 'Soccer Real', category: 'Sports', popular: 88, desc: 'Skill-based soccer gameplay.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/47.png', url: 'https://pizzaedition.com/embed/soccerreal' },
+    { id: 'snowrider3d', name: 'Snow Rider 3D', category: 'Racing', popular: 87, desc: 'Snowboard down snowy slopes and collect coins.', img: 'https://cdn.jsdelivr.net/gh/gn-math/covers@main/25.png', url: 'https://pizzaedition.com/embed/snowrider3d' }
+  ];
+
+  // Fallback images (simple colored placeholders if remote fails)
+  function safeImg(g) {
+    return g.img || `https://placehold.co/200x200/1e1b4b/ffffff?text=${encodeURIComponent(g.name.slice(0,8))}`;
+  }
+
+  let sorted = [...GAMES];
+  let visible = 18;
+  let activeGame = null;
+  let currentCat = 'All';
+
+  // ============== WALLPAPER ==============
+  let particleAnim = null;
+  function setWallpaper(name) {
+    const layer = document.getElementById('wallpaper-layer');
+    layer.className = '';
+    layer.innerHTML = '';
+    if (particleAnim) { cancelAnimationFrame(particleAnim); particleAnim = null; }
+
+    if (name === 'particles') {
+      layer.classList.add('wp-particles');
+      const canvas = document.createElement('canvas');
+      layer.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      let w, h, particles = [];
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: Math.random()*w, y: Math.random()*h,
+          r: Math.random()*1.8+0.4,
+          vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+          a: Math.random()*0.5+0.2
+        });
+      }
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(165,180,252,${p.a})`;
+          ctx.fill();
+        });
+        particleAnim = requestAnimationFrame(draw);
+      }
+      draw();
+    } else {
+      layer.classList.add('wp-' + name);
+    }
+
+    document.querySelectorAll('.wallpaper-thumb').forEach(t => {
+      t.classList.toggle('active', t.dataset.wp === name);
+    });
+    try { localStorage.setItem('studyhub-wp', name); } catch (e) { /* sandboxed */ }
+  }
+
+  function toggleWallpaperMenu() {
+    document.getElementById('wallpaper-menu').classList.toggle('hidden');
+  }
+  document.addEventListener('click', e => {
+    const menu = document.getElementById('wallpaper-menu');
+    if (!menu.classList.contains('hidden') && !menu.contains(e.target) && !e.target.closest('[onclick*="toggleWallpaperMenu"]')) {
+      menu.classList.add('hidden');
+    }
+  });
+
+  // ============== RENDER ==============
+  function buildCard(g) {
+    return `
+      <div onclick="viewGame('${g.id}')" class="group umbrel-card game-card flex items-center gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-[20px] sm:rounded-[24px] cursor-pointer hover:scale-[1.01] active:scale-[0.98] transition-all">
+        <div class="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-[18px] sm:rounded-[22px] overflow-hidden shrink-0 shadow-lg bg-white/5">
+          <img src="${safeImg(g)}" loading="lazy" class="w-full h-full object-cover" alt="${g.name}"
+            onerror="this.src='https://placehold.co/120x120/1e1b4b/a5b4fc?text=${encodeURIComponent(g.name.slice(0,6))}'" />
+        </div>
+        <div class="flex flex-col justify-center min-w-0 flex-1">
+          <h3 class="font-bold text-sm md:text-base text-white truncate group-hover:text-indigo-300 transition-colors">${g.name}</h3>
+          <p class="text-[11px] sm:text-xs text-gray-400 font-medium mt-0.5">${g.category}</p>
+          <p class="text-[10px] sm:text-xs text-gray-300 mt-1 leading-snug line-clamp-2">${g.desc}</p>
+        </div>
+      </div>`;
+  }
+
+  function renderHot() {
+    const top = [...GAMES].sort((a,b) => b.popular - a.popular).slice(0, 7);
+    document.getElementById('hot-grid').innerHTML = top.map(g => `
+      <div onclick="viewGame('${g.id}')" class="flex flex-col items-center cursor-pointer group">
+        <div class="w-full aspect-square rounded-[18px] sm:rounded-[24px] overflow-hidden shadow-md group-hover:scale-105 transition-transform bg-white/5">
+          <img src="${safeImg(g)}" loading="lazy" class="w-full h-full object-cover"
+            onerror="this.src='https://placehold.co/160x160/1e1b4b/a5b4fc?text=${encodeURIComponent(g.name.slice(0,6))}'" />
+        </div>
+        <div class="mt-2 text-center w-full px-1">
+          <h3 class="font-bold text-[11px] sm:text-xs text-white truncate group-hover:text-indigo-300">${g.name}</h3>
+          <p class="text-[10px] text-gray-400">${g.category}</p>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('games-grid');
+    const end = document.getElementById('end-text');
+    if (!sorted.length) {
+      grid.innerHTML = '<p class="text-gray-500 col-span-full text-center py-10">No games in this category.</p>';
+      end.classList.add('hidden');
+      return;
+    }
+    grid.innerHTML = sorted.slice(0, visible).map(buildCard).join('');
+    end.classList.toggle('hidden', visible < sorted.length);
+  }
+
+  function filterCat(cat, btn) {
+    currentCat = cat;
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      const isActive = b.textContent.trim() === cat || (cat === 'All' && b.textContent.trim() === 'All');
+      b.classList.toggle('active', isActive);
+      b.classList.toggle('inactive', !isActive);
+    });
+    if (cat === 'All') sorted = [...GAMES];
+    else sorted = GAMES.filter(g => g.category === cat);
+    document.getElementById('grid-title').textContent = cat === 'All' ? 'All games' : cat + ' games';
+    visible = 18;
+    showPage('home');
+    renderGrid();
+  }
+
+  function changeSort(mode) {
+    if (mode === 'popular') sorted.sort((a,b) => b.popular - a.popular);
+    else if (mode === 'az') sorted.sort((a,b) => a.name.localeCompare(b.name));
+    else if (mode === 'category') sorted.sort((a,b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+    visible = 18;
+    renderGrid();
+  }
+
+  function viewGame(id) {
+    const g = GAMES.find(x => x.id === id);
+    if (!g) return;
+    activeGame = g;
+    document.getElementById('detail-img').src = safeImg(g);
+    document.getElementById('detail-title').textContent = g.name;
+    document.getElementById('detail-cat').textContent = g.category;
+    document.getElementById('detail-desc').textContent = g.desc;
+    showPage('details');
+  }
+
+  function launchPlayer() {
+    if (!activeGame) return;
+    document.getElementById('player-title').textContent = activeGame.name;
+    const frame = document.getElementById('player-iframe');
+    const loader = document.getElementById('player-loader');
+    loader.classList.remove('hidden');
+    frame.src = activeGame.url;
+    showPage('player');
+    setTimeout(() => loader.classList.add('hidden'), 1800);
+  }
+
+  function exitPlayer() {
+    document.getElementById('player-iframe').src = 'about:blank';
+    if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+    if (activeGame) showPage('details');
+    else showPage('home');
+  }
+
+  
+  function toggleStreamFullscreen() {
+    const wrap = document.getElementById('stream-player-wrap');
+    if (!wrap) return;
+    if (!document.fullscreenElement) {
+      const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.msRequestFullscreen;
+      if (req) req.call(wrap);
+    } else {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+      if (exit) exit.call(document);
+    }
+  }
+
+
+
+
+
+  // Proxy via browse.startmyeducation.net (UV) using #site= mode
+  const PROXY_ORIGIN = 'https://browse.startmyeducation.net';
+  const PROXY_TAB = PROXY_ORIGIN + '/tab.html';
+  let browserCurrent = PROXY_TAB;
+  let browserDisplayUrl = '';
+
+  function browserNormalize(input) {
+    input = (input || '').trim();
+    if (!input) return null;
+    if (/^https?:\/\//i.test(input)) return input;
+    if (/^[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(input)) return 'https://' + input;
+    return 'https://duckduckgo.com/?q=' + encodeURIComponent(input);
+  }
+
+  function browserProxySrc(targetUrl) {
+    return PROXY_TAB + '#site=' + encodeURIComponent(targetUrl);
+  }
+
+  function browserSetInputs(value) {
+    const a = document.getElementById('browser-url');
+    const b = document.getElementById('browser-url-bar');
+    const display = (value || '').replace(/^https?:\/\//i, '');
+    if (a) a.value = value || '';
+    if (b) b.value = display || value || '';
+  }
+
+  function browserShowHome() {
+    const home = document.getElementById('browser-home');
+    const results = document.getElementById('browser-results');
+    const frame = document.getElementById('browser-iframe');
+    if (home) home.classList.remove('hidden');
+    if (results) results.classList.add('hidden');
+    if (frame) frame.src = 'about:blank';
+    browserDisplayUrl = '';
+    const a = document.getElementById('browser-url');
+    if (a) { a.value = ''; setTimeout(() => a.focus(), 50); }
+  }
+
+  function browserShowResults() {
+    const home = document.getElementById('browser-home');
+    const results = document.getElementById('browser-results');
+    if (home) home.classList.add('hidden');
+    if (results) results.classList.remove('hidden');
+  }
+
+  function browserGo(url) {
+    const frame = document.getElementById('browser-iframe');
+    if (!frame) return;
+    const target = browserNormalize(url) || url;
+    browserDisplayUrl = target;
+    const src = browserProxySrc(target);
+    browserCurrent = src;
+    browserShowResults();
+    browserSetInputs(target);
+    frame.src = 'about:blank';
+    setTimeout(() => { frame.src = src; }, 40);
+  }
+
+  function browserSubmit(e) {
+    e.preventDefault();
+    const homeInput = document.getElementById('browser-url');
+    const barInput = document.getElementById('browser-url-bar');
+    // Prefer the input that is visible / focused
+    let raw = '';
+    const results = document.getElementById('browser-results');
+    if (results && !results.classList.contains('hidden') && barInput) {
+      raw = barInput.value;
+    } else if (homeInput) {
+      raw = homeInput.value;
+    } else if (barInput) {
+      raw = barInput.value;
+    }
+    const target = browserNormalize(raw);
+    if (target) browserGo(target);
+  }
+
+  function browserReload() {
+    if (browserDisplayUrl) browserGo(browserDisplayUrl);
+  }
+
+  function browserOpenExternal() {
+    const target = browserDisplayUrl || 'https://duckduckgo.com/';
+    window.open(browserProxySrc(target), '_blank');
+  }
+
+  function browserFullscreen() {
+    const wrap = document.getElementById('browser-wrap');
+    if (!wrap) return;
+    if (!document.fullscreenElement) {
+      const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.msRequestFullscreen;
+      if (req) req.call(wrap);
+    } else {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+      if (exit) exit.call(document);
+    }
+  }
+
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 9999px; }
+
+    #navbar {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 50;
+    }
+    .nav-at-top { background-color: rgba(10,10,10,0.85); }
+    .nav-scrolled {
+      background-color: rgba(10,10,10,0.65);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .tab-btn {
+      transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+      backdrop-filter: blur(12px);
+      outline: none !important;
+      border: none !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn.inactive { background-color: rgba(255,255,255,0.05); color: #a1a1aa; }
+    .tab-btn.inactive:hover { background-color: rgba(255,255,255,0.14); color: #fff; }
+    .tab-btn.active { background-color: rgba(255,255,255,0.22); color: #fff; }
+
+    .umbrel-card {
+      background-color: transparent;
+      transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .umbrel-card:hover { background-color: rgba(38,40,42,0.8); }
+
+    .loader {
+      --dim: 3rem;
+      width: var(--dim); height: var(--dim);
+      position: relative;
+      animation: spin_loader 2s linear infinite;
+    }
+    .loader .circle {
+      --color: #fff; --dim: 1.2rem;
+      width: var(--dim); height: var(--dim);
+      background: var(--color); border-radius: 50%;
+      position: absolute;
+      box-shadow: 0 0 12px rgba(255,255,255,0.5);
+    }
+    .loader .circle:nth-child(1){top:0;left:0}
+    .loader .circle:nth-child(2){top:0;right:0}
+    .loader .circle:nth-child(3){bottom:0;left:0}
+    .loader .circle:nth-child(4){bottom:0;right:0}
+    @keyframes spin_loader {
+      0%{transform:scale(1) rotate(0)}
+      20%,25%{transform:scale(1.3) rotate(90deg)}
+      45%,50%{transform:scale(1) rotate(180deg)}
+      70%,75%{transform:scale(1.3) rotate(270deg)}
+      95%,100%{transform:scale(1) rotate(360deg)}
+    }
+    .player-spinner {
+      width: 48px; height: 48px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-left-color: #fff;
+      border-radius: 50%;
+      animation: spin_fast 0.8s linear infinite;
+    }
+    @keyframes spin_fast { to { transform: rotate(360deg); } }
+
+    .view-section { padding-top: 24px; padding-bottom: 100px; }
+    @media (min-width: 640px) {
+      .view-section { padding-top: 140px; padding-bottom: 40px; }
+    }
+
+    /* Animated wallpapers */
+    #wallpaper-layer {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      overflow: hidden;
+    }
+    .wp-aurora {
+      background: linear-gradient(135deg, #0a0a0a 0%, #0f172a 40%, #1e1b4b 70%, #0a0a0a 100%);
+      background-size: 200% 200%;
+      animation: aurora 18s ease infinite;
+    }
+    @keyframes aurora {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    .wp-mesh {
+      background-color: #0a0a0a;
+      background-image:
+        radial-gradient(at 20% 30%, rgba(99,102,241,0.25) 0px, transparent 50%),
+        radial-gradient(at 80% 20%, rgba(168,85,247,0.2) 0px, transparent 50%),
+        radial-gradient(at 40% 80%, rgba(14,165,233,0.18) 0px, transparent 50%),
+        radial-gradient(at 90% 70%, rgba(236,72,153,0.15) 0px, transparent 50%);
+      animation: meshPulse 12s ease-in-out infinite alternate;
+    }
+    @keyframes meshPulse {
+      from { filter: hue-rotate(0deg) brightness(1); }
+      to { filter: hue-rotate(25deg) brightness(1.08); }
+    }
+    .wp-particles {
+      background: #050505;
+    }
+    .wp-particles canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .wp-waves {
+      background: linear-gradient(180deg, #0a0a0a, #0f172a);
+    }
+    .wp-waves::before, .wp-waves::after {
+      content: '';
+      position: absolute; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(ellipse at center, rgba(99,102,241,0.15) 0%, transparent 60%);
+      animation: waveMove 20s linear infinite;
+    }
+    .wp-waves::after { animation-duration: 28s; animation-direction: reverse; opacity: 0.6; }
+    @keyframes waveMove {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .wp-solid { background: #0a0a0a; }
+
+    .game-card img { transition: transform 0.3s ease; }
+    .game-card:hover img { transform: scale(1.06); }
+
+    :fullscreen #player-topnav,
+    :-webkit-full-screen #player-topnav {
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    :fullscreen #app-player-view:hover #player-topnav,
+    :-webkit-full-screen #app-player-view:hover #player-topnav {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .wallpaper-thumb {
+      width: 48px; height: 32px; border-radius: 8px;
+      border: 2px solid transparent; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .wallpaper-thumb.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+    .wallpaper-thumb:hover { transform: scale(1.08); }
+  </style>
+</head>
+<body class="bg-oled-bg text-gray-100 min-h-screen antialiased selection:bg-white/20 selection:text-white overflow-x-hidden">
+
+  <!-- Wallpaper layer -->
+  <div id="wallpaper-layer" class="wp-aurora"></div>
+
+  <!-- Startup -->
+  <div id="startup-overlay" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-2xl flex flex-col items-center justify-center">
+    <div class="loader">
+      <div class="circle"></div><div class="circle"></div>
+      <div class="circle"></div><div class="circle"></div>
+    </div>
+    <p class="mt-6 text-sm text-gray-400 font-medium tracking-wide">Loading Essential Mathematics Y8…</p>
+  </div>
+
+  <!-- Desktop Navbar -->
+  <header id="navbar" class="hidden sm:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 nav-at-top py-2">
+    <div class="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div class="flex items-center justify-between h-14 md:h-16">
+        <a href="#home" onclick="showPage('home'); return false;" class="flex items-center gap-3 shrink-0 cursor-pointer">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-800 to-blue-600 flex items-center justify-center font-extrabold text-white text-sm shadow-lg">EM</div>
+          <span class="font-extrabold text-sm md:text-base tracking-tight text-white leading-tight max-w-[200px] md:max-w-none">Essential Maths <span class="text-gray-400 font-semibold">Y8</span></span>
+        </a>
+
+        <div class="relative z-[110] flex-1 max-w-md mx-6">
+          <form onsubmit="doSearch(event)" class="relative">
+            <input id="search-input" type="text" placeholder="Search topics, exercises…" autocomplete="off"
+              oninput="onSearchType(this.value)"
+              class="w-full bg-white/[0.07] hover:bg-white/[0.12] focus:bg-white/[0.14] border border-white/10 text-white placeholder-gray-400 pl-10 pr-10 py-2.5 rounded-full text-sm font-medium outline-none transition-all" />
+            <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <button type="button" id="search-clear-btn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs font-bold w-5 h-5 rounded-full bg-white/10 flex items-center justify-center">✕</button>
+          </form>
+          <div id="search-suggestions" class="hidden absolute top-full left-0 right-0 mt-2 bg-neutral-900/95 backdrop-blur-2xl border border-white/15 rounded-2xl p-2 shadow-2xl z-[120] max-h-80 overflow-y-auto"></div>
         </div>
 
-        <div id="browser-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height: min(75vh, 780px);">
-          <iframe id="browser-iframe" src="about:blank" class="w-full h-full border-0 bg-white" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen></iframe>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleWallpaperMenu()" class="px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold border border-white/10 transition-all">Wallpaper</button>
         </div>
-        <p class="text-xs text-gray-500 mt-2">Uses a web proxy (logo hidden). First load can take a few seconds while the proxy starts. If blank, try open-in-new-tab.</p>
+      </div>
+
+      <div class="py-2 flex justify-center">
+        <nav class="flex items-center gap-2 overflow-x-auto no-scrollbar" id="category-nav">
+          <button onclick="filterCat('All', this)" class="tab-btn active flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold">All</button>
+          <button onclick="filterCat('Retro', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">🕹️ Retro</button>
+          <button onclick="filterCat('Action', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Action</button>
+          <button onclick="filterCat('Racing', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Racing</button>
+          <button onclick="filterCat('Sports', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Sports</button>
+          <button onclick="filterCat('Puzzle', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Puzzle</button>
+          <button onclick="filterCat('Idle', this)" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Idle</button>
+          <button onclick="showPage('stream')" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Stream</button>
+          <button onclick="showPage('browser')" class="tab-btn inactive flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold">Browser</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Wallpaper picker popover -->
+  <div id="wallpaper-menu" class="hidden fixed top-20 right-6 z-[90] bg-neutral-900/95 backdrop-blur-xl border border-white/15 rounded-2xl p-4 shadow-2xl">
+    <p class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">Choose wallpaper</p>
+    <div class="flex flex-wrap gap-2">
+      <div class="wallpaper-thumb active wp-aurora" data-wp="aurora" onclick="setWallpaper('aurora')" title="Aurora"></div>
+      <div class="wallpaper-thumb wp-mesh" data-wp="mesh" onclick="setWallpaper('mesh')" title="Mesh Glow"></div>
+      <div class="wallpaper-thumb wp-particles bg-black" data-wp="particles" onclick="setWallpaper('particles')" title="Particles"></div>
+      <div class="wallpaper-thumb wp-waves" data-wp="waves" onclick="setWallpaper('waves')" title="Waves"></div>
+      <div class="wallpaper-thumb wp-solid" data-wp="solid" onclick="setWallpaper('solid')" title="Solid"></div>
+    </div>
+  </div>
+
+  <!-- Mobile bottom bar -->
+  <div class="sm:hidden fixed bottom-4 inset-x-3 z-50 flex items-center justify-between gap-2 bg-neutral-900/85 backdrop-blur-2xl border border-white/15 rounded-full p-2 shadow-2xl">
+    <div class="flex-1 overflow-x-auto no-scrollbar flex items-center gap-1.5">
+      <button onclick="filterCat('All', this)" class="tab-btn active shrink-0 px-3.5 py-2 rounded-full text-xs font-bold">All</button>
+      <button onclick="filterCat('Action', this)" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Action</button>
+      <button onclick="filterCat('Racing', this)" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Racing</button>
+      <button onclick="filterCat('Sports', this)" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Sports</button>
+      <button onclick="showPage('stream')" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Stream</button>
+      <button onclick="showPage('browser')" class="tab-btn inactive shrink-0 px-3.5 py-2 rounded-full text-xs font-semibold">Browser</button>
+    </div>
+    <button onclick="toggleWallpaperMenu()" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+    </button>
+  </div>
+
+  <div id="page-wrapper" class="w-full min-h-[100vh]">
+
+    <!-- HOME / ARCADE -->
+    <div id="home-page" class="view-section">
+      <section class="w-full mb-8">
+        <div class="relative w-full h-[200px] sm:h-[280px] md:h-[340px] overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-r from-indigo-900/60 via-purple-900/40 to-transparent"></div>
+          <div class="relative w-full max-w-7xl mx-auto px-5 sm:px-8 h-full flex flex-col justify-center z-10">
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+              Study hard.<br>
+              <span class="text-indigo-300">Play harder.</span>
+            </h1>
+            <p class="mt-3 text-sm sm:text-base text-gray-300 max-w-xl font-medium">
+              Hundreds of unblocked games + free streaming. Fast, clean, and built for focus breaks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Hot now -->
+        <div class="mb-8 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-400/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <p class="text-sm font-bold text-indigo-200">Interactive practice modules</p>
+            <p class="text-xs text-gray-400 mt-0.5">Play loads the game-only embed. New tab opens the full page if needed.</p>
+          </div>
+          <a href="https://pizzaedition.com/" target="_blank" class="shrink-0 px-4 py-2 rounded-full bg-indigo-500/20 hover:bg-indigo-500/30 text-xs font-bold text-indigo-200 border border-indigo-400/30">Open Pizza Edition ↗</a>
+        </div>
+
+        <section class="mb-10">
+          <h2 class="text-xl sm:text-2xl font-extrabold mb-4">Featured practice</h2>
+          <div id="hot-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 sm:gap-4"></div>
+        </section>
+
+        <!-- All games -->
+        <section class="mb-16">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
+            <div>
+              <h2 id="grid-title" class="text-xl sm:text-2xl md:text-3xl font-extrabold">All games</h2>
+              <p class="text-xs sm:text-sm text-gray-400 mt-1">Browse the arcade — click any title to play instantly.</p>
+            </div>
+            <select id="sort-select" onchange="changeSort(this.value)" class="bg-white/[0.07] border border-white/10 text-white text-xs font-bold rounded-full px-3.5 py-2 outline-none cursor-pointer">
+              <option value="popular">Most Popular</option>
+              <option value="az">A–Z</option>
+              <option value="category">By Category</option>
+            </select>
+          </div>
+          <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+          <p id="end-text" class="text-center text-xs text-gray-500 mt-8 hidden">End of list</p>
+        </section>
+      </main>
+    </div>
+
+    <!-- SEARCH RESULTS -->
+    <div id="search-page" class="view-section hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+        <div>
+          <h1 class="text-2xl font-extrabold">Search Results</h1>
+          <p class="text-sm text-gray-400">Showing matches for “<span id="search-query-display" class="text-white font-semibold"></span>”</p>
+        </div>
+        <button onclick="showPage('home')" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">✕ Close</button>
+      </div>
+      <div id="search-results-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      <div id="search-empty" class="hidden text-center py-16 text-gray-400">
+        <p class="text-lg font-bold text-white mb-1">No games found</p>
+        <p class="text-sm">Try a different keyword.</p>
+      </div>
+    </div>
+
+    <!-- STREAM (dulo.gd) -->
+    <div id="stream-page" class="view-section hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold">Stream</h1>
+            <p class="text-sm text-gray-400 mt-1">Movies & TV via dulo.gd</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleStreamFullscreen()" class="px-4 py-2 rounded-full bg-white text-black hover:bg-gray-200 text-xs font-extrabold flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+              Fullscreen
+            </button>
+            <a href="https://browse.startmyeducation.net/tab.html#site=https%3A%2F%2Fdulo.gd%2F" target="_blank" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">Open in new tab ↗</a>
+            <button onclick="showPage('home')" class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
+          </div>
+        </div>
+        <div id="stream-player-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height: min(80vh, 800px);">
+          <iframe id="stream-iframe" src="about:blank" class="w-full h-full border-0" allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <p class="text-xs text-gray-500 mt-3">Loads dulo.gd through the proxy so sessions work better. Use Fullscreen for cinema mode; New tab if still blocked.</p>
+      </div>
+    </div>
+
+
+    <!-- BROWSER -->
+    <div id="browser-page" class="view-section hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Search-only home -->
+        <div id="browser-home" class="flex flex-col items-center justify-center min-h-[70vh] px-2">
+          <p class="text-xs font-semibold tracking-widest text-gray-500 uppercase mb-3">Web Search</p>
+          <h1 class="text-2xl sm:text-3xl font-extrabold mb-8 text-center">Search the web</h1>
+          <form onsubmit="browserSubmit(event)" class="w-full max-w-xl flex gap-2">
+            <input id="browser-url" type="text" placeholder="Search or type a URL…" autocomplete="off" autofocus
+              class="flex-1 h-12 px-5 rounded-2xl bg-white/10 border border-white/15 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-400/50 focus:ring-1 focus:ring-indigo-400/30" />
+            <button type="submit" class="h-12 px-6 rounded-2xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 shrink-0">Search</button>
+          </form>
+          <p class="text-xs text-gray-500 mt-4 text-center max-w-md">Results open in-page through a secure proxy. Type a site (e.g. wikipedia.org) or any search.</p>
+          <button onclick="showPage('home')" class="mt-8 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
+        </div>
+
+        <!-- Results (hidden until search) -->
+        <div id="browser-results" class="hidden">
+          <div class="flex items-center gap-2 mb-3">
+            <button onclick="browserShowHome()" title="New search" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </button>
+            <form onsubmit="browserSubmit(event)" class="flex-1 flex gap-2">
+              <input id="browser-url-bar" type="text" placeholder="Search or URL…" autocomplete="off"
+                class="flex-1 h-10 px-4 rounded-xl bg-white/10 border border-white/15 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-400/50" />
+              <button type="submit" class="h-10 px-4 rounded-xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 shrink-0">Go</button>
+            </form>
+            <button onclick="browserOpenExternal()" title="Open in new tab" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </button>
+            <button onclick="browserFullscreen()" title="Fullscreen" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+            </button>
+          </div>
+          <div id="browser-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height: min(75vh, 780px);">
+            <iframe id="browser-iframe" src="about:blank" class="w-full h-full border-0 bg-white" allow="fullscreen" allowfullscreen></iframe>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -840,12 +1560,7 @@ function showPage(name) {
     const top = document.getElementById('navbar');
     const bot = document.querySelector('.sm\\:hidden.fixed.bottom-4');
     if (name === 'browser') {
-      try {
-        const frame = document.getElementById('browser-iframe');
-        if (frame && (!frame.src || frame.src === 'about:blank' || frame.src.endsWith('about:blank'))) {
-          browserGo('https://duckduckgo.com/');
-        }
-      } catch (e) {}
+      try { browserShowHome(); } catch (e) {}
     }
     if (name === 'stream') {
       try { loadStreamDulo(); } catch (e) {}
