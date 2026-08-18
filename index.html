@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark" style="background:#0a0a0a;color:#fff">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,9 +10,7 @@
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%231e3a5f' width='100' height='100' rx='12'/%3E%3Ctext x='50' y='62' text-anchor='middle' font-size='48' fill='white' font-family='Georgia,serif'%3EM%3C/text%3E%3C/svg%3E" />
   <meta name="description" content="Essential Mathematics for the Australian Curriculum Year 8, 4th Edition — Cambridge University Press. Online student resources, exercises and worked examples." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- system fonts only — faster first paint -->
   <!-- Tailwind Play CDN (fine for this single-file static site). Production apps should use the CLI/PostCSS build. -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -20,7 +18,7 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          fontFamily: { sans: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'] },
           colors: { oled: { bg: '#0a0a0a', card: '#141414' } }
         }
       }
@@ -28,7 +26,7 @@
   </script>
   <style>
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background-color: #0a0a0a;
       color: #ffffff;
       overflow-x: hidden;
@@ -181,19 +179,12 @@
     .wallpaper-thumb:hover { transform: scale(1.08); }
   </style>
 </head>
-<body class="bg-oled-bg text-gray-100 min-h-screen antialiased selection:bg-white/20 selection:text-white overflow-x-hidden">
+<body style="background:#0a0a0a;color:#fff;margin:0" class="bg-oled-bg text-gray-100 min-h-screen antialiased selection:bg-white/20 selection:text-white overflow-x-hidden">
 
   <!-- Wallpaper layer -->
   <div id="wallpaper-layer" class="wp-aurora"></div>
 
-  <!-- Startup -->
-  <div id="startup-overlay" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-2xl flex flex-col items-center justify-center">
-    <div class="loader">
-      <div class="circle"></div><div class="circle"></div>
-      <div class="circle"></div><div class="circle"></div>
-    </div>
-    <p class="mt-6 text-sm text-gray-400 font-medium tracking-wide">Loading Essential Mathematics Y8…</p>
-  </div>
+  <!-- startup splash removed for faster load -->
 
   <!-- Desktop Navbar -->
   <header id="navbar" class="hidden sm:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 nav-at-top py-2">
@@ -369,7 +360,7 @@
               class="flex-1 h-12 px-5 rounded-2xl bg-white/10 border border-white/15 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-400/50 focus:ring-1 focus:ring-indigo-400/30" />
             <button type="submit" class="h-12 px-6 rounded-2xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 shrink-0">Search</button>
           </form>
-          <p class="text-xs text-gray-500 mt-4 text-center max-w-md">Results open in-page through a secure proxy. Type a site (e.g. wikipedia.org) or any search.</p>
+          <p class="text-xs text-gray-500 mt-4 text-center max-w-md">Results use a proxy (can be slow when busy). For speed, use the open-in-new-tab button after searching.</p>
           <button onclick="showPage('home')" class="mt-8 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
         </div>
 
@@ -710,8 +701,9 @@
     browserCurrent = src;
     browserShowResults();
     browserSetInputs(target);
-    frame.src = 'about:blank';
-    setTimeout(() => { frame.src = src; }, 40);
+    // Load proxy immediately (no blank intermediate)
+    if (frame.src !== src) frame.src = src;
+    else frame.src = src; // force reload same query
   }
 
   function browserSubmit(e) {
@@ -756,7 +748,7 @@
   </script>
   <style>
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       background-color: #0a0a0a;
       color: #ffffff;
       overflow-x: hidden;
@@ -914,14 +906,7 @@
   <!-- Wallpaper layer -->
   <div id="wallpaper-layer" class="wp-aurora"></div>
 
-  <!-- Startup -->
-  <div id="startup-overlay" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-2xl flex flex-col items-center justify-center">
-    <div class="loader">
-      <div class="circle"></div><div class="circle"></div>
-      <div class="circle"></div><div class="circle"></div>
-    </div>
-    <p class="mt-6 text-sm text-gray-400 font-medium tracking-wide">Loading Essential Mathematics Y8…</p>
-  </div>
+  <!-- startup splash removed for faster load -->
 
   <!-- Desktop Navbar -->
   <header id="navbar" class="hidden sm:block fixed top-0 left-0 right-0 z-50 transition-all duration-300 nav-at-top py-2">
@@ -1097,7 +1082,7 @@
               class="flex-1 h-12 px-5 rounded-2xl bg-white/10 border border-white/15 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-400/50 focus:ring-1 focus:ring-indigo-400/30" />
             <button type="submit" class="h-12 px-6 rounded-2xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 shrink-0">Search</button>
           </form>
-          <p class="text-xs text-gray-500 mt-4 text-center max-w-md">Results open in-page through a secure proxy. Type a site (e.g. wikipedia.org) or any search.</p>
+          <p class="text-xs text-gray-500 mt-4 text-center max-w-md">Results use a proxy (can be slow when busy). For speed, use the open-in-new-tab button after searching.</p>
           <button onclick="showPage('home')" class="mt-8 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold">← Back</button>
         </div>
 
@@ -1452,8 +1437,7 @@
       + '#site=' + encodeURIComponent('https://dulo.gd/');
     // only set if not already on dulo proxy
     if (!frame.src || frame.src === 'about:blank' || frame.src.endsWith('about:blank') || !frame.src.includes('dulo')) {
-      frame.src = 'about:blank';
-      setTimeout(() => { frame.src = proxy; }, 30);
+      frame.src = proxy;
     }
   }
 
@@ -1560,7 +1544,18 @@ function showPage(name) {
     const top = document.getElementById('navbar');
     const bot = document.querySelector('.sm\\:hidden.fixed.bottom-4');
     if (name === 'browser') {
-      try { browserShowHome(); } catch (e) {}
+      try {
+        browserShowHome();
+        // Warm proxy SW in background so first search is faster
+        if (!window.__proxyWarmed) {
+          window.__proxyWarmed = true;
+          const warm = document.createElement('iframe');
+          warm.style.cssText = 'position:absolute;width:0;height:0;border:0;opacity:0;pointer-events:none';
+          warm.src = (typeof PROXY_TAB !== 'undefined' ? PROXY_TAB : 'https://browse.startmyeducation.net/tab.html');
+          document.body.appendChild(warm);
+          setTimeout(() => { try { warm.remove(); } catch(e) {} }, 15000);
+        }
+      } catch (e) {}
     }
     if (name === 'stream') {
       try { loadStreamDulo(); } catch (e) {}
@@ -1595,20 +1590,13 @@ function showPage(name) {
     }
   });
 
-  // Init
+  // Init — show UI ASAP (no artificial loading screen)
   function init() {
     const saved = (function(){ try { return localStorage.getItem('studyhub-wp') || 'aurora'; } catch(e){ return 'aurora'; } })();
     setWallpaper(saved);
     sorted.sort((a,b) => b.popular - a.popular);
     renderHot();
     renderGrid();
-    setTimeout(() => {
-      const splash = document.getElementById('startup-overlay');
-      if (splash) {
-        splash.classList.add('opacity-0', 'pointer-events-none');
-        setTimeout(() => splash.remove(), 300);
-      }
-    }, 600);
   }
 
   if (document.readyState === 'loading') {
@@ -1616,10 +1604,6 @@ function showPage(name) {
   } else {
     init();
   }
-  setTimeout(() => {
-    const splash = document.getElementById('startup-overlay');
-    if (splash) splash.remove();
-  }, 2500);
 </script>
 </body>
 </html>
