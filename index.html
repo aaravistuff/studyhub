@@ -7,6 +7,9 @@
   <meta name="description" content="Essential Mathematics for the Australian Curriculum Year 8, 4th Edition." />
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="https://www.google.com/s2/favicons?domain=cambridge.org&sz=64" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={darkMode:"class"};</script>
   <style>
@@ -22,12 +25,103 @@
     #macos-window{transition:opacity .25s ease,transform .25s ease}
     .player-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,.12);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes mcShift{0%{filter:hue-rotate(0deg) brightness(1.05)}100%{filter:hue-rotate(12deg) brightness(1.15)}}
   </style>
 </head>
 <body>
   <div id="wallpaper-layer" class="fixed inset-0 overflow-hidden" style="z-index:0"></div>
 
-  <div id="macos-menubar" class="fixed top-0 left-0 right-0 z-[60] h-7 flex items-center justify-between px-4 text-[12px] font-medium select-none"
+  
+  <!-- Desktop (greeting + apps on left — not inside a window) -->
+  <!-- Desktop: date + time only -->
+  <div id="desktop-ui" class="fixed inset-0 z-[30] pointer-events-none" style="top:28px;bottom:80px;">
+    <div class="absolute top-3 left-0 right-0 flex flex-col items-center select-none"
+         style="font-family:'Outfit',-apple-system,BlinkMacSystemFont,sans-serif;">
+      <p id="home-date" class="text-sm font-normal tracking-wide" style="color:rgba(255,255,255,0.55);"></p>
+      <p id="home-time" class="text-4xl sm:text-5xl font-light tabular-nums mt-0.5" style="color:rgba(255,255,255,0.78);letter-spacing:0.06em;"></p>
+    </div>
+    <p id="home-greeting" class="hidden"></p>
+  </div>
+
+  <!-- App library (9-dot launcher) -->
+  <div id="app-library" class="fixed inset-0 z-[70] hidden flex flex-col" style="background:rgba(0,0,0,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);">
+    <button type="button" onclick="closeAppLibrary()" class="absolute inset-0 w-full h-full cursor-default border-0 bg-transparent" aria-label="Close"></button>
+    <div class="relative z-10 flex-1 overflow-y-auto overscroll-contain px-6 py-16 sm:py-20" style="-webkit-overflow-scrolling:touch;">
+      <div class="max-w-lg mx-auto pb-24">
+      <p class="text-center text-sm font-semibold text-white/50 mb-6 tracking-wide">Apps</p>
+      <div class="grid grid-cols-3 sm:grid-cols-4 gap-6 justify-items-center">
+        <button type="button" onclick="openDesktopApp('settings');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+          </div>
+          <span class="text-[11px] text-white">Settings</span>
+        </button>
+        <button type="button" onclick="openApp('https://www.youtube.com/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.8 15.5v-7l6.2 3.5-6.2 3.5z"/></svg>
+          </div>
+          <span class="text-[11px] text-white">Youtube</span>
+        </button>
+        <button type="button" onclick="openApp('https://music.youtube.com/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+          </div>
+          <span class="text-[11px] text-white">Music</span>
+        </button>
+        <button type="button" onclick="openApp('https://classroom.google.com/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M12 3L1 9l4 2.2v6L12 21l7-3.8v-6L23 9 12 3zm0 2.2l6.5 3.6L12 12.4 5.5 8.8 12 5.2z"/></svg>
+          </div>
+          <span class="text-[11px] text-white">Classroom</span>
+        </button>
+        <button type="button" onclick="openApp('https://docs.google.com/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7V3.5L19.5 9H15zM8 13h8v1.5H8V13zm0 3h8v1.5H8V16zm0-6h5v1.5H8V10z"/></svg>
+          </div>
+          <span class="text-[11px] text-white">Docs</span>
+        </button>
+        <button type="button" onclick="openApp('https://drive.google.com/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M7.7 3h8.6L22 14h-5.5L7.7 3zM2 14l4.3 7h11.4l-4.3-7H2z"/></svg>
+          </div>
+          <span class="text-[11px] text-white">Drive</span>
+        </button>
+        <button type="button" onclick="openApp('https://mail.google.com/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg>
+          </div>
+          <span class="text-[11px] text-white">Gmail</span>
+        </button>
+        <button type="button" onclick="openApp('https://www.google.com/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <span style="font-size:22px;font-weight:700;color:#fff;">G</span>
+          </div>
+          <span class="text-[11px] text-white">Google</span>
+        </button>
+        <button type="button" onclick="openApp('https://www.tiktok.com/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M19.6 6.8A4.9 4.9 0 0 1 16.4 5.5V15a5 5 0 1 1-5-5v2.2a2.8 2.8 0 1 0 2.8 2.8V2h2.3a4.9 4.9 0 0 0 4.1 4.1v.7z"/></svg>
+          </div>
+          <span class="text-[11px] text-white">TikTok</span>
+        </button>
+        <button type="button" onclick="openApp('https://duckmath.org/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <span style="font-size:20px;">🦆</span>
+          </div>
+          <span class="text-[11px] text-white">DuckMath</span>
+        </button>
+        <button type="button" onclick="openApp('https://wikipedia.org/');closeAppLibrary();" class="flex flex-col items-center gap-2 bg-transparent border-0 cursor-pointer">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center" style="background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);">
+            <span style="font-size:22px;font-family:Georgia,serif;font-weight:700;color:#fff;">W</span>
+          </div>
+          <span class="text-[11px] text-white">Wikipedia</span>
+        </button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+<div id="macos-menubar" class="fixed top-0 left-0 right-0 z-[60] h-7 flex items-center justify-between px-4 text-[12px] font-medium select-none"
     style="background:rgba(30,30,30,.72);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.08)">
     <div class="flex items-center gap-4 text-white/90">
       <span class="font-semibold">&#63743;</span>
@@ -57,109 +151,7 @@
     <div id="macos-content" class="flex-1 overflow-y-auto relative">
       <div id="page-wrapper" class="w-full min-h-full">
 
-        <div id="home-page" class="view-section hidden">
-          <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-            <!-- Brand -->
-            <div class="flex items-center gap-3 mb-8">
-              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 via-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg>
-              </div>
-              <div>
-                <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">StudyHub</h1>
-                <p class="text-xs text-white/60">Essential Mathematics · Year 8</p>
-              </div>
-            </div>
-
-            <!-- Greeting + clock -->
-            <div class="mb-10">
-              <p id="home-greeting" class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-2 drop-shadow-lg">Good morning</p>
-              <p id="home-date" class="text-base sm:text-lg text-white/80 font-medium"></p>
-              <p id="home-time" class="text-2xl sm:text-3xl font-semibold text-white/90 tabular-nums mt-1"></p>
-            </div>
-
-            <!-- Core apps -->
-            <p class="text-xs font-bold uppercase tracking-wider text-white/50 mb-3">StudyHub</p>
-            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 mb-10">
-              <button type="button" onclick="showPage('browser')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Browser</span>
-              </button>
-              <button type="button" onclick="showPage('games')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-violet-400 to-purple-700 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Games</span>
-              </button>
-              <button type="button" onclick="showPage('stream')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-rose-400 to-red-700 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M3 7h13v10H3z"/><path d="M16 10l5-3v10l-5-3z"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Stream</span>
-              </button>
-              <button type="button" onclick="showPage('settings')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-gray-400 to-gray-700 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Settings</span>
-              </button>
-            </div>
-
-            <!-- Web apps -->
-            <p class="text-xs font-bold uppercase tracking-wider text-white/50 mb-3">Apps</p>
-            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 pb-8">
-              <button type="button" onclick="openApp('https://music.youtube.com/')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-red-500 to-red-800 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center leading-tight">YT Music</span>
-              </button>
-              <button type="button" onclick="openApp('https://www.youtube.com/')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-[#ff0000] shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.8 15.5v-7l6.2 3.5-6.2 3.5z"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">YouTube</span>
-              </button>
-              <button type="button" onclick="openApp('https://classroom.google.com/')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-green-400 to-green-700 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 3L1 9l4 2.2v6L12 21l7-3.8v-6L23 9 12 3zm0 2.2l6.5 3.6L12 12.4 5.5 8.8 12 5.2zM6 16.3v-4.1l5 2.8v4.2l-5-2.9zm7 2.9v-4.2l5-2.8v4.1l-5 2.9z"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Classroom</span>
-              </button>
-              <button type="button" onclick="openApp('https://docs.google.com/')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-blue-300 to-blue-600 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7V3.5L19.5 9H15zM8 13h8v1.5H8V13zm0 3h8v1.5H8V16zm0-6h5v1.5H8V10z"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Docs</span>
-              </button>
-              <button type="button" onclick="openApp('https://drive.google.com/')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-amber-300 via-green-400 to-blue-500 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M7.7 3h8.6L22 14h-5.5L7.7 3zM2 14l4.3 7h11.4l-4.3-7H2zm5.5-1L12 5.2 16.5 13h-9z"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Drive</span>
-              </button>
-              <button type="button" onclick="openApp('https://mail.google.com/')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-red-400 to-red-600 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Gmail</span>
-              </button>
-              <button type="button" onclick="openApp('https://www.google.com/')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-white shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <svg width="28" height="28" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Google</span>
-              </button>
-              <button type="button" onclick="openApp('https://wikipedia.org/')" class="app-icon group flex flex-col items-center gap-2">
-                <div class="w-16 h-16 rounded-[22%] bg-gradient-to-br from-gray-100 to-gray-400 shadow-lg flex items-center justify-center transition-transform group-hover:scale-110 group-hover:-translate-y-1">
-                  <span class="text-2xl font-serif font-bold text-gray-900">W</span>
-                </div>
-                <span class="text-[11px] font-semibold text-center">Wikipedia</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <div id="home-page" class="view-section hidden"></div>
 
         <div id="games-page" class="view-section hidden">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
@@ -289,12 +281,8 @@
   <div id="macos-dock" class="fixed bottom-3 left-1/2 -translate-x-1/2 z-[60] flex items-end gap-1 px-3 py-2 rounded-2xl"
     style="background:rgba(40,40,45,.55);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.15);box-shadow:0 8px 32px rgba(0,0,0,.4)">
     <button type="button" data-nav="browser" onclick="showPage('browser')" class="dock-item group flex flex-col items-center gap-1 px-2">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-700 flex items-center justify-center shadow-lg transition-transform group-hover:-translate-y-2 group-hover:scale-110"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></div>
-      <span class="dock-dot w-1 h-1 rounded-full bg-white/80 opacity-0"></span>
-    </button>
-    <button type="button" data-nav="home" onclick="showPage('home')" class="dock-item group flex flex-col items-center gap-1 px-2">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center shadow-lg transition-transform group-hover:-translate-y-2 group-hover:scale-110">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-700 flex items-center justify-center shadow-lg transition-transform group-hover:-translate-y-2 group-hover:scale-110">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
       </div>
       <span class="dock-dot w-1 h-1 rounded-full bg-white/80 opacity-0"></span>
     </button>
@@ -311,11 +299,19 @@
       <span class="dock-dot w-1 h-1 rounded-full bg-white/80 opacity-0"></span>
     </button>
     <div class="w-px h-10 bg-white/20 mx-1 self-center"></div>
-    <button type="button" data-nav="settings" onclick="showPage('settings')" class="dock-item group flex flex-col items-center gap-1 px-2">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center shadow-lg transition-transform group-hover:-translate-y-2 group-hover:scale-110"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg></div>
-      <span class="dock-dot w-1 h-1 rounded-full bg-white/80 opacity-0"></span>
+    <button type="button" onclick="toggleAppLibrary()" class="dock-item group flex flex-col items-center gap-1 px-2" title="Apps">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-500 to-gray-700 flex items-center justify-center shadow-lg transition-transform group-hover:-translate-y-2 group-hover:scale-110">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
+          <circle cx="5" cy="5" r="2.2"/><circle cx="12" cy="5" r="2.2"/><circle cx="19" cy="5" r="2.2"/>
+          <circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/>
+          <circle cx="5" cy="19" r="2.2"/><circle cx="12" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/>
+        </svg>
+      </div>
+      <span class="w-1 h-1 rounded-full opacity-0"></span>
     </button>
   </div>
+
+
 
   <div id="app-player-view" class="fixed inset-0 z-[200] bg-black flex flex-col hidden">
     <header class="h-14 bg-neutral-900/90 border-b border-white/10 px-4 flex items-center justify-between shrink-0">
@@ -371,24 +367,29 @@ function setWallpaper(name){
   layer.style.zIndex="0";
   layer.innerHTML="";
   try{localStorage.setItem("studyhub-wp","minecraft")}catch(e){}
-  // Brighter Minecraft live wallpaper — scaled up to crop YouTube UI chrome
-  layer.innerHTML=`
-    <div class="absolute inset-0 overflow-hidden">
-      <iframe id="yt-wallpaper" class="absolute top-1/2 left-1/2 pointer-events-none"
-        style="width:120vw;height:67.5vw;min-height:120vh;min-width:213vh;transform:translate(-50%,-50%) scale(1.15);border:0;"
-        src="https://www.youtube-nocookie.com/embed/Im6RusHotNY?autoplay=1&mute=1&loop=1&playlist=Im6RusHotNY&controls=0&showinfo=0&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3&fs=0&disablekb=1&cc_load_policy=0"
-        allow="autoplay; encrypted-media"
-        title="Minecraft wallpaper"></iframe>
-    </div>
-    <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(180deg,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.25) 100%);"></div>
-    <div id="yt-ui-mask" class="absolute inset-0 pointer-events-none bg-transparent"></div>`;
-  // Cover center briefly so pause icon is less visible on load
-  const mask=document.getElementById("yt-ui-mask");
-  if(mask){
-    mask.style.background="rgba(0,0,0,0.35)";
-    setTimeout(()=>{mask.style.transition="background 0.8s ease";mask.style.background="transparent";},2500);
+
+  const fallback=
+    '<div class="absolute inset-0" style="' +
+    'background:linear-gradient(180deg, rgba(87,160,255,0.45) 0%, rgba(120,190,90,0.25) 42%, rgba(80,140,60,0.5) 70%, rgba(60,40,20,0.85) 100%),' +
+    'repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(0,0,0,0.06) 31px, rgba(0,0,0,0.06) 32px),' +
+    'repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(0,0,0,0.06) 31px, rgba(0,0,0,0.06) 32px),' +
+    '#5aa0ff;animation:mcShift 20s ease-in-out infinite alternate;"></div>' +
+    '<div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,0.15),transparent 55%);"></div>';
+
+  const ytSrc="https://www.youtube.com/embed/Im6RusHotNY?autoplay=1&mute=1&loop=1&playlist=Im6RusHotNY&controls=0&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3&fs=0&disablekb=1";
+  layer.innerHTML=fallback +
+    '<div id="yt-wrap" class="absolute inset-0 overflow-hidden opacity-0" style="transition:opacity 0.7s">' +
+    '<iframe id="yt-wallpaper" class="absolute top-1/2 left-1/2 pointer-events-none" ' +
+    'style="width:120vw;height:67.5vw;min-height:120vh;min-width:213vh;transform:translate(-50%,-50%) scale(1.2);border:0" ' +
+    'src="'+ytSrc+'" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture" title="Minecraft wallpaper"></iframe>' +
+    '<div class="absolute inset-0 pointer-events-none" style="background:rgba(255,255,255,0.06)"></div></div>';
+
+  const wrap=document.getElementById("yt-wrap");
+  if(wrap){
+    setTimeout(function(){ wrap.style.opacity="1"; }, 1200);
   }
 }
+
 function safeImg(g){return g.img||("https://placehold.co/200x200/1e1b4b/fff?text="+encodeURIComponent(g.name.slice(0,8)))}
 function buildCard(g){return '<button type="button" onclick="viewGame(\''+g.id+'\')" class="game-card text-left rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 overflow-hidden"><div class="aspect-square overflow-hidden bg-black/40"><img src="'+safeImg(g)+'" class="w-full h-full object-cover" loading="lazy" onerror="this.style.opacity=.3"/></div><div class="p-2"><p class="text-xs font-bold truncate">'+g.name+'</p><p class="text-[10px] text-gray-500">'+g.category+'</p></div></button>'}
 function renderHot(){const el=document.getElementById("hot-grid");if(el)el.innerHTML=[...GAMES].sort((a,b)=>b.popular-a.popular).slice(0,7).map(buildCard).join("")}
@@ -415,11 +416,30 @@ function applyCloakFromStorage(){const c=getCloak();document.title=c.title;setFa
 function applyCloak(){const title=((document.getElementById("cloak-title-input")||{}).value||DEFAULT_CLOAK_TITLE).trim();const icon=((document.getElementById("cloak-icon-input")||{}).value||DEFAULT_CLOAK_ICON).trim();try{localStorage.setItem("studyhub-cloak-title",title);localStorage.setItem("studyhub-cloak-icon",icon)}catch(e){}document.title=title;setFavicon(icon)}
 function presetCloak(title,icon){const t=document.getElementById("cloak-title-input"),i=document.getElementById("cloak-icon-input");if(t)t.value=title;if(i)i.value=icon;applyCloak()}
 function resetCloak(){try{localStorage.removeItem("studyhub-cloak-title");localStorage.removeItem("studyhub-cloak-icon")}catch(e){}applyCloakFromStorage()}
-function macosTraffic(action){const win=document.getElementById("macos-window");if(!win)return;if(action==="close"||action==="min"){win.style.opacity="0";win.style.pointerEvents="none";win.style.transform=action==="min"?"translateY(40px) scale(0.85)":"scale(0.96)"}else if(action==="max"){if(win.dataset.max==="1"){win.style.top="40px";win.style.left="12px";win.style.right="12px";win.style.bottom="88px";win.style.borderRadius="12px";win.dataset.max="0"}else{win.style.top="28px";win.style.left="0";win.style.right="0";win.style.bottom="0";win.style.borderRadius="0";win.dataset.max="1"}}}
+function macosTraffic(action){const win=document.getElementById("macos-window");if(!win)return;if(action==="close"||action==="min"){win.style.opacity="0";win.style.pointerEvents="none";win.style.visibility="hidden";win.style.transform=action==="min"?"translateY(40px) scale(0.85)":"scale(0.96)";document.querySelectorAll(".dock-item .dock-dot").forEach(d=>d.style.opacity="0")}else if(action==="max"){if(win.dataset.max==="1"){win.style.top="40px";win.style.left="12px";win.style.right="12px";win.style.bottom="88px";win.style.borderRadius="12px";win.dataset.max="0"}else{win.style.top="28px";win.style.left="0";win.style.right="0";win.style.bottom="0";win.style.borderRadius="0";win.dataset.max="1"}}}
 function updateMacClock(){const el=document.getElementById("macos-clock");if(el)el.textContent=new Date().toLocaleString(undefined,{weekday:"short",hour:"numeric",minute:"2-digit"})}
+function toggleAppLibrary(){
+  const el=document.getElementById("app-library");
+  if(!el)return;
+  el.classList.toggle("hidden");
+}
+function closeAppLibrary(){
+  const el=document.getElementById("app-library");
+  if(el)el.classList.add("hidden");
+}
+function openDesktopApp(name){
+  const win=document.getElementById("macos-window");
+  if(win){win.style.opacity="1";win.style.pointerEvents="auto";win.style.transform="none";win.style.visibility="visible";}
+  showPage(name);
+}
+function hideWindowToDesktop(){
+  const win=document.getElementById("macos-window");
+  if(win){win.style.opacity="0";win.style.pointerEvents="none";win.style.visibility="hidden";}
+  document.querySelectorAll(".dock-item .dock-dot").forEach(d=>d.style.opacity="0");
+}
 function openApp(url){
-  showPage("browser");
-  setTimeout(function(){ browserGo(url); }, 50);
+  openDesktopApp("browser");
+  setTimeout(function(){ browserGo(url); }, 80);
 }
 function updateHomeClock(){
   const now=new Date();
@@ -434,8 +454,8 @@ function updateHomeClock(){
   if(d)d.textContent=now.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
   if(t)t.textContent=now.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
 }
-function showPage(name){const map={home:"home-page",games:"games-page",stream:"stream-page",details:"details-page",player:"app-player-view",browser:"browser-page",settings:"settings-page"};const target=map[name]||(name+"-page");["home-page","games-page","stream-page","details-page","app-player-view","browser-page","settings-page"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle("hidden",id!==target)});document.querySelectorAll(".dock-item[data-nav]").forEach(btn=>{const on=btn.getAttribute("data-nav")===name||(name==="details"&&btn.getAttribute("data-nav")==="games")||(name==="games"&&btn.getAttribute("data-nav")==="games");const dot=btn.querySelector(".dock-dot");if(dot)dot.style.opacity=on?"1":"0"});const titles={browser:"Browser",home:"Home",games:"Games",stream:"Stream",details:"Game",player:"Player",settings:"Settings"};const wt=document.getElementById("macos-window-title");if(wt)wt.textContent=titles[name]||"Essential Mathematics";const win=document.getElementById("macos-window");if(win&&name!=="player"){win.style.opacity="1";win.style.pointerEvents="auto";win.style.transform="none"}if(name==="stream")try{loadStreamDulo()}catch(e){}if(name==="browser")try{browserShowHome()}catch(e){}if(name==="settings")applyCloakFromStorage()}
-function init(){setWallpaper("minecraft");sorted.sort((a,b)=>b.popular-a.popular);renderHot();renderGrid();applyCloakFromStorage();updateMacClock();updateHomeClock();setInterval(updateMacClock,15000);setInterval(updateHomeClock,1000);showPage("home")}
+function showPage(name){const map={home:"home-page",games:"games-page",stream:"stream-page",details:"details-page",player:"app-player-view",browser:"browser-page",settings:"settings-page"};const target=map[name]||(name+"-page");["home-page","games-page","stream-page","details-page","app-player-view","browser-page","settings-page"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle("hidden",id!==target)});document.querySelectorAll(".dock-item[data-nav]").forEach(btn=>{const on=btn.getAttribute("data-nav")===name||(name==="details"&&btn.getAttribute("data-nav")==="games")||(name==="games"&&btn.getAttribute("data-nav")==="games");const dot=btn.querySelector(".dock-dot");if(dot)dot.style.opacity=on?"1":"0"});const titles={browser:"Browser",home:"Home",games:"Games",stream:"Stream",details:"Game",player:"Player",settings:"Settings"};const wt=document.getElementById("macos-window-title");if(wt)wt.textContent=titles[name]||"Essential Mathematics";const win=document.getElementById("macos-window");if(win&&name!=="player"&&name!=="home"){win.style.opacity="1";win.style.pointerEvents="auto";win.style.transform="none";win.style.visibility="visible"}if(name==="stream")try{loadStreamDulo()}catch(e){}if(name==="browser")try{browserShowHome()}catch(e){}if(name==="settings")applyCloakFromStorage()}
+function init(){setWallpaper("minecraft");sorted.sort((a,b)=>b.popular-a.popular);renderHot();renderGrid();applyCloakFromStorage();updateMacClock();updateHomeClock();setInterval(updateMacClock,15000);setInterval(updateHomeClock,1000);hideWindowToDesktop();}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 </script>
 </body>
