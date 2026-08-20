@@ -228,10 +228,10 @@
             <p class="text-sm text-gray-400 mb-8">Wallpaper &amp; tab cloak</p>
             <section class="mb-10">
               <h2 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-2">Desktop wallpaper</h2>
-              <p class="text-xs text-gray-500 mb-4">Live wallpaper behind the window.</p>
+              <p class="text-xs text-gray-500 mb-4">Minecraft animated wallpaper.</p>
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 <button type="button" onclick="setWallpaper('minecraft')" class="rounded-xl border border-white/15 overflow-hidden text-left hover:border-white/40">
-                  <div class="h-20 bg-gradient-to-br from-green-700 to-green-900 flex items-center justify-center text-sm font-bold">⛏ Minecraft</div>
+                  <div class="h-20 bg-gradient-to-br from-green-700 to-green-900 flex items-center justify-center text-sm font-bold">Minecraft</div>
                   <div class="px-3 py-2 text-xs font-semibold bg-white/5">Minecraft</div>
                 </button>
               </div>
@@ -371,26 +371,15 @@ function setWallpaper(name){
   layer.style.zIndex="0";
   layer.innerHTML="";
   try{localStorage.setItem("studyhub-wp","minecraft")}catch(e){}
-
-  const fallback=
-    '<div class="absolute inset-0" style="' +
-    'background:linear-gradient(180deg, rgba(87,160,255,0.45) 0%, rgba(120,190,90,0.25) 42%, rgba(80,140,60,0.5) 70%, rgba(60,40,20,0.85) 100%),' +
-    'repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(0,0,0,0.06) 31px, rgba(0,0,0,0.06) 32px),' +
-    'repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(0,0,0,0.06) 31px, rgba(0,0,0,0.06) 32px),' +
-    '#5aa0ff;animation:mcShift 20s ease-in-out infinite alternate;"></div>' +
-    '<div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,0.15),transparent 55%);"></div>';
-
-  const ytSrc="https://www.youtube.com/embed/Im6RusHotNY?autoplay=1&mute=1&loop=1&playlist=Im6RusHotNY&controls=0&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3&fs=0&disablekb=1";
-  layer.innerHTML=fallback +
-    '<div id="yt-wrap" class="absolute inset-0 overflow-hidden opacity-0" style="transition:opacity 0.7s">' +
-    '<iframe id="yt-wallpaper" class="absolute top-1/2 left-1/2 pointer-events-none" ' +
-    'style="width:120vw;height:67.5vw;min-height:120vh;min-width:213vh;transform:translate(-50%,-50%) scale(1.2);border:0" ' +
-    'src="'+ytSrc+'" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture" title="Minecraft wallpaper"></iframe>' +
-    '<div class="absolute inset-0 pointer-events-none" style="background:rgba(255,255,255,0.06)"></div></div>';
-
-  const wrap=document.getElementById("yt-wrap");
-  if(wrap){
-    setTimeout(function(){ wrap.style.opacity="1"; }, 1200);
+  // Local Minecraft nature video wallpaper (loops, muted)
+  layer.innerHTML=
+    '<video id="mc-wallpaper" autoplay muted loop playsinline ' +
+    'style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;" ' +
+    'src="minecraft-wallpaper.mp4"></video>' +
+    '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.12);pointer-events:none;"></div>';
+  const v=document.getElementById("mc-wallpaper");
+  if(v){
+    v.play().catch(function(){});
   }
 }
 
