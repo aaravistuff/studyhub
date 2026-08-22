@@ -228,11 +228,19 @@
             <p class="text-sm text-gray-400 mb-8">Wallpaper &amp; tab cloak</p>
             <section class="mb-10">
               <h2 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-2">Desktop wallpaper</h2>
-              <p class="text-xs text-gray-500 mb-4">Minecraft animated wallpaper.</p>
+              <p class="text-xs text-gray-500 mb-4">Pick a live video wallpaper. Saved for next visit.</p>
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <button type="button" onclick="setWallpaper('minecraft')" class="rounded-xl border border-white/15 overflow-hidden text-left hover:border-white/40">
-                  <div class="h-20 bg-gradient-to-br from-green-700 to-green-900 flex items-center justify-center text-sm font-bold">Minecraft</div>
+                <button type="button" data-wp="minecraft" onclick="setWallpaper('minecraft')" class="rounded-xl border border-white/15 overflow-hidden text-left hover:border-white/40 transition">
+                  <div class="h-20 bg-gradient-to-br from-green-600 to-emerald-900 flex items-center justify-center text-xs font-bold px-2 text-center">Minecraft Nature</div>
                   <div class="px-3 py-2 text-xs font-semibold bg-white/5">Minecraft</div>
+                </button>
+                <button type="button" data-wp="autumn" onclick="setWallpaper('autumn')" class="rounded-xl border border-white/15 overflow-hidden text-left hover:border-white/40 transition">
+                  <div class="h-20 bg-gradient-to-br from-orange-500 via-red-600 to-rose-900 flex items-center justify-center text-xs font-bold px-2 text-center">Autumn Fire</div>
+                  <div class="px-3 py-2 text-xs font-semibold bg-white/5">Autumn Fire</div>
+                </button>
+                <button type="button" data-wp="crimson" onclick="setWallpaper('crimson')" class="rounded-xl border border-white/15 overflow-hidden text-left hover:border-white/40 transition">
+                  <div class="h-20 bg-gradient-to-br from-red-700 to-black flex items-center justify-center text-xs font-bold px-2 text-center">Crimson Faith</div>
+                  <div class="px-3 py-2 text-xs font-semibold bg-white/5">Crimson</div>
                 </button>
               </div>
             </section>
@@ -367,20 +375,30 @@ const DEFAULT_CLOAK_ICON="https://www.google.com/s2/favicons?domain=cambridge.or
 function setWallpaper(name){
   const layer=document.getElementById("wallpaper-layer");
   if(!layer)return;
+  const map={
+    minecraft:"minecraft-wallpaper.mp4",
+    autumn:"wallpaper-autumn.mp4",
+    crimson:"wallpaper-crimson.mp4"
+  };
+  const key=(name&&map[name])?name:"minecraft";
+  const src=map[key];
   layer.className="fixed inset-0 overflow-hidden";
   layer.style.zIndex="0";
   layer.innerHTML="";
-  try{localStorage.setItem("studyhub-wp","minecraft")}catch(e){}
-  // Local Minecraft nature video wallpaper (loops, muted)
+  try{localStorage.setItem("studyhub-wp",key)}catch(e){}
   layer.innerHTML=
     '<video id="mc-wallpaper" autoplay muted loop playsinline ' +
     'style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;" ' +
-    'src="minecraft-wallpaper.mp4"></video>' +
+    'src="'+src+'"></video>' +
     '<div style="position:absolute;inset:0;background:rgba(0,0,0,0.12);pointer-events:none;"></div>';
   const v=document.getElementById("mc-wallpaper");
-  if(v){
-    v.play().catch(function(){});
-  }
+  if(v){ v.play().catch(function(){}); }
+  // highlight selected tile in settings
+  document.querySelectorAll("[data-wp]").forEach(function(btn){
+    const on=btn.getAttribute("data-wp")===key;
+    btn.style.outline=on?"2px solid rgba(255,255,255,0.85)":"";
+    btn.style.outlineOffset=on?"2px":"";
+  });
 }
 
 function safeImg(g){return g.img||("https://placehold.co/200x200/1e1b4b/fff?text="+encodeURIComponent(g.name.slice(0,8)))}
@@ -451,7 +469,7 @@ function updateHomeClock(){
   if(t)t.textContent=now.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
 }
 function showPage(name){const map={home:"home-page",games:"games-page",stream:"stream-page",details:"details-page",player:"app-player-view",browser:"browser-page",settings:"settings-page"};const target=map[name]||(name+"-page");["home-page","games-page","stream-page","details-page","app-player-view","browser-page","settings-page"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle("hidden",id!==target)});document.querySelectorAll(".dock-item[data-nav]").forEach(btn=>{const on=btn.getAttribute("data-nav")===name||(name==="details"&&btn.getAttribute("data-nav")==="games")||(name==="games"&&btn.getAttribute("data-nav")==="games");const dot=btn.querySelector(".dock-dot");if(dot)dot.style.opacity=on?"1":"0"});const titles={browser:"Browser",home:"Home",games:"Games",stream:"Stream",details:"Game",player:"Player",settings:"Settings"};const wt=document.getElementById("macos-window-title");if(wt)wt.textContent=titles[name]||"Essential Mathematics";const win=document.getElementById("macos-window");if(win&&name!=="player"&&name!=="home"){win.style.opacity="1";win.style.pointerEvents="auto";win.style.transform="none";win.style.visibility="visible"}if(name==="stream")try{loadStreamDulo()}catch(e){}if(name==="browser")try{browserShowHome()}catch(e){}if(name==="settings")applyCloakFromStorage()}
-function init(){setWallpaper("minecraft");sorted.sort((a,b)=>b.popular-a.popular);renderHot();renderGrid();applyCloakFromStorage();updateMacClock();updateHomeClock();setInterval(updateMacClock,15000);setInterval(updateHomeClock,1000);hideWindowToDesktop();}
+function init(){var wp="minecraft";try{wp=localStorage.getItem("studyhub-wp")||"minecraft"}catch(e){}setWallpaper(wp);sorted.sort((a,b)=>b.popular-a.popular);renderHot();renderGrid();applyCloakFromStorage();updateMacClock();updateHomeClock();setInterval(updateMacClock,15000);setInterval(updateHomeClock,1000);hideWindowToDesktop();}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 </script>
 </body>
