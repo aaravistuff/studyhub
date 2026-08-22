@@ -242,6 +242,14 @@
                   <div class="h-20 bg-gradient-to-br from-red-700 to-black flex items-center justify-center text-xs font-bold px-2 text-center">Crimson Faith</div>
                   <div class="px-3 py-2 text-xs font-semibold bg-white/5">Crimson</div>
                 </button>
+                <button type="button" data-wp="blackhole" onclick="setWallpaper('blackhole')" class="rounded-xl border border-white/15 overflow-hidden text-left hover:border-white/40 transition">
+                  <div class="h-20 bg-gradient-to-br from-amber-200 via-orange-400 to-black flex items-center justify-center text-xs font-bold px-2 text-center">Gargantua</div>
+                  <div class="px-3 py-2 text-xs font-semibold bg-white/5">Black Hole</div>
+                </button>
+                <button type="button" data-wp="snake" onclick="setWallpaper('snake')" class="rounded-xl border border-white/15 overflow-hidden text-left hover:border-white/40 transition">
+                  <div class="h-20 bg-gradient-to-br from-zinc-300 via-gray-600 to-black flex items-center justify-center text-xs font-bold px-2 text-center">Snake Skeleton</div>
+                  <div class="px-3 py-2 text-xs font-semibold bg-white/5">Snake Chains</div>
+                </button>
               </div>
             </section>
 
@@ -378,7 +386,9 @@ function setWallpaper(name){
   const map={
     minecraft:"minecraft-wallpaper.mp4",
     autumn:"wallpaper-autumn.mp4",
-    crimson:"wallpaper-crimson.mp4"
+    crimson:"wallpaper-crimson.mp4",
+    blackhole:"wallpaper-blackhole.mp4",
+    snake:"wallpaper-snake.mp4"
   };
   const key=(name&&map[name])?name:"minecraft";
   const src=map[key];
