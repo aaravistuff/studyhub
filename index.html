@@ -26,6 +26,14 @@
     .player-spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,.12);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     @keyframes mcShift{0%{filter:hue-rotate(0deg) brightness(1.05)}100%{filter:hue-rotate(12deg) brightness(1.15)}}
+    .browser-tab{max-width:180px;min-width:90px;transition:background .15s,color .15s}
+    .browser-tab.active{background:rgba(255,255,255,.14);color:#fff}
+    .browser-tab:not(.active){background:transparent;color:rgba(255,255,255,.55)}
+    .browser-tab:not(.active):hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.85)}
+    .browser-tab .tab-x{opacity:0;transition:opacity .12s}
+    .browser-tab:hover .tab-x,.browser-tab.active .tab-x{opacity:.7}
+    .browser-tab .tab-x:hover{opacity:1;background:rgba(255,255,255,.15)}
+    #browser-tab-strip::-webkit-scrollbar{height:0}
   </style>
 </head>
 <body>
@@ -194,30 +202,40 @@
           </div>
         </div>
 
-        <div id="browser-page" class="view-section hidden">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div id="browser-home" class="flex flex-col items-center justify-center min-h-[70vh] px-2">
-              <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase mb-3">Web Search</p>
-              <h1 class="text-2xl sm:text-4xl font-extrabold mb-8 text-center">Search the web</h1>
-              <form onsubmit="browserSubmit(event)" class="w-full max-w-xl flex gap-2">
-                <input id="browser-url" type="text" placeholder="Search or type a URL..." autocomplete="off" autofocus
-                  class="flex-1 h-12 px-5 rounded-2xl bg-white/10 border border-white/15 text-sm outline-none" />
-                <button type="submit" class="h-12 px-6 rounded-2xl bg-white text-black font-extrabold text-sm">Search</button>
-              </form>
+        <div id="browser-page" class="view-section hidden" style="display:none;flex-direction:column;height:calc(100vh - 140px);min-height:420px">
+          <!-- Tab strip -->
+          <div class="flex items-center gap-1 px-2 pt-1.5 pb-0 shrink-0 border-b border-white/10" style="background:rgba(0,0,0,.35)">
+            <div id="browser-tab-strip" class="flex items-center gap-0.5 overflow-x-auto flex-1 min-w-0 py-1"></div>
+            <button type="button" onclick="browserNewTab()" title="New tab"
+              class="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 text-lg font-light leading-none">+</button>
+          </div>
+          <!-- URL bar only (single search) -->
+          <div class="flex items-center gap-2 px-3 py-2 shrink-0 border-b border-white/10" style="background:rgba(0,0,0,.28)">
+            <button type="button" onclick="browserShowHome()" title="New tab home" class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-sm shrink-0">⌂</button>
+            <form onsubmit="browserSubmit(event)" class="flex-1 flex gap-2 min-w-0">
+              <input id="browser-url-bar" type="text" placeholder="Search or type a URL..." autocomplete="off"
+                class="flex-1 h-9 px-4 rounded-xl bg-white/10 border border-white/15 text-sm outline-none min-w-0" />
+              <button type="submit" class="h-9 px-4 rounded-xl bg-white text-black font-extrabold text-sm shrink-0">Go</button>
+            </form>
+            <button type="button" onclick="browserOpenExternal()" title="Open external" class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">↗</button>
+            <button type="button" onclick="browserFullscreen()" title="Fullscreen" class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">⛶</button>
+          </div>
+          <!-- Content below chrome only -->
+          <div class="flex-1 relative min-h-0 overflow-hidden" style="background:#0a0a0c">
+            <div id="browser-home" class="absolute inset-0 flex flex-col items-center justify-center px-6 z-10" style="background:radial-gradient(ellipse at center,rgba(40,40,50,.95) 0%,rgba(10,10,12,.98) 70%)">
+              <p class="text-xs font-semibold tracking-[0.2em] text-white/40 uppercase mb-2">Unblocked browser</p>
+              <h1 class="text-3xl sm:text-4xl font-semibold text-white/90 mb-3 text-center tracking-tight">Search the web</h1>
+              <p class="text-sm text-white/40 text-center max-w-md mb-8">Type a site or search above · TikTok, YouTube, games all go through the proxy</p>
+              <div class="flex flex-wrap gap-2 justify-center">
+                <button type="button" onclick="browserGo('https://www.youtube.com/')" class="px-3 h-8 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/15 border border-white/10">YouTube</button>
+                <button type="button" onclick="browserGo('https://www.tiktok.com/')" class="px-3 h-8 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/15 border border-white/10">TikTok</button>
+                <button type="button" onclick="browserGo('https://music.youtube.com/')" class="px-3 h-8 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/15 border border-white/10">Music</button>
+                <button type="button" onclick="browserGo('https://duckduckgo.com/')" class="px-3 h-8 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/15 border border-white/10">DuckDuckGo</button>
+              </div>
+              <p class="text-[11px] text-white/25 mt-10">+ new tab · click ✕ to close</p>
             </div>
-            <div id="browser-results" class="hidden py-4">
-              <div class="flex items-center gap-2 mb-3">
-                <button onclick="browserShowHome()" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">←</button>
-                <form onsubmit="browserSubmit(event)" class="flex-1 flex gap-2">
-                  <input id="browser-url-bar" type="text" placeholder="Search or URL..." class="flex-1 h-10 px-4 rounded-xl bg-white/10 border border-white/15 text-sm outline-none" />
-                  <button type="submit" class="h-10 px-4 rounded-xl bg-white text-black font-extrabold text-sm">Go</button>
-                </form>
-                <button onclick="browserOpenExternal()" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">↗</button>
-                <button onclick="browserFullscreen()" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">⛶</button>
-              </div>
-              <div id="browser-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height:min(70vh,720px)">
-                <iframe id="browser-iframe" src="about:blank" class="w-full h-full border-0 bg-white" allow="fullscreen" allowfullscreen></iframe>
-              </div>
+            <div id="browser-wrap" class="absolute inset-0 bg-black">
+              <div id="browser-frames" class="w-full h-full relative"></div>
             </div>
           </div>
         </div>
@@ -376,6 +394,9 @@ const GAMES=[
 let sorted=[...GAMES],visible=30,activeGame=null;
 const PROXY_TAB="https://browse.startmyeducation.net/tab.html";
 let browserDisplayUrl="";
+let browserTabs=[];
+let browserActiveId=null;
+let browserTabSeq=0;
 const YT_WALLPAPER="https://www.youtube.com/embed/Im6RusHotNY?autoplay=1&mute=1&loop=1&playlist=Im6RusHotNY&controls=0&showinfo=0&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3";
 const DEFAULT_CLOAK_TITLE="Essential Mathematics for the Australian Curriculum Year 8, 4th Edition";
 const DEFAULT_CLOAK_ICON="https://www.google.com/s2/favicons?domain=cambridge.org&sz=64";
@@ -425,12 +446,149 @@ function toggleStreamFullscreen(){const wrap=document.getElementById("stream-pla
 function loadStreamDulo(){const frame=document.getElementById("stream-iframe");if(!frame)return;const proxy=PROXY_TAB+"#site="+encodeURIComponent("https://dulo.gd/");if(!frame.src||frame.src==="about:blank"||frame.src.endsWith("about:blank"))frame.src=proxy}
 function browserNormalize(input){input=(input||"").trim();if(!input)return null;if(/^https?:\/\//i.test(input))return input;if(/^[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(input))return"https://"+input;return"https://duckduckgo.com/?q="+encodeURIComponent(input)}
 function browserProxySrc(url){return PROXY_TAB+"#site="+encodeURIComponent(url)}
-function browserShowHome(){document.getElementById("browser-home").classList.remove("hidden");document.getElementById("browser-results").classList.add("hidden");document.getElementById("browser-iframe").src="about:blank";browserDisplayUrl="";const a=document.getElementById("browser-url");if(a){a.value="";setTimeout(()=>a.focus(),40)}}
-function browserShowResults(){document.getElementById("browser-home").classList.add("hidden");document.getElementById("browser-results").classList.remove("hidden")}
-function browserGo(url){const frame=document.getElementById("browser-iframe");if(!frame)return;const target=browserNormalize(url)||url;browserDisplayUrl=target;browserShowResults();const bar=document.getElementById("browser-url-bar"),home=document.getElementById("browser-url");if(bar)bar.value=target.replace(/^https?:\/\//i,"");if(home)home.value=target;frame.src=browserProxySrc(target)}
-function browserSubmit(e){e.preventDefault();const results=document.getElementById("browser-results"),bar=document.getElementById("browser-url-bar"),home=document.getElementById("browser-url");let raw=(results&&!results.classList.contains("hidden")&&bar)?bar.value:(home&&home.value)||(bar&&bar.value)||"";const target=browserNormalize(raw);if(target)browserGo(target)}
-function browserOpenExternal(){window.open(browserProxySrc(browserDisplayUrl||"https://duckduckgo.com/"),"_blank")}
-function browserFullscreen(){const wrap=document.getElementById("browser-wrap");if(!wrap)return;if(!document.fullscreenElement)(wrap.requestFullscreen||wrap.webkitRequestFullscreen).call(wrap);else document.exitFullscreen()}
+function browserTitleFromUrl(url){
+  if(!url)return"New Tab";
+  try{
+    const u=new URL(url);
+    if(u.hostname.includes("duckduckgo")&&u.searchParams.get("q"))return u.searchParams.get("q").slice(0,28);
+    return (u.hostname.replace(/^www\./,"")||"Tab").slice(0,28);
+  }catch(e){return String(url).slice(0,28)}
+}
+function browserGetActive(){return browserTabs.find(t=>t.id===browserActiveId)||null}
+function browserEnsureFrame(tab){
+  const host=document.getElementById("browser-frames");
+  if(!host)return null;
+  let frame=document.getElementById("bf-"+tab.id);
+  if(!frame){
+    frame=document.createElement("iframe");
+    frame.id="bf-"+tab.id;
+    frame.className="w-full h-full border-0 bg-white absolute inset-0";
+    frame.setAttribute("allow","fullscreen");
+    frame.setAttribute("allowfullscreen","");
+    frame.src="about:blank";
+    host.appendChild(frame);
+  }
+  return frame;
+}
+function browserRenderTabs(){
+  const strip=document.getElementById("browser-tab-strip");
+  if(!strip)return;
+  strip.innerHTML=browserTabs.map(function(t){
+    const active=t.id===browserActiveId;
+    const title=(t.title||"New Tab").replace(/</g,"&lt;");
+    return '<button type="button" class="browser-tab '+(active?"active":"")+' group flex items-center gap-1.5 h-8 px-2.5 rounded-t-lg text-[12px] font-medium select-none shrink-0" data-tid="'+t.id+'" onclick="browserSwitchTab('+t.id+')">'+
+      '<span class="truncate flex-1 text-left">'+title+'</span>'+
+      '<span class="tab-x w-4 h-4 rounded flex items-center justify-center text-[11px] shrink-0" onclick="event.stopPropagation();browserCloseTab('+t.id+')" title="Close">✕</span>'+
+    '</button>';
+  }).join("");
+}
+function browserSyncChrome(){
+  const tab=browserGetActive();
+  const home=document.getElementById("browser-home");
+  const bar=document.getElementById("browser-url-bar");
+  const frames=document.getElementById("browser-frames");
+  if(!tab){
+    if(home)home.style.display="flex";
+    if(bar)bar.value="";
+    browserDisplayUrl="";
+    browserRenderTabs();
+    return;
+  }
+  browserDisplayUrl=tab.url||"";
+  if(bar)bar.value=tab.url?tab.url.replace(/^https?:\/\//i,""):"";
+  const showHome=!tab.url;
+  if(home)home.style.display=showHome?"flex":"none";
+  if(frames){
+    Array.prototype.forEach.call(frames.querySelectorAll("iframe"),function(f){
+      f.style.display=(f.id==="bf-"+tab.id&&!showHome)?"block":"none";
+    });
+  }
+  browserRenderTabs();
+}
+function browserNewTab(url){
+  const id=++browserTabSeq;
+  const tab={id:id,title:"New Tab",url:""};
+  browserTabs.push(tab);
+  browserActiveId=id;
+  browserEnsureFrame(tab);
+  browserRenderTabs();
+  if(url){
+    browserGo(url);
+  }else{
+    browserSyncChrome();
+    const bar=document.getElementById("browser-url-bar");
+    if(bar)setTimeout(function(){bar.focus()},40);
+  }
+  return tab;
+}
+function browserSwitchTab(id){
+  if(!browserTabs.some(t=>t.id===id))return;
+  browserActiveId=id;
+  browserSyncChrome();
+}
+function browserCloseTab(id){
+  const idx=browserTabs.findIndex(t=>t.id===id);
+  if(idx<0)return;
+  const frame=document.getElementById("bf-"+id);
+  if(frame){frame.src="about:blank";frame.remove()}
+  browserTabs.splice(idx,1);
+  if(!browserTabs.length){
+    browserActiveId=null;
+    browserNewTab();
+    return;
+  }
+  if(browserActiveId===id){
+    const next=browserTabs[Math.max(0,idx-1)]||browserTabs[0];
+    browserActiveId=next.id;
+  }
+  browserSyncChrome();
+}
+function browserShowHome(){
+  const tab=browserGetActive();
+  if(!tab){browserNewTab();return}
+  tab.url="";
+  tab.title="New Tab";
+  const frame=browserEnsureFrame(tab);
+  if(frame)frame.src="about:blank";
+  browserDisplayUrl="";
+  browserSyncChrome();
+  const bar=document.getElementById("browser-url-bar");
+  if(bar){bar.value="";setTimeout(function(){bar.focus()},40)}
+}
+function browserGo(url){
+  let tab=browserGetActive();
+  if(!tab)tab=browserNewTab();
+  const target=browserNormalize(url)||url;
+  if(!target)return;
+  tab.url=target;
+  tab.title=browserTitleFromUrl(target);
+  browserDisplayUrl=target;
+  const frame=browserEnsureFrame(tab);
+  if(frame)frame.src=browserProxySrc(target);
+  browserSyncChrome();
+}
+function browserSubmit(e){
+  e.preventDefault();
+  const bar=document.getElementById("browser-url-bar");
+  const raw=(bar&&bar.value)||"";
+  const target=browserNormalize(raw);
+  if(target)browserGo(target);
+}
+function browserOpenExternal(){
+  const tab=browserGetActive();
+  const u=(tab&&tab.url)||browserDisplayUrl||"https://duckduckgo.com/";
+  window.open(browserProxySrc(u),"_blank");
+}
+function browserFullscreen(){
+  const wrap=document.getElementById("browser-wrap");
+  if(!wrap)return;
+  if(!document.fullscreenElement)(wrap.requestFullscreen||wrap.webkitRequestFullscreen).call(wrap);
+  else document.exitFullscreen();
+}
+function browserInit(){
+  if(!browserTabs.length)browserNewTab();
+  else browserSyncChrome();
+}
 function getCloak(){try{return{title:localStorage.getItem("studyhub-cloak-title")||DEFAULT_CLOAK_TITLE,icon:localStorage.getItem("studyhub-cloak-icon")||DEFAULT_CLOAK_ICON}}catch(e){return{title:DEFAULT_CLOAK_TITLE,icon:DEFAULT_CLOAK_ICON}}}
 function setFavicon(url){if(!url)return;let link=document.querySelector("link[rel*='icon']");if(!link){link=document.createElement("link");link.rel="icon";document.head.appendChild(link)}link.href=url}
 function applyCloakFromStorage(){const c=getCloak();document.title=c.title;setFavicon(c.icon);const t=document.getElementById("cloak-title-input"),i=document.getElementById("cloak-icon-input");if(t)t.value=c.title;if(i)i.value=c.icon}
@@ -463,7 +621,10 @@ function hideWindowToDesktop(){
 }
 function openApp(url){
   openDesktopApp("browser");
-  setTimeout(function(){ browserGo(url); }, 80);
+  setTimeout(function(){
+    if(!browserTabs.length)browserNewTab(url);
+    else browserNewTab(url);
+  }, 80);
 }
 function updateHomeClock(){
   const now=new Date();
@@ -478,7 +639,37 @@ function updateHomeClock(){
   if(d)d.textContent=now.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
   if(t)t.textContent=now.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
 }
-function showPage(name){const map={home:"home-page",games:"games-page",stream:"stream-page",details:"details-page",player:"app-player-view",browser:"browser-page",settings:"settings-page"};const target=map[name]||(name+"-page");["home-page","games-page","stream-page","details-page","app-player-view","browser-page","settings-page"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle("hidden",id!==target)});document.querySelectorAll(".dock-item[data-nav]").forEach(btn=>{const on=btn.getAttribute("data-nav")===name||(name==="details"&&btn.getAttribute("data-nav")==="games")||(name==="games"&&btn.getAttribute("data-nav")==="games");const dot=btn.querySelector(".dock-dot");if(dot)dot.style.opacity=on?"1":"0"});const titles={browser:"Browser",home:"Home",games:"Games",stream:"Stream",details:"Game",player:"Player",settings:"Settings"};const wt=document.getElementById("macos-window-title");if(wt)wt.textContent=titles[name]||"Essential Mathematics";const win=document.getElementById("macos-window");if(win&&name!=="player"&&name!=="home"){win.style.opacity="1";win.style.pointerEvents="auto";win.style.transform="none";win.style.visibility="visible"}if(name==="stream")try{loadStreamDulo()}catch(e){}if(name==="browser")try{browserShowHome()}catch(e){}if(name==="settings")applyCloakFromStorage()}
+function showPage(name){
+  const map={home:"home-page",games:"games-page",stream:"stream-page",details:"details-page",player:"app-player-view",browser:"browser-page",settings:"settings-page"};
+  const target=map[name]||(name+"-page");
+  ["home-page","games-page","stream-page","details-page","app-player-view","browser-page","settings-page"].forEach(function(id){
+    const el=document.getElementById(id);
+    if(!el)return;
+    const on=id===target;
+    el.classList.toggle("hidden",!on);
+    if(id==="browser-page"){
+      el.style.display=on?"flex":"none";
+    }
+  });
+  document.querySelectorAll(".dock-item[data-nav]").forEach(function(btn){
+    const on=btn.getAttribute("data-nav")===name||(name==="details"&&btn.getAttribute("data-nav")==="games")||(name==="games"&&btn.getAttribute("data-nav")==="games");
+    const dot=btn.querySelector(".dock-dot");
+    if(dot)dot.style.opacity=on?"1":"0";
+  });
+  const titles={browser:"Browser",home:"Home",games:"Games",stream:"Stream",details:"Game",player:"Player",settings:"Settings"};
+  const wt=document.getElementById("macos-window-title");
+  if(wt)wt.textContent=titles[name]||"Essential Mathematics";
+  const win=document.getElementById("macos-window");
+  if(win&&name!=="player"&&name!=="home"){
+    win.style.opacity="1";
+    win.style.pointerEvents="auto";
+    win.style.transform="none";
+    win.style.visibility="visible";
+  }
+  if(name==="stream")try{loadStreamDulo()}catch(e){}
+  if(name==="browser")try{browserInit()}catch(e){}
+  if(name==="settings")applyCloakFromStorage();
+}
 function init(){var wp="minecraft";try{wp=localStorage.getItem("studyhub-wp")||"minecraft"}catch(e){}setWallpaper(wp);sorted.sort((a,b)=>b.popular-a.popular);renderHot();renderGrid();applyCloakFromStorage();updateMacClock();updateHomeClock();setInterval(updateMacClock,15000);setInterval(updateHomeClock,1000);hideWindowToDesktop();}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 </script>
