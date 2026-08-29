@@ -409,7 +409,7 @@
 <script>
 const GAMES=[
 {id:"eaglercraft",name:"Eaglercraft",category:"Action",popular:110,desc:"Minecraft in the browser — singleplayer & multiplayer, no download.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/1.png",url:"https://svaaps.github.io/eaglercrafthtml/"},
-{id:"unmatched-ego-2",name:"Unmatched Ego 2",category:"Action",popular:109,desc:"Action arena combat on CrazyGames.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/4.png",url:"https://www.crazygames.com/game/unmatched-ego-2?instantJoin=true"},
+{id:"unmatched-ego-2",name:"Unmatched Ego 2",category:"Sports",popular:109,desc:"Fast 3v3 soccer — dribble, shoot, skill moves. Embedded from CrazyGames.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/4.png",url:"https://games.crazygames.com/en_US/unmatched-ego-2/index.html",proxy:true},
 {id:"asmallworldcup",name:"A Small World Cup",category:"Sports",popular:103,desc:"Tiny football tournament — score and win the cup.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/3.png",url:"https://pizzaedition.com/embed/asmallworldcup"},
 {id:"wordle",name:"Wordle",category:"Puzzle",popular:102,desc:"Guess the 5-letter word.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/36.png",url:"https://pizzaedition.com/embed/wordle"},
 {id:"pacman",name:"Pac-Man",category:"Retro",popular:101,desc:"Classic arcade maze.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/15.png",url:"https://pacmanonline.org/game.html"},
@@ -475,9 +475,22 @@ function renderHot(){const el=document.getElementById("hot-grid");if(el)el.inner
 function renderGrid(){const grid=document.getElementById("games-grid");if(grid)grid.innerHTML=sorted.slice(0,visible).map(buildCard).join("")}
 function filterCat(cat,btn){document.querySelectorAll("#category-nav .tab-btn").forEach(b=>{b.classList.toggle("active",b===btn);b.classList.toggle("inactive",b!==btn)});sorted=cat==="All"?[...GAMES]:GAMES.filter(g=>g.category===cat);visible=30;renderGrid()}
 function viewGame(id){const g=GAMES.find(x=>x.id===id);if(!g)return;activeGame=g;document.getElementById("detail-title").textContent=g.name;document.getElementById("detail-cat").textContent=g.category;document.getElementById("detail-desc").textContent=g.desc||"";document.getElementById("detail-img").src=safeImg(g);showPage("details")}
-function launchPlayer(){if(!activeGame)return;showPage("player");const frame=document.getElementById("player-iframe"),loader=document.getElementById("player-loader");document.getElementById("player-title").textContent=activeGame.name;if(loader)loader.classList.remove("hidden");frame.src=activeGame.url;frame.onload=()=>{if(loader)loader.classList.add("hidden")}}
+function gamePlayUrl(g){
+  if(!g||!g.url)return "";
+  if(g.proxy)return PROXY_TAB+"#site="+encodeURIComponent(g.url);
+  return g.url;
+}
+function launchPlayer(){
+  if(!activeGame)return;
+  showPage("player");
+  const frame=document.getElementById("player-iframe"),loader=document.getElementById("player-loader");
+  document.getElementById("player-title").textContent=activeGame.name;
+  if(loader)loader.classList.remove("hidden");
+  frame.src=gamePlayUrl(activeGame);
+  frame.onload=function(){if(loader)loader.classList.add("hidden")};
+}
 function exitPlayer(){document.getElementById("player-iframe").src="";showPage(activeGame?"details":"games")}
-function openExternal(){if(activeGame)window.open(activeGame.url,"_blank")}
+function openExternal(){if(activeGame)window.open(gamePlayUrl(activeGame),"_blank")}
 function toggleFullscreen(){const el=document.getElementById("app-player-view");if(!document.fullscreenElement)el.requestFullscreen().catch(()=>{});else document.exitFullscreen().catch(()=>{})}
 function toggleStreamFullscreen(){const wrap=document.getElementById("stream-player-wrap");if(!wrap)return;if(!document.fullscreenElement)(wrap.requestFullscreen||wrap.webkitRequestFullscreen).call(wrap);else document.exitFullscreen()}
 function loadStreamDulo(){const frame=document.getElementById("stream-iframe");if(!frame)return;const proxy=PROXY_TAB+"#site="+encodeURIComponent("https://dulo.gd/");if(!frame.src||frame.src==="about:blank"||frame.src.endsWith("about:blank"))frame.src=proxy}
