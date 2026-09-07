@@ -202,8 +202,17 @@
 
         <div id="games-page" class="view-section hidden">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-            <h1 class="text-2xl sm:text-3xl font-extrabold mb-1">Games</h1>
-            <p class="text-sm text-gray-400 mb-5">Unblocked arcade</p>
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
+              <div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold mb-1">Games</h1>
+                <p class="text-sm text-gray-400">Unblocked arcade · star to pin favorites</p>
+              </div>
+              <div class="flex gap-2 items-center w-full sm:w-auto">
+                <input id="game-search" type="search" placeholder="Search games…" autocomplete="off" oninput="searchGames(this.value)"
+                  class="flex-1 sm:w-56 h-10 px-4 rounded-xl bg-white/10 border border-white/15 text-sm outline-none" />
+                <button type="button" onclick="playRandomGame()" class="h-10 px-4 rounded-xl bg-white text-black text-xs font-extrabold shrink-0">Random</button>
+              </div>
+            </div>
             <div class="flex flex-wrap gap-2 mb-6" id="category-nav">
               <button onclick="filterCat('All',this)" class="tab-btn active px-4 py-2 rounded-full text-xs font-bold">All</button>
               <button onclick="filterCat('Action',this)" class="tab-btn inactive px-4 py-2 rounded-full text-xs font-semibold">Action</button>
@@ -212,7 +221,13 @@
               <button onclick="filterCat('Puzzle',this)" class="tab-btn inactive px-4 py-2 rounded-full text-xs font-semibold">Puzzle</button>
               <button onclick="filterCat('Retro',this)" class="tab-btn inactive px-4 py-2 rounded-full text-xs font-semibold">Retro</button>
               <button onclick="filterCat('Idle',this)" class="tab-btn inactive px-4 py-2 rounded-full text-xs font-semibold">Idle</button>
+              <button onclick="filterCat('2 Players',this)" class="tab-btn inactive px-4 py-2 rounded-full text-xs font-semibold">2 Players</button>
             </div>
+            <div id="fav-section" class="hidden mb-8">
+              <h2 class="text-lg font-bold mb-3">Pinned</h2>
+              <div id="fav-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3"></div>
+            </div>
+            <h2 class="text-lg font-bold mb-3">Popular</h2>
             <div id="hot-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 mb-8"></div>
             <h2 class="text-lg font-bold mb-3">All games</h2>
             <div id="games-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pb-10"></div>
@@ -267,7 +282,11 @@
                 <button type="button" onclick="browserGo('https://music.youtube.com/')" class="px-3 h-8 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/15 border border-white/10">Music</button>
                 <button type="button" onclick="browserGo('https://duckduckgo.com/')" class="px-3 h-8 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/15 border border-white/10">DuckDuckGo</button>
               </div>
-              <p class="text-[11px] text-white/25 mt-10">+ new tab · click ✕ to close</p>
+              <div id="browser-recents" class="mt-8 w-full max-w-lg hidden">
+                <p class="text-[11px] text-white/35 uppercase tracking-wider mb-2 text-center">Recent</p>
+                <div id="browser-recents-list" class="flex flex-wrap gap-2 justify-center"></div>
+              </div>
+              <p class="text-[11px] text-white/25 mt-8">+ new tab · T new · W close · Esc library</p>
             </div>
             <div id="browser-wrap" class="absolute inset-0 bg-black">
               <div id="browser-frames" class="w-full h-full relative"></div>
@@ -408,8 +427,12 @@
 
 <script>
 const GAMES=[
-{id:"eaglercraft",name:"Eaglercraft",category:"Action",popular:110,desc:"Minecraft in the browser — singleplayer & multiplayer, no download.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/1.png",url:"https://svaaps.github.io/eaglercrafthtml/"},
-{id:"unmatched-ego-2",name:"Unmatched Ego 2",category:"Sports",popular:109,desc:"Fast 3v3 soccer — dribble, shoot, skill moves. Embedded from CrazyGames.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/4.png",url:"https://games.crazygames.com/en_US/unmatched-ego-2/index.html",proxy:true},
+{id:"ovo",name:"OvO",category:"Action",popular:115,desc:"Parkour platformer — wall-jump, slide, dive through deadly levels.",img:"https://pizzaedition.com/apnggames/ovo.png",url:"https://pizzaedition.com/embed/0v0"},
+{id:"ovodimensions",name:"OvO Dimensions",category:"Action",popular:114,desc:"OvO sequel with new dimensions and parkour challenges.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/1.png",url:"https://pizzaedition.com/embed/ovodimensions"},
+{id:"unicyclehero",name:"Unicycle Heros",category:"Action",popular:113,desc:"Unicycle obstacle course — balance and race.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/7.png",url:"https://pizzaedition.com/embed/unicyclehero"},
+{id:"ragdollarchers",name:"Ragdoll Archers",category:"Action",popular:112,desc:"Physics archery — 1 player, PVP or 2 players.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/4.png",url:"https://pizzaedition.com/embed/ragdollarchers"},
+{id:"tag",name:"Tag",category:"2 Players",popular:111,desc:"Classic 2-player tag — chase and tag your friend.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/5.png",url:"https://pizzaedition.com/embed/tag"},
+{id:"goalgang",name:"Goal Gang",category:"Sports",popular:110,desc:"Chaotic multiplayer soccer — physics hits, power-ups & pure mayhem.",img:"https://imgs.crazygames.com/goal-gang_16x9/20260212081350/goal-gang_16x9-cover?metadata=none&quality=85&width=440",url:"https://games.crazygames.com/en_US/goal-gang/index.html"},
 {id:"asmallworldcup",name:"A Small World Cup",category:"Sports",popular:103,desc:"Tiny football tournament — score and win the cup.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/3.png",url:"https://pizzaedition.com/embed/asmallworldcup"},
 {id:"wordle",name:"Wordle",category:"Puzzle",popular:102,desc:"Guess the 5-letter word.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/36.png",url:"https://pizzaedition.com/embed/wordle"},
 {id:"pacman",name:"Pac-Man",category:"Retro",popular:101,desc:"Classic arcade maze.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/15.png",url:"https://pacmanonline.org/game.html"},
@@ -428,7 +451,9 @@ const GAMES=[
 {id:"soccerreal",name:"Soccer Real",category:"Sports",popular:88,desc:"Skill soccer.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/14.png",url:"https://pizzaedition.com/embed/soccerreal"},
 {id:"snowrider3d",name:"Snow Rider 3D",category:"Racing",popular:87,desc:"Snowboard run.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/16.png",url:"https://pizzaedition.com/embed/snowrider3d"}
 ];
-let sorted=[...GAMES],visible=30,activeGame=null;
+let sorted=[...GAMES],visible=40,activeGame=null,activeCat="All",searchQuery="";
+let favIds=[];
+try{favIds=JSON.parse(localStorage.getItem("studyhub-favs")||"[]")}catch(e){favIds=[]}
 const PROXY_TAB="https://browse.startmyeducation.net/tab.html";
 let browserDisplayUrl="";
 let browserTabs=[];
@@ -470,11 +495,57 @@ function setWallpaper(name){
 }
 
 function safeImg(g){return g.img||("https://placehold.co/200x200/1e1b4b/fff?text="+encodeURIComponent(g.name.slice(0,8)))}
-function buildCard(g){return '<button type="button" onclick="viewGame(\''+g.id+'\')" class="game-card text-left rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 overflow-hidden"><div class="aspect-square overflow-hidden bg-black/40"><img src="'+safeImg(g)+'" class="w-full h-full object-cover" loading="lazy" onerror="this.style.opacity=.3"/></div><div class="p-2"><p class="text-xs font-bold truncate">'+g.name+'</p><p class="text-[10px] text-gray-500">'+g.category+'</p></div></button>'}
-function renderHot(){const el=document.getElementById("hot-grid");if(el)el.innerHTML=[...GAMES].sort((a,b)=>b.popular-a.popular).slice(0,7).map(buildCard).join("")}
+function isFav(id){return favIds.indexOf(id)>=0}
+function toggleFav(id,ev){
+  if(ev){ev.stopPropagation();ev.preventDefault()}
+  var i=favIds.indexOf(id);
+  if(i>=0)favIds.splice(i,1);else favIds.unshift(id);
+  try{localStorage.setItem("studyhub-favs",JSON.stringify(favIds.slice(0,24)))}catch(e){}
+  renderFavs();renderHot();renderGrid();
+}
+function buildCard(g){
+  var star=isFav(g.id)?"★":"☆";
+  var starCls=isFav(g.id)?"text-amber-300":"text-white/40";
+  return '<div class="game-card text-left rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 overflow-hidden relative group">'+
+    '<button type="button" onclick="toggleFav(\''+g.id+'\',event)" class="absolute top-1.5 right-1.5 z-10 w-7 h-7 rounded-lg bg-black/50 text-sm leading-none '+starCls+'" title="Pin">'+star+'</button>'+
+    '<button type="button" onclick="viewGame(\''+g.id+'\')" class="w-full text-left bg-transparent border-0 p-0 cursor-pointer">'+
+    '<div class="aspect-square overflow-hidden bg-black/40"><img src="'+safeImg(g)+'" class="w-full h-full object-cover" loading="lazy" onerror="this.style.opacity=.3"/></div>'+
+    '<div class="p-2"><p class="text-xs font-bold truncate">'+g.name+'</p><p class="text-[10px] text-gray-500">'+g.category+'</p></div></button></div>';
+}
+function applyGameFilters(){
+  var q=(searchQuery||"").toLowerCase().trim();
+  sorted=GAMES.filter(function(g){
+    if(activeCat!=="All"&&g.category!==activeCat)return false;
+    if(q&&g.name.toLowerCase().indexOf(q)<0&&(g.desc||"").toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  if(activeCat==="All"&&!q)sorted=[...GAMES].sort(function(a,b){return b.popular-a.popular});
+  visible=40;
+  renderGrid();
+}
+function renderFavs(){
+  var sec=document.getElementById("fav-section");
+  var grid=document.getElementById("fav-grid");
+  if(!sec||!grid)return;
+  var list=favIds.map(function(id){return GAMES.find(function(g){return g.id===id})}).filter(Boolean);
+  if(!list.length){sec.classList.add("hidden");grid.innerHTML="";return}
+  sec.classList.remove("hidden");
+  grid.innerHTML=list.map(buildCard).join("");
+}
+function renderHot(){const el=document.getElementById("hot-grid");if(el)el.innerHTML=[...GAMES].sort(function(a,b){return b.popular-a.popular}).slice(0,8).map(buildCard).join("")}
 function renderGrid(){const grid=document.getElementById("games-grid");if(grid)grid.innerHTML=sorted.slice(0,visible).map(buildCard).join("")}
-function filterCat(cat,btn){document.querySelectorAll("#category-nav .tab-btn").forEach(b=>{b.classList.toggle("active",b===btn);b.classList.toggle("inactive",b!==btn)});sorted=cat==="All"?[...GAMES]:GAMES.filter(g=>g.category===cat);visible=30;renderGrid()}
-function viewGame(id){const g=GAMES.find(x=>x.id===id);if(!g)return;activeGame=g;document.getElementById("detail-title").textContent=g.name;document.getElementById("detail-cat").textContent=g.category;document.getElementById("detail-desc").textContent=g.desc||"";document.getElementById("detail-img").src=safeImg(g);showPage("details")}
+function filterCat(cat,btn){
+  activeCat=cat;
+  document.querySelectorAll("#category-nav .tab-btn").forEach(function(b){b.classList.toggle("active",b===btn);b.classList.toggle("inactive",b!==btn)});
+  applyGameFilters();
+}
+function searchGames(val){searchQuery=val||"";applyGameFilters()}
+function playRandomGame(){
+  var pool=sorted.length?sorted:GAMES;
+  var g=pool[Math.floor(Math.random()*pool.length)];
+  if(g){activeGame=g;launchPlayer()}
+}
+function viewGame(id){const g=GAMES.find(function(x){return x.id===id});if(!g)return;activeGame=g;document.getElementById("detail-title").textContent=g.name;document.getElementById("detail-cat").textContent=g.category;document.getElementById("detail-desc").textContent=g.desc||"";document.getElementById("detail-img").src=safeImg(g);showPage("details")}
 function gamePlayUrl(g){
   if(!g||!g.url)return "";
   if(g.proxy)return PROXY_TAB+"#site="+encodeURIComponent(g.url);
@@ -605,6 +676,29 @@ function browserShowHome(){
   const bar=document.getElementById("browser-url-bar");
   if(bar){bar.value="";setTimeout(function(){bar.focus()},40)}
 }
+function saveBrowserRecent(url){
+  if(!url)return;
+  var list=[];
+  try{list=JSON.parse(localStorage.getItem("studyhub-recents")||"[]")}catch(e){list=[]}
+  list=list.filter(function(u){return u!==url});
+  list.unshift(url);
+  list=list.slice(0,8);
+  try{localStorage.setItem("studyhub-recents",JSON.stringify(list))}catch(e){}
+  renderBrowserRecents();
+}
+function renderBrowserRecents(){
+  var wrap=document.getElementById("browser-recents");
+  var listEl=document.getElementById("browser-recents-list");
+  if(!wrap||!listEl)return;
+  var list=[];
+  try{list=JSON.parse(localStorage.getItem("studyhub-recents")||"[]")}catch(e){list=[]}
+  if(!list.length){wrap.classList.add("hidden");listEl.innerHTML="";return}
+  wrap.classList.remove("hidden");
+  listEl.innerHTML=list.map(function(u){
+    var label=browserTitleFromUrl(u).replace(/</g,"&lt;");
+    return '<button type="button" onclick="browserGo(\''+u.replace(/'/g,"\\'")+'\')" class="px-3 h-8 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/15 border border-white/10 max-w-[140px] truncate" title="'+label+'">'+label+'</button>';
+  }).join("");
+}
 function browserGo(url){
   let tab=browserGetActive();
   if(!tab)tab=browserNewTab();
@@ -615,6 +709,7 @@ function browserGo(url){
   browserDisplayUrl=target;
   const frame=browserEnsureFrame(tab);
   if(frame)frame.src=browserProxySrc(target);
+  saveBrowserRecent(target);
   browserSyncChrome();
 }
 function browserSubmit(e){
@@ -638,6 +733,7 @@ function browserFullscreen(){
 function browserInit(){
   if(!browserTabs.length)browserNewTab();
   else browserSyncChrome();
+  renderBrowserRecents();
 }
 function getCloak(){try{return{title:localStorage.getItem("studyhub-cloak-title")||DEFAULT_CLOAK_TITLE,icon:localStorage.getItem("studyhub-cloak-icon")||DEFAULT_CLOAK_ICON}}catch(e){return{title:DEFAULT_CLOAK_TITLE,icon:DEFAULT_CLOAK_ICON}}}
 function setFavicon(url){if(!url)return;let link=document.querySelector("link[rel*='icon']");if(!link){link=document.createElement("link");link.rel="icon";document.head.appendChild(link)}link.href=url}
@@ -657,7 +753,17 @@ function closeAppLibrary(){
   if(el)el.classList.add("hidden");
 }
 document.addEventListener("keydown",function(e){
-  if(e.key==="Escape")closeAppLibrary();
+  if(e.key==="Escape"){closeAppLibrary();return}
+  var tag=(e.target&&e.target.tagName||"").toLowerCase();
+  if(tag==="input"||tag==="textarea")return;
+  var bp=document.getElementById("browser-page");
+  var browserOpen=bp&&!bp.classList.contains("hidden")&&bp.style.display!=="none";
+  if(browserOpen&&(e.key==="t"||e.key==="T")&&!e.metaKey&&!e.ctrlKey){e.preventDefault();browserNewTab();return}
+  if(browserOpen&&(e.key==="w"||e.key==="W")&&!e.metaKey&&!e.ctrlKey){
+    e.preventDefault();
+    if(browserActiveId!=null)browserCloseTab(browserActiveId);
+    return;
+  }
 });
 function openDesktopApp(name){
   const win=document.getElementById("macos-window");
@@ -790,7 +896,8 @@ function init(){
   var wp="minecraft";
   try{wp=localStorage.getItem("studyhub-wp")||"minecraft"}catch(e){}
   setWallpaper(wp);
-  sorted.sort(function(a,b){return b.popular-a.popular});
+  applyGameFilters();
+  renderFavs();
   renderHot();
   renderGrid();
   applyCloakFromStorage();
@@ -801,6 +908,7 @@ function init(){
   hideWindowToDesktop();
   initDockZoom();
   initAppLibraryZoom();
+  renderBrowserRecents();
   // Cloak boot: textbook splash → desktop
   setTimeout(finishBoot,1800);
 }
