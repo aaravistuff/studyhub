@@ -239,11 +239,11 @@
             <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
               <div>
                 <h1 class="text-2xl font-extrabold">Stream</h1>
-                <p class="text-sm text-gray-400">dulo.gd via proxy</p>
+                <p class="text-sm text-gray-400">cinejoy.pk via proxy</p>
               </div>
               <div class="flex gap-2">
                 <button onclick="toggleStreamFullscreen()" class="px-4 py-2 rounded-full bg-white text-black text-xs font-extrabold">Fullscreen</button>
-                <a href="https://browse.startmyeducation.net/tab.html#site=https%3A%2F%2Fdulo.gd%2F" target="_blank" class="px-4 py-2 rounded-full bg-white/10 text-xs font-bold">New tab</a>
+                <a href="https://browse.startmyeducation.net/tab.html#site=https%3A%2F%2Fcinejoy.pk%2F" target="_blank" class="px-4 py-2 rounded-full bg-white/10 text-xs font-bold">New tab</a>
               </div>
             </div>
             <div id="stream-player-wrap" class="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-black" style="height:min(70vh,720px)">
@@ -427,6 +427,7 @@
 
 <script>
 const GAMES=[
+{id:"slingline",name:"Slingline",category:"Action",popular:116,desc:"Grapple-hook runner — sling, wall-run, boost & beat your best distance.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/9.png",url:"slingline.html"},
 {id:"ovo",name:"OvO",category:"Action",popular:115,desc:"Parkour platformer — wall-jump, slide, dive through deadly levels.",img:"https://pizzaedition.com/apnggames/ovo.png",url:"https://pizzaedition.com/embed/0v0"},
 {id:"ovodimensions",name:"OvO Dimensions",category:"Action",popular:114,desc:"OvO sequel with new dimensions and parkour challenges.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/1.png",url:"https://pizzaedition.com/embed/ovodimensions"},
 {id:"unicyclehero",name:"Unicycle Heros",category:"Action",popular:113,desc:"Unicycle obstacle course — balance and race.",img:"https://cdn.jsdelivr.net/gh/gn-math/covers@main/7.png",url:"https://pizzaedition.com/embed/unicyclehero"},
@@ -566,7 +567,7 @@ function exitPlayer(){document.getElementById("player-iframe").src="";showPage(a
 function openExternal(){if(activeGame)window.open(gamePlayUrl(activeGame),"_blank")}
 function toggleFullscreen(){const el=document.getElementById("app-player-view");if(!document.fullscreenElement)el.requestFullscreen().catch(()=>{});else document.exitFullscreen().catch(()=>{})}
 function toggleStreamFullscreen(){const wrap=document.getElementById("stream-player-wrap");if(!wrap)return;if(!document.fullscreenElement)(wrap.requestFullscreen||wrap.webkitRequestFullscreen).call(wrap);else document.exitFullscreen()}
-function loadStreamDulo(){const frame=document.getElementById("stream-iframe");if(!frame)return;const proxy=PROXY_TAB+"#site="+encodeURIComponent("https://dulo.gd/");if(!frame.src||frame.src==="about:blank"||frame.src.endsWith("about:blank"))frame.src=proxy}
+function loadStreamDulo(){const frame=document.getElementById("stream-iframe");if(!frame)return;const proxy=PROXY_TAB+"#site="+encodeURIComponent("https://cinejoy.pk/");if(!frame.src||frame.src==="about:blank"||frame.src.endsWith("about:blank"))frame.src=proxy}
 function browserNormalize(input){input=(input||"").trim();if(!input)return null;if(/^https?:\/\//i.test(input))return input;if(/^[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(input))return"https://"+input;return"https://duckduckgo.com/?q="+encodeURIComponent(input)}
 function browserProxySrc(url){return PROXY_TAB+"#site="+encodeURIComponent(url)}
 function browserTitleFromUrl(url){
